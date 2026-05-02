@@ -1,0 +1,278 @@
+{
+  "repeat": 0,
+  "task_id": "8b5b4eca788e",
+  "repo": "entireio-cli",
+  "task_type": "debug_or_validation",
+  "condition": "baseline",
+  "prompt": "I am running this test on Windows TestSingleSessionSubagentCommitInTurn. And it is failing, not always, it fails because after running the test we identify that there is a shadow branch that should not be there. I copied the entire.log on windows execution windows-broken-test.json (failing one) and the same test but this time running on macos the entire.log are inside mac-ok-test.json.",
+  "answer": "",
+  "tool_calls": [
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": "."
+      },
+      "output": ".allowed-licenses\n.claude/\n.codex/\n.devcontainer/\n.entire/\n.ferrata/\n.gemini/\n.git/\n.github/\n.gitignore\n.golangci.yaml\n.goreleaser.yaml\n.opencode/\n.vscode/\nAGENTS.md\nCHANGELOG.md\nCLAUDE.md\nCODE_OF_CONDUCT.md\nCONTRIBUTING.md\nLICENSE\nREADME.md\nSECURITY.md\nWINDOWS.md\ncmd/\ndocs/\ne2e/\ngo.mod\ngo.sum\nmise-tasks/\nmise.toml\nperf/\nredact/\nscripts/",
+      "output_tokens": 339,
+      "duration_ms": 0.6120204925537109,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "TestSingleSessionSubagentCommitInTurn"
+      },
+      "output": "./e2e/tests/single_session_test.go\n  87-94:\n    87| }\n    88| \n    89| // TestSingleSessionSubagentCommitInTurn: one prompt with subagent creates a file and commits it.\n    90| // Expects both an initial checkpoint (post-commit) and a catchup checkpoint\n    91| // (end-of-turn) referencing the same checkpoint ID.\n    92| func TestSingleSessionSubagentCommitInTurn(t *testing.T) {\n    93| \ttestutil.ForEachAgent(t, 2*time.Minute, func(t *testing.T, s *testutil.RepoState, ctx context.Context) {\n    ",
+      "output_tokens": 542,
+      "duration_ms": 17.222166061401367,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "pattern": "windows-broken-test.json"
+      },
+      "output": "No files found.",
+      "output_tokens": 15,
+      "duration_ms": 13.22484016418457,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "pattern": "mac-ok-test.json"
+      },
+      "output": "No files found.",
+      "output_tokens": 15,
+      "duration_ms": 9.113073348999023,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/tests/single_session_test.go",
+        "start_line": 87,
+        "max_lines": 80
+      },
+      "output": "e2e/tests/single_session_test.go:87-114\n  87| }\n  88| \n  89| // TestSingleSessionSubagentCommitInTurn: one prompt with subagent creates a file and commits it.\n  90| // Expects both an initial checkpoint (post-commit) and a catchup checkpoint\n  91| // (end-of-turn) referencing the same checkpoint ID.\n  92| func TestSingleSessionSubagentCommitInTurn(t *testing.T) {\n  93| \ttestutil.ForEachAgent(t, 2*time.Minute, func(t *testing.T, s *testutil.RepoState, ctx context.Context) {\n  94| \t\tif s.Agent.Nam",
+      "output_tokens": 1600,
+      "duration_ms": 0.1609325408935547,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": ".entire"
+      },
+      "output": ".gitignore\nsettings.json",
+      "output_tokens": 24,
+      "duration_ms": 0.17380714416503906,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "WaitForNoShadowBranches"
+      },
+      "output": "./e2e/testutil/assertions.go\n  135-142:\n    135| }\n    136| \n    137| // WaitForNoShadowBranches polls until all shadow branches are cleaned up or\n    138| // the timeout expires. Shadow branch cleanup can lag slightly behind checkpoint\n    139| // condensation (carry-forward creates intermediate branches that are deleted\n    140| // asynchronously).\n    141| func WaitForNoShadowBranches(t *testing.T, dir string, timeout time.Duration) {\n    142| \tt.Helper()\n\n./e2e/tests/mid_turn_commit_test.go\n",
+      "output_tokens": 5102,
+      "duration_ms": 21.404027938842773,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/testutil/assertions.go",
+        "start_line": 137,
+        "max_lines": 60
+      },
+      "output": "e2e/testutil/assertions.go:137-196\n  137| // WaitForNoShadowBranches polls until all shadow branches are cleaned up or\n  138| // the timeout expires. Shadow branch cleanup can lag slightly behind checkpoint\n  139| // condensation (carry-forward creates intermediate branches that are deleted\n  140| // asynchronously).\n  141| func WaitForNoShadowBranches(t *testing.T, dir string, timeout time.Duration) {\n  142| \tt.Helper()\n  143| \tdeadline := time.Now().Add(timeout)\n  144| \tfor time.Now().Before(d",
+      "output_tokens": 2860,
+      "duration_ms": 0.2810955047607422,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": "e2e",
+        "recursive": true
+      },
+      "output": "README.md\ncmd/testreport/main.go\nbootstrap/main.go\ntests/attribution_test.go\ntests/checkpoint_metadata_test.go\ntests/codex_resume_test.go\ntests/deleted_files_test.go\ntests/disable_test.go\ntests/edge_cases_test.go\ntests/existing_files_test.go\ntests/external_agent_test.go\ntests/factory_hooks_test.go\ntests/interactive_test.go\ntests/main_test.go\ntests/mid_turn_commit_test.go\ntests/multi_session_test.go\ntests/resume_remote_test.go\ntests/resume_test.go\ntests/rewind_test.go\ntests/session_lifecycle_test",
+      "output_tokens": 1130,
+      "duration_ms": 0.4820823669433594,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/testutil/assertions.go",
+        "start_line": 1,
+        "max_lines": 136
+      },
+      "output": "e2e/testutil/assertions.go:1-136\n  1| package testutil\n  2| \n  3| import (\n  4| \t\"crypto/sha256\"\n  5| \t\"encoding/hex\"\n  6| \t\"encoding/json\"\n  7| \t\"fmt\"\n  8| \t\"os\"\n  9| \t\"path/filepath\"\n  10| \t\"regexp\"\n  11| \t\"strings\"\n  12| \t\"testing\"\n  13| \t\"time\"\n  14| \n  15| \t\"github.com/stretchr/testify/assert\"\n  16| \t\"github.com/stretchr/testify/require\"\n  17| )\n  18| \n  19| // DeepCheckpointValidation contains expected values for comprehensive checkpoint validation.\n  20| type DeepCheckpointValidation stru",
+      "output_tokens": 5315,
+      "duration_ms": 0.3418922424316406,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "pattern": "windows-broken-test.json",
+        "glob": "**/*.json"
+      },
+      "output": "No files found.",
+      "output_tokens": 15,
+      "duration_ms": 13.4429931640625,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/tests/subagent_commit_flow_test.go"
+      },
+      "output": "e2e/tests/subagent_commit_flow_test.go:1-47\n  1| //go:build e2e\n  2| \n  3| package tests\n  4| \n  5| import (\n  6| \t\"context\"\n  7| \t\"testing\"\n  8| \t\"time\"\n  9| \n  10| \t\"github.com/entireio/cli/e2e/testutil\"\n  11| \t\"github.com/stretchr/testify/assert\"\n  12| )\n  13| \n  14| // TestSubagentCommitFlow: agent creates a file via subagent, user commits.\n  15| // Validates the full checkpoint flow: trailer, metadata (cli_version, strategy,\n  16| // sessions), session metadata (agent field), and checkpoint",
+      "output_tokens": 2085,
+      "duration_ms": 0.431060791015625,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": "cmd",
+        "recursive": true
+      },
+      "output": "entire/main.go\nentire/cli/api_client.go\nentire/cli/attach.go\nentire/cli/attach_test.go\nentire/cli/attach_transcript.go\nentire/cli/bench_enable_test.go\nentire/cli/bench_test.go\nentire/cli/clean.go\nentire/cli/clean_test.go\nentire/cli/commit_message.go\nentire/cli/commit_message_test.go\nentire/cli/config.go\nentire/cli/config_test.go\nentire/cli/constants.go\nentire/cli/doctor.go\nentire/cli/doctor_test.go\nentire/cli/errors.go\nentire/cli/explain.go\nentire/cli/explain_test.go\nentire/cli/fetch_no_config_p",
+      "output_tokens": 3095,
+      "duration_ms": 0.9241104125976562,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/hooks.go"
+      },
+      "output": "cmd/entire/cli/hooks.go:1-80\n  1| package cli\n  2| \n  3| import (\n  4| \t\"encoding/json\"\n  5| \t\"errors\"\n  6| \t\"fmt\"\n  7| \t\"io\"\n  8| \n  9| \t\"github.com/entireio/cli/cmd/entire/cli/strategy\"\n  10| )\n  11| \n  12| // TaskHookInput represents the JSON input from PreToolUse[Task] hook\n  13| type TaskHookInput struct {\n  14| \tSessionID      string          `json:\"session_id\"`\n  15| \tTranscriptPath string          `json:\"transcript_path\"`\n  16| \tToolUseID      string          `json:\"tool_use_id\"`\n  17| \t",
+      "output_tokens": 2759,
+      "duration_ms": 0.33593177795410156,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/setup_subagents.go"
+      },
+      "output": "cmd/entire/cli/setup_subagents.go:1-80\n  1| package cli\n  2| \n  3| import (\n  4| \t\"bytes\"\n  5| \t\"context\"\n  6| \t\"errors\"\n  7| \t\"fmt\"\n  8| \t\"io\"\n  9| \t\"os\"\n  10| \t\"path/filepath\"\n  11| \t\"strings\"\n  12| \n  13| \t\"github.com/entireio/cli/cmd/entire/cli/agent\"\n  14| \t\"github.com/entireio/cli/cmd/entire/cli/agent/types\"\n  15| \t\"github.com/entireio/cli/cmd/entire/cli/paths\"\n  16| )\n  17| \n  18| const entireManagedSearchSubagentMarker = \"ENTIRE-MANAGED SEARCH SUBAGENT v1\"\n  19| \n  20| type searchSubagen",
+      "output_tokens": 3153,
+      "duration_ms": 0.1480579376220703,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/hooks.go",
+        "start_line": 80,
+        "max_lines": 100
+      },
+      "output": "cmd/entire/cli/hooks.go:80-179\n  80| \t\tAgentID:   raw.ToolResponse.AgentID,\n  81| \t\tToolInput: raw.ToolInput,\n  82| \t}, nil\n  83| }\n  84| \n  85| // logPreTaskHookContext logs the PreToolUse[Task] hook context to the writer\n  86| func logPreTaskHookContext(w io.Writer, input *TaskHookInput) {\n  87| \t_, _ = fmt.Fprintln(w, \"[entire] PreToolUse[Task] hook invoked\")\n  88| \t_, _ = fmt.Fprintf(w, \"  Session ID: %s\\n\", input.SessionID)\n  89| \t_, _ = fmt.Fprintf(w, \"  Tool Use ID: %s\\n\", input.ToolUseID",
+      "output_tokens": 4513,
+      "duration_ms": 0.3325939178466797,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/lifecycle.go"
+      },
+      "output": "cmd/entire/cli/lifecycle.go:1-80\n  1| // lifecycle.go implements the generic lifecycle event dispatcher.\n  2| // It routes normalized events from any agent to the appropriate framework actions.\n  3| //\n  4| // The dispatcher inverts the current flow from \"agent handler calls framework functions\"\n  5| // to \"framework dispatcher calls agent methods.\" Agents are passive data providers;\n  6| // the dispatcher handles all orchestration: state transitions, strategy calls,\n  7| // file change detectio",
+      "output_tokens": 3358,
+      "duration_ms": 0.347137451171875,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/lifecycle.go",
+        "start_line": 80,
+        "max_lines": 120
+      },
+      "output": "cmd/entire/cli/lifecycle.go:80-199\n  80| \n  81| \t// Build informational message \u2014 warn early if repo has no commits yet,\n  82| \t// since checkpoints require at least one commit to work.\n  83| \tmessage := sessionStartMessage(ag.Name(), false)\n  84| \tif repo, err := strategy.OpenRepository(ctx); err == nil && strategy.IsEmptyRepository(repo) {\n  85| \t\tmessage = sessionStartMessage(ag.Name(), true)\n  86| \t}\n  87| \n  88| \t// Check for concurrent sessions and append count if any\n  89| \t_, countSessio",
+      "output_tokens": 5834,
+      "duration_ms": 0.4761219024658203,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "handleLifecycleSubagentEnd\\|handleLifecycleSubagentStart",
+        "path_glob": "cmd/entire/cli/lifecycle.go"
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 13.11802864074707,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "func handleLifecycleSubagent",
+        "path_glob": "cmd/entire/cli/lifecycle.go"
+      },
+      "output": "./cmd/entire/cli/lifecycle.go\n  662-662:\n    662| \n  664-664:\n    664| func handleLifecycleSubagentStart(ctx context.Context, ag agent.Agent, event *agent.Event) error {\n  666-666:\n    666| \tlogging.Info(logCtx, \"subagent started\",",
+      "output_tokens": 231,
+      "duration_ms": 13.928890228271484,
+      "turn_number": 10
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/lifecycle.go",
+        "start_line": 662,
+        "max_lines": 150
+      },
+      "output": "cmd/entire/cli/lifecycle.go:662-811\n  662| \n  663| // handleLifecycleSubagentStart handles subagent start: captures pre-task state.\n  664| func handleLifecycleSubagentStart(ctx context.Context, ag agent.Agent, event *agent.Event) error {\n  665| \tlogCtx := logging.WithAgent(logging.WithComponent(ctx, \"lifecycle\"), ag.Name())\n  666| \tlogging.Info(logCtx, \"subagent started\",\n  667| \t\tslog.String(\"event\", event.Type.String()),\n  668| \t\tslog.String(\"session_id\", event.SessionID),\n  669| \t\tslog.String",
+      "output_tokens": 6828,
+      "duration_ms": 0.7061958312988281,
+      "turn_number": 11
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "func.*SaveTaskStep"
+      },
+      "output": "./cmd/entire/cli/strategy/manual_commit_git.go\n  188-190:\n    188| // SaveTaskStep saves a task step checkpoint to the shadow branch.\n    189| // Uses checkpoint.GitStore.WriteTemporaryTask for git operations.\n    190| func (s *ManualCommitStrategy) SaveTaskStep(ctx context.Context, step TaskStepContext) error {\n  192-192:\n    192| \tif err != nil {",
+      "output_tokens": 350,
+      "duration_ms": 22.490739822387695,
+      "turn_number": 12
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "shadow branch\\|shadowBranch\\|ShadowBranch\\|entire/shadow\\|entire/session",
+        "path_glob": "cmd/entire/cli/*.go",
+        "max_files": 5
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 11.688232421875,
+      "turn_number": 12
+    }
+  ],
+  "total_tool_calls": 23,
+  "total_turns": 12,
+  "wall_clock_ms": 41706.90417289734,
+  "input_tokens": 129209,
+  "output_tokens": 1654,
+  "tool_output_tokens": 49197,
+  "total_cost_usd": 0.412437,
+  "first_call_tool": "list_dir",
+  "first_call_produced_file": true,
+  "retry_count": 0,
+  "error": "",
+  "total_tool_duration_ms": 141.3860321044922,
+  "tool_execution_share": 0.0033899910556384563,
+  "search_call_count": 6,
+  "avg_search_code_duration_ms": 16.642014185587566,
+  "median_search_code_duration_ms": 15.575528144836426,
+  "avg_read_code_duration_ms": 0.35610198974609375,
+  "median_read_code_duration_ms": 0.3389120101928711
+}

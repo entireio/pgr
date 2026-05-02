@@ -1,0 +1,269 @@
+{
+  "repeat": 0,
+  "task_id": "02d49af5bfe0",
+  "repo": "entireio-cli",
+  "task_type": "debug_or_validation",
+  "condition": "baseline",
+  "prompt": "can you look through the tests, we should have one that validates commits during a session (made by claude) are getting checkpoint trailers and condension works, or? should be integration tests?",
+  "answer": "Good, I now have a solid complete picture. Here's what exists:\n\n---\n\n## \u2705 Yes \u2014 both are covered, and quite thoroughly. Here's the map:\n\n### Agent commits during a session \u2192 checkpoint trailers\n\nThere are multiple integration tests covering this exact scenario, all in `e2e/tests/`:\n\n| Test | File | What it validates |\n|---|---|---|\n| `TestSingleSessionAgentCommitInTurn` | `single_session_test.go:69` | Agent creates a file and commits it in-turn; expects checkpoint trailer + checkpoint on `entire/checkpoints/v1` |\n| `TestSingleSessionSubagentCommitInTurn` | `single_session_test.go:92` | Same but via a subagent |\n| `TestRapidSequentialCommits` | `edge_cases_test.go:130` | Agent makes 3 back-to-back commits; each of `HEAD`, `HEAD~1`, `HEAD~2` must have a distinct checkpoint trailer |\n| `TestAgentCommitsMidTurnUserCommitsRemainder` | `edge_cases_test.go:161` | Agent commits mid-turn, user commits the leftover \u2014 both get valid trailers with distinct checkpoint IDs |\n| `TestAgentContinuesAfterCommit` | `edge_cases_test.go:20` | Agent commits, then a second prompt runs and user commits that too \u2014 two distinct checkpoint IDs |\n| `TestAgentAmendsCommit` | `edge_cases_test.go:64` | Agent commits then amends; amended commit must still carry a valid checkpoint trailer |\n| `TestDirtyWorkingTree` | `edge_cases_test.go:95` | Agent commits its file while human has uncommitted changes; `AssertCommitLinkedToCheckpoint` on HEAD |\n| `TestMidTurnCommit_DifferentFilesThanPreviousTurn` | `mid_turn_commit_test.go` | Regression: mid-turn agent commit on files *different* from the previous turn's tracked files still gets a checkpoint |\n| `TestSubagentCommitFlow` | `subagent_commit_flow_test.go` | Full deep checkpoint metadata validation (cli_version, strategy, sessions, agent field) on an agent commit |\n\n### Condensation\n\nCondensation is also covered \u2014 the terminology used in the codebase is \"condensation\" (not \"compaction\"):\n\n| Test | File | What it validates |\n|---|---|---|\n| `TestTrailerRemovalSkipsCondensation` | `session_lifecycle_test.go:90` | When user removes the `Entire-Checkpoint` trailer (by bypassing hooks), no condensation happens \u2014 checkpoint branch does not advance |\n| `TestEndedSessionUserCommitsAfterExit` | `session_lifecycle_test.go:18` | After session ends, user commits still trigger condensation and get trailers; shadow branches are cleaned up afterward |\n| `TestSessionDepletedManualEditNoCheckpoint` | `session_lifecycle_test.go:53` | Once all session files are committed, a subsequent manual edit does NOT trigger condensation |\n| `WaitForNoShadowBranches` (used broadly) | `testutil/assertions.go:137` | Shadow branch cleanup \u2014 which trails condensation \u2014 is polled for in almost every test |\n\n### What's notably absent\n\nOne scenario that **isn't directly tested** as its own case: **agent makes multiple commits across multiple turns within a single session and condensation correctly produces distinct, sequential checkpoint entries for each** \u2014 the `TestRapidSequentialCommits` comes closest but it's a single-prompt single-turn burst. If you wanted a test that exercises multi-turn \u2192 multi-commit \u2192 multi-checkpoint condensation ordering end-to-end, that gap exists. But the individual pieces (trailer per commit, condensation on commit, condensation skipped when trailer absent) are all well covered.",
+  "tool_calls": [
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "glob": "**/*test*",
+        "max_results": 50
+      },
+      "output": "./cmd/entire/cli/agent/agent_test.go\n./cmd/entire/cli/agent/architecture_test.go\n./cmd/entire/cli/agent/capabilities_test.go\n./cmd/entire/cli/agent/chunking_test.go\n./cmd/entire/cli/agent/claudecode/claude_test.go\n./cmd/entire/cli/agent/claudecode/hooks_test.go\n./cmd/entire/cli/agent/claudecode/lifecycle_test.go\n./cmd/entire/cli/agent/claudecode/response_test.go\n./cmd/entire/cli/agent/claudecode/transcript_test.go\n./cmd/entire/cli/agent/codex/codex_test.go\n./cmd/entire/cli/agent/codex/hooks_test",
+      "output_tokens": 2347,
+      "duration_ms": 15.360116958618164,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "checkpoint",
+        "file_type": "go",
+        "max_files": 15
+      },
+      "output": "./e2e/testutil/artifacts.go\n  45-49:\n    45| }\n    46| \n    47| // CaptureArtifacts captures git state, checkpoint metadata, entire logs,\n    48| // and console output to the artifact directory.\n    49| func CaptureArtifacts(t *testing.T, s *RepoState) {\n  56-61:\n    56| \twriteArtifact(t, dir, \"git-tree.txt\",\n    57| \t\tgitOutputSafe(s.Dir, \"ls-tree\", \"-r\", \"HEAD\")+\n    58| \t\t\t\"\\n--- entire/checkpoints/v1 ---\\n\"+\n    59| \t\t\tgitOutputSafe(s.Dir, \"ls-tree\", \"-r\", \"entire/checkpoints/v1\"))\n    60| \n",
+      "output_tokens": 9208,
+      "duration_ms": 28.736114501953125,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "condensation\\|condense\\|condense",
+        "file_type": "go",
+        "max_files": 15
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 17.529726028442383,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": "e2e/tests"
+      },
+      "output": "attribution_test.go\ncheckpoint_metadata_test.go\ncodex_resume_test.go\ndeleted_files_test.go\ndisable_test.go\nedge_cases_test.go\nexisting_files_test.go\nexternal_agent_test.go\nfactory_hooks_test.go\ninteractive_test.go\nmain_test.go\nmid_turn_commit_test.go\nmulti_session_test.go\nresume_remote_test.go\nresume_test.go\nrewind_test.go\nsession_lifecycle_test.go\nsingle_session_test.go\nsplit_commits_test.go\nstash_workflows_test.go\nsubagent_commit_flow_test.go",
+      "output_tokens": 448,
+      "duration_ms": 0.17213821411132812,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "compact\\|Compact\\|condensation\\|Condensation",
+        "file_type": "go",
+        "max_files": 15
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 18.031835556030273,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "trailer",
+        "file_type": "go",
+        "max_files": 15
+      },
+      "output": "./e2e/testutil/repo.go\n  94-98:\n    94| \t}\n    95| \t// commit_linking=always ensures the prepare-commit-msg hook adds the\n    96| \t// Entire-Checkpoint trailer unconditionally. This is needed because\n    97| \t// interactive agents run inside tmux (hasTTY()=true) but can't respond to\n    98| \t// prompts, and content detection may fail on the first checkpoint when no\n  710-719:\n    710| }\n    711| \n    712| // GetCheckpointTrailer extracts the Entire-Checkpoint trailer value from a\n    713| // cod",
+      "output_tokens": 8688,
+      "duration_ms": 16.793012619018555,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/tests/session_lifecycle_test.go"
+      },
+      "output": "e2e/tests/session_lifecycle_test.go:1-80\n  1| //go:build e2e\n  2| \n  3| package tests\n  4| \n  5| import (\n  6| \t\"context\"\n  7| \t\"os\"\n  8| \t\"path/filepath\"\n  9| \t\"testing\"\n  10| \t\"time\"\n  11| \n  12| \t\"github.com/entireio/cli/e2e/testutil\"\n  13| \t\"github.com/stretchr/testify/assert\"\n  14| )\n  15| \n  16| // TestEndedSessionUserCommitsAfterExit tests that after an agent session ends\n  17| // naturally, user commits still get checkpoint trailers.\n  18| func TestEndedSessionUserCommitsAfterExit(t *tes",
+      "output_tokens": 3592,
+      "duration_ms": 0.2999305725097656,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/tests/subagent_commit_flow_test.go"
+      },
+      "output": "e2e/tests/subagent_commit_flow_test.go:1-47\n  1| //go:build e2e\n  2| \n  3| package tests\n  4| \n  5| import (\n  6| \t\"context\"\n  7| \t\"testing\"\n  8| \t\"time\"\n  9| \n  10| \t\"github.com/entireio/cli/e2e/testutil\"\n  11| \t\"github.com/stretchr/testify/assert\"\n  12| )\n  13| \n  14| // TestSubagentCommitFlow: agent creates a file via subagent, user commits.\n  15| // Validates the full checkpoint flow: trailer, metadata (cli_version, strategy,\n  16| // sessions), session metadata (agent field), and checkpoint",
+      "output_tokens": 2085,
+      "duration_ms": 0.13494491577148438,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/tests/session_lifecycle_test.go",
+        "start_line": 80,
+        "end_line": 130
+      },
+      "output": "e2e/tests/session_lifecycle_test.go:80-112\n  80| \t\tcpBranchAfterManual := testutil.GitOutput(t, s.Dir, \"rev-parse\", \"entire/checkpoints/v1\")\n  81| \t\tassert.Equal(t, cpBranchAfterAgent, cpBranchAfterManual,\n  82| \t\t\t\"manual edit after session depletion should not advance checkpoint branch\")\n  83| \t\ttestutil.AssertNoCheckpointTrailer(t, s.Dir, \"HEAD\")\n  84| \t\ttestutil.WaitForNoShadowBranches(t, s.Dir, 10*time.Second)\n  85| \t})\n  86| }\n  87| \n  88| // TestTrailerRemovalSkipsCondensation tests that ",
+      "output_tokens": 1643,
+      "duration_ms": 0.3800392150878906,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/tests/single_session_test.go"
+      },
+      "output": "e2e/tests/single_session_test.go:1-80\n  1| //go:build e2e\n  2| \n  3| package tests\n  4| \n  5| import (\n  6| \t\"context\"\n  7| \t\"os\"\n  8| \t\"path/filepath\"\n  9| \t\"testing\"\n  10| \t\"time\"\n  11| \n  12| \t\"github.com/entireio/cli/e2e/testutil\"\n  13| \t\"github.com/stretchr/testify/assert\"\n  14| )\n  15| \n  16| // TestHumanOnlyChangesAndCommits: human creates a file and commits without any\n  17| // agent interaction. No checkpoint should be created.\n  18| func TestHumanOnlyChangesAndCommits(t *testing.T) {\n ",
+      "output_tokens": 3433,
+      "duration_ms": 12.790918350219727,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/tests/single_session_test.go",
+        "start_line": 80,
+        "end_line": 114
+      },
+      "output": "e2e/tests/single_session_test.go:80-114\n  80| \t\ttestutil.AssertCheckpointAdvanced(t, s)\n  81| \n  82| \t\tcpID := testutil.AssertHasCheckpointTrailer(t, s.Dir, \"HEAD\")\n  83| \t\ttestutil.AssertCheckpointExists(t, s.Dir, cpID)\n  84| \t\ttestutil.AssertCheckpointInLastN(t, s.Dir, cpID, 2)\n  85| \t\ttestutil.WaitForNoShadowBranches(t, s.Dir, 10*time.Second)\n  86| \t})\n  87| }\n  88| \n  89| // TestSingleSessionSubagentCommitInTurn: one prompt with subagent creates a file and commits it.\n  90| // Expects both a",
+      "output_tokens": 1918,
+      "duration_ms": 0.2510547637939453,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "condense\\|Condense\\|condensation\\|Condensation",
+        "max_files": 15
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 19.70982551574707,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "compact\\|Compact",
+        "file_type": "go",
+        "max_files": 15,
+        "max_matches_per_file": 3
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 17.193317413330078,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/tests/mid_turn_commit_test.go"
+      },
+      "output": "e2e/tests/mid_turn_commit_test.go:1-62\n  1| //go:build e2e\n  2| \n  3| package tests\n  4| \n  5| import (\n  6| \t\"context\"\n  7| \t\"testing\"\n  8| \t\"time\"\n  9| \n  10| \t\"github.com/entireio/cli/e2e/testutil\"\n  11| )\n  12| \n  13| // TestMidTurnCommit_DifferentFilesThanPreviousTurn: Turn 1 creates file A\n  14| // (tracked via Stop checkpoint), Turn 2 creates+commits different files B,C.\n  15| // Validates that the mid-turn commit gets a checkpoint on entire/checkpoints/v1\n  16| // even though the committ",
+      "output_tokens": 3279,
+      "duration_ms": 0.28204917907714844,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "shouldCondense\\|condenseSession\\|doCondense\\|runCondense",
+        "file_type": "go",
+        "max_files": 10
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 17.92311668395996,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/tests/edge_cases_test.go"
+      },
+      "output": "e2e/tests/edge_cases_test.go:1-80\n  1| //go:build e2e\n  2| \n  3| package tests\n  4| \n  5| import (\n  6| \t\"context\"\n  7| \t\"fmt\"\n  8| \t\"os\"\n  9| \t\"path/filepath\"\n  10| \t\"testing\"\n  11| \t\"time\"\n  12| \n  13| \t\"github.com/entireio/cli/e2e/agents\"\n  14| \t\"github.com/entireio/cli/e2e/testutil\"\n  15| \t\"github.com/stretchr/testify/assert\"\n  16| )\n  17| \n  18| // TestAgentContinuesAfterCommit: agent commits, then makes more changes in a\n  19| // second prompt. User commits those. Both commits should have ",
+      "output_tokens": 3847,
+      "duration_ms": 0.2701282501220703,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "shouldCondense\\|Condense\\|condense",
+        "file_type": "go",
+        "max_files": 10
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 15.957117080688477,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "condensation",
+        "file_type": "go",
+        "max_files": 10
+      },
+      "output": "./e2e/testutil/assertions.go\n  137-141:\n    137| // WaitForNoShadowBranches polls until all shadow branches are cleaned up or\n    138| // the timeout expires. Shadow branch cleanup can lag slightly behind checkpoint\n    139| // condensation (carry-forward creates intermediate branches that are deleted\n    140| // asynchronously).\n    141| func WaitForNoShadowBranches(t *testing.T, dir string, timeout time.Duration) {\n\n./e2e/entire/entire.go\n  31-31:\n    31| \tCondensationID   string `json:\"conden",
+      "output_tokens": 5159,
+      "duration_ms": 27.72212028503418,
+      "turn_number": 10
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "AgentCommit\\|agent.*commit\\|commit.*agent",
+        "file_type": "go",
+        "path_glob": "e2e/**/*\"",
+        "max_files": 10
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 11.152029037475586,
+      "turn_number": 10
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "agent.*commit\\|AgentCommits\\|agent commit",
+        "file_type": "go",
+        "path_glob": "e2e/tests/*.go",
+        "max_files": 10
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 18.77307891845703,
+      "turn_number": 11
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/tests/edge_cases_test.go",
+        "start_line": 80,
+        "end_line": 195
+      },
+      "output": "e2e/tests/edge_cases_test.go:80-195\n  80| \t\t\tt.Fatalf(\"agent prompt 2 failed: %v\", err)\n  81| \t\t}\n  82| \n  83| \t\ttestutil.AssertFileExists(t, s.Dir, \"docs/red.md\")\n  84| \t\ttestutil.AssertFileExists(t, s.Dir, \"docs/blue.md\")\n  85| \n  86| \t\t// The amended commit should still carry a valid checkpoint trailer.\n  87| \t\tcpID := testutil.AssertHasCheckpointTrailer(t, s.Dir, \"HEAD\")\n  88| \t\ttestutil.AssertCheckpointExists(t, s.Dir, cpID)\n  89| \t\ttestutil.WaitForNoShadowBranches(t, s.Dir, 10*time.Second)",
+      "output_tokens": 5819,
+      "duration_ms": 0.3600120544433594,
+      "turn_number": 11
+    }
+  ],
+  "total_tool_calls": 21,
+  "total_turns": 12,
+  "wall_clock_ms": 56754.0488243103,
+  "input_tokens": 159527,
+  "output_tokens": 2735,
+  "tool_output_tokens": 51602,
+  "total_cost_usd": 0.519606,
+  "first_call_tool": "find_files",
+  "first_call_produced_file": true,
+  "retry_count": 0,
+  "error": "",
+  "total_tool_duration_ms": 239.8226261138916,
+  "tool_execution_share": 0.004225647880317656,
+  "search_call_count": 11,
+  "read_call_count": 8,
+  "avg_search_code_duration_ms": 19.04739033092152,
+  "median_search_code_duration_ms": 17.92311668395996
+}

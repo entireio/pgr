@@ -1,0 +1,234 @@
+{
+  "repeat": 0,
+  "task_id": "9d54ae3daa05",
+  "repo": "entireio-cli",
+  "task_type": "repo_task",
+  "condition": "baseline",
+  "prompt": "Can you confirm things are working correctly for \"entire status --detailed\"?",
+  "answer": "",
+  "tool_calls": [
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "entire status --detailed"
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 28.615951538085938,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "entire status"
+      },
+      "output": "./CLAUDE.md\n  366-370:\n    366| - Rewind restores files from shadow branch commit tree (does not use `git reset`)\n    367| - **Location-independent transcript resolution** - transcript paths are always computed dynamically from the current repo location (via `agent.GetSessionDir` + `agent.ResolveSessionFile`), never stored in checkpoint metadata. This ensures restore/rewind works after repo relocation or across machines.\n    368| - **Copilot token scoping** - Copilot CLI `session.shutdown` conta",
+      "output_tokens": 4983,
+      "duration_ms": 15.59591293334961,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "--detailed",
+        "file_type": "go"
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 15.030860900878906,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "glob": "**/status*.go"
+      },
+      "output": "./cmd/entire/cli/status.go\n./cmd/entire/cli/status_style.go\n./cmd/entire/cli/status_test.go",
+      "output_tokens": 91,
+      "duration_ms": 9.493827819824219,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "./cmd/entire/cli/status.go"
+      },
+      "output": "./cmd/entire/cli/status.go:1-80\n  1| package cli\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"errors\"\n  6| \t\"fmt\"\n  7| \t\"io\"\n  8| \t\"io/fs\"\n  9| \t\"os\"\n  10| \t\"os/exec\"\n  11| \t\"path/filepath\"\n  12| \t\"sort\"\n  13| \t\"strings\"\n  14| \t\"time\"\n  15| \n  16| \t\"github.com/entireio/cli/cmd/entire/cli/paths\"\n  17| \t\"github.com/entireio/cli/cmd/entire/cli/session\"\n  18| \t\"github.com/entireio/cli/cmd/entire/cli/settings\"\n  19| \t\"github.com/entireio/cli/cmd/entire/cli/strategy\"\n  20| \t\"github.com/entireio/cli/cmd/",
+      "output_tokens": 2712,
+      "duration_ms": 0.5178451538085938,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "./cmd/entire/cli/status_test.go"
+      },
+      "output": "./cmd/entire/cli/status_test.go:1-80\n  1| package cli\n  2| \n  3| import (\n  4| \t\"bytes\"\n  5| \t\"context\"\n  6| \t\"os\"\n  7| \t\"path/filepath\"\n  8| \t\"strings\"\n  9| \t\"testing\"\n  10| \t\"time\"\n  11| \n  12| \t\"github.com/charmbracelet/lipgloss\"\n  13| \t\"github.com/entireio/cli/cmd/entire/cli/agent\"\n  14| \t\"github.com/entireio/cli/cmd/entire/cli/agent/types\"\n  15| \t\"github.com/entireio/cli/cmd/entire/cli/session\"\n  16| \n  17| \t\"github.com/go-git/go-git/v6\"\n  18| \t\"github.com/go-git/go-git/v6/plumbing/object\"\n",
+      "output_tokens": 2518,
+      "duration_ms": 0.5030632019042969,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "./cmd/entire/cli/status.go",
+        "start_line": 80,
+        "max_lines": 120
+      },
+      "output": "./cmd/entire/cli/status.go:80-199\n  80| \t}\n  81| \n  82| \t// Short output: just show the effective/merged state\n  83| \ts, err := LoadEntireSettings(ctx)\n  84| \tif err != nil {\n  85| \t\treturn fmt.Errorf(\"failed to load settings: %w\", err)\n  86| \t}\n  87| \n  88| \tfmt.Fprintln(w, formatSettingsStatusShort(ctx, s, sty))\n  89| \tif s.Enabled {\n  90| \t\twriteActiveSessions(ctx, w, sty)\n  91| \t}\n  92| \n  93| \treturn nil\n  94| }\n  95| \n  96| // runStatusDetailed shows the effective status plus detailed stat",
+      "output_tokens": 4306,
+      "duration_ms": 0.6060600280761719,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "./cmd/entire/cli/status_test.go",
+        "start_line": 80,
+        "max_lines": 120
+      },
+      "output": "./cmd/entire/cli/status_test.go:80-199\n  80| \theadPath := filepath.Join(dir, \".git\", \"HEAD\")\n  81| \tif err := os.WriteFile(headPath, []byte(hash.String()+\"\\n\"), 0o644); err != nil {\n  82| \t\tt.Fatalf(\"write HEAD: %v\", err)\n  83| \t}\n  84| \n  85| \tbranch := resolveWorktreeBranch(context.Background(), dir)\n  86| \tif branch != \"HEAD\" {\n  87| \t\tt.Errorf(\"resolveWorktreeBranch() = %q, want %q for detached HEAD\", branch, \"HEAD\")\n  88| \t}\n  89| }\n  90| \n  91| func TestResolveWorktreeBranch_WorktreeGitFil",
+      "output_tokens": 5044,
+      "duration_ms": 0.48923492431640625,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "./cmd/entire/cli/status_test.go",
+        "start_line": 199,
+        "max_lines": 150
+      },
+      "output": "./cmd/entire/cli/status_test.go:199-348\n  199| \n  200| \tvar stdout bytes.Buffer\n  201| \tif err := runStatus(context.Background(), &stdout, false); err != nil {\n  202| \t\tt.Fatalf(\"runStatus() error = %v\", err)\n  203| \t}\n  204| \n  205| \tif !strings.Contains(stdout.String(), \"Enabled\") {\n  206| \t\tt.Errorf(\"Expected output to show 'Enabled', got: %s\", stdout.String())\n  207| \t}\n  208| }\n  209| \n  210| func TestRunStatus_Disabled(t *testing.T) {\n  211| \tsetupTestRepo(t)\n  212| \twriteSettings(t, testS",
+      "output_tokens": 6146,
+      "duration_ms": 0.7181167602539062,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "./cmd/entire/cli/status_test.go",
+        "start_line": 348,
+        "max_lines": 120
+      },
+      "output": "./cmd/entire/cli/status_test.go:348-467\n  348| \t\twant     string\n  349| \t}{\n  350| \t\t{\"just now\", 10 * time.Second, \"just now\"},\n  351| \t\t{\"30 seconds\", 30 * time.Second, \"just now\"},\n  352| \t\t{\"1 minute\", 1 * time.Minute, \"1m ago\"},\n  353| \t\t{\"5 minutes\", 5 * time.Minute, \"5m ago\"},\n  354| \t\t{\"59 minutes\", 59 * time.Minute, \"59m ago\"},\n  355| \t\t{\"1 hour\", 1 * time.Hour, \"1h ago\"},\n  356| \t\t{\"3 hours\", 3 * time.Hour, \"3h ago\"},\n  357| \t\t{\"23 hours\", 23 * time.Hour, \"23h ago\"},\n  358| \t\t{\"1 day\",",
+      "output_tokens": 4690,
+      "duration_ms": 0.6260871887207031,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "./cmd/entire/cli/status.go",
+        "start_line": 199,
+        "max_lines": 130
+      },
+      "output": "./cmd/entire/cli/status.go:199-328\n  199| \t\treturn \"just now\"\n  200| \tcase d < time.Hour:\n  201| \t\tm := int(d.Minutes())\n  202| \t\treturn fmt.Sprintf(\"%dm ago\", m)\n  203| \tcase d < 24*time.Hour:\n  204| \t\th := int(d.Hours())\n  205| \t\treturn fmt.Sprintf(\"%dh ago\", h)\n  206| \tdefault:\n  207| \t\tdays := int(d.Hours() / 24)\n  208| \t\treturn fmt.Sprintf(\"%dd ago\", days)\n  209| \t}\n  210| }\n  211| \n  212| // worktreeGroup groups sessions by worktree path for display.\n  213| type worktreeGroup struct {\n  21",
+      "output_tokens": 4127,
+      "duration_ms": 0.3211498260498047,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "./cmd/entire/cli/status.go",
+        "start_line": 328,
+        "max_lines": 101
+      },
+      "output": "./cmd/entire/cli/status.go:328-428\n  328| \n  329| \t\t\tif st.LastInteractionTime != nil && st.LastInteractionTime.Sub(st.StartedAt) > time.Minute {\n  330| \t\t\t\tstats = append(stats, activeTimeDisplay(st.LastInteractionTime))\n  331| \t\t\t}\n  332| \n  333| \t\t\tif t := totalTokens(st.TokenUsage); t > 0 {\n  334| \t\t\t\tstats = append(stats, \"tokens \"+formatTokenCount(t))\n  335| \t\t\t}\n  336| \n  337| \t\t\tstatsLine := strings.Join(stats, sty.render(sty.dim, \" \u00b7 \"))\n  338| \t\t\tif st.IsStuckActive() {\n  339| \t\t\t\tfmt.",
+      "output_tokens": 3895,
+      "duration_ms": 0.49567222595214844,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "./cmd/entire/cli/status_test.go",
+        "start_line": 467,
+        "max_lines": 120
+      },
+      "output": "./cmd/entire/cli/status_test.go:467-586\n  467| \t\t\t}\n  468| \t\t}\n  469| \t}\n  470| \n  471| \t// Should show \"active 5m ago\" for session with LastInteractionTime that differs from StartedAt\n  472| \tif !strings.Contains(output, \"active 5m ago\") {\n  473| \t\tt.Errorf(\"Expected 'active 5m ago' for session with LastInteractionTime, got: %s\", output)\n  474| \t}\n  475| \n  476| \t// Session started 15m ago with no LastInteractionTime should NOT show \"active\" in stats\n  477| \tfor _, line := range lines {\n  478| ",
+      "output_tokens": 4707,
+      "duration_ms": 0.5249977111816406,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "./cmd/entire/cli/status_test.go",
+        "start_line": 586,
+        "max_lines": 120
+      },
+      "output": "./cmd/entire/cli/status_test.go:586-705\n  586| \n  587| func TestFormatTokenCount(t *testing.T) {\n  588| \tt.Parallel()\n  589| \n  590| \ttests := []struct {\n  591| \t\tinput int\n  592| \t\twant  string\n  593| \t}{\n  594| \t\t{0, \"0\"},\n  595| \t\t{500, \"500\"},\n  596| \t\t{999, \"999\"},\n  597| \t\t{1000, \"1k\"},\n  598| \t\t{1200, \"1.2k\"},\n  599| \t\t{4800, \"4.8k\"},\n  600| \t\t{14300, \"14.3k\"},\n  601| \t\t{100000, \"100k\"},\n  602| \t}\n  603| \n  604| \tfor _, tt := range tests {\n  605| \t\tt.Run(tt.want, func(t *testing.T) {\n  60",
+      "output_tokens": 3401,
+      "duration_ms": 0.637054443359375,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "./cmd/entire/cli/status_test.go",
+        "start_line": 705,
+        "max_lines": 120
+      },
+      "output": "./cmd/entire/cli/status_test.go:705-824\n  705| \t\tt.Parallel()\n  706| \t\tif got := activeTimeDisplay(nil); got != \"\" {\n  707| \t\t\tt.Errorf(\"activeTimeDisplay(nil) = %q, want empty\", got)\n  708| \t\t}\n  709| \t})\n  710| \n  711| \tt.Run(\"recent\", func(t *testing.T) {\n  712| \t\tt.Parallel()\n  713| \t\tnow := time.Now()\n  714| \t\tif got := activeTimeDisplay(&now); got != \"active now\" {\n  715| \t\t\tt.Errorf(\"activeTimeDisplay(now) = %q, want 'active now'\", got)\n  716| \t\t}\n  717| \t})\n  718| \n  719| \tt.Run(\"older\",",
+      "output_tokens": 4002,
+      "duration_ms": 0.7388591766357422,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "./cmd/entire/cli/status_test.go",
+        "start_line": 824,
+        "max_lines": 120
+      },
+      "output": "./cmd/entire/cli/status_test.go:824-943\n  824| \tstyOn := statusStyles{colorEnabled: true}\n  825| \tgot = styOn.render(style, \"test\")\n  826| \tif !strings.Contains(got, \"test\") {\n  827| \t\tt.Errorf(\"render(colorEnabled=true) should contain 'test', got: %q\", got)\n  828| \t}\n  829| }\n  830| \n  831| func TestSectionRule_PlainText(t *testing.T) {\n  832| \tt.Parallel()\n  833| \n  834| \tsty := statusStyles{colorEnabled: false, width: 40}\n  835| \trule := sty.sectionRule(\"Active Sessions\", 40)\n  836| \n  837| \t",
+      "output_tokens": 4466,
+      "duration_ms": 0.5550384521484375,
+      "turn_number": 10
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "./cmd/entire/cli/status_test.go",
+        "start_line": 943,
+        "max_lines": 120
+      },
+      "output": "./cmd/entire/cli/status_test.go:943-1062\n  943| \t\tt.Errorf(\"sectionRule with narrow width should have at least one trailing dash, got: %q\", rule)\n  944| \t}\n  945| }\n  946| \n  947| func TestActiveTimeDisplay_Hours(t *testing.T) {\n  948| \tt.Parallel()\n  949| \n  950| \thoursAgo := time.Now().Add(-3 * time.Hour)\n  951| \tgot := activeTimeDisplay(&hoursAgo)\n  952| \tif got != \"active 3h ago\" {\n  953| \t\tt.Errorf(\"activeTimeDisplay(-3h) = %q, want 'active 3h ago'\", got)\n  954| \t}\n  955| }\n  956| \n  957| f",
+      "output_tokens": 4318,
+      "duration_ms": 0.7288455963134766,
+      "turn_number": 11
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "./cmd/entire/cli/status_test.go",
+        "start_line": 1062,
+        "max_lines": 120
+      },
+      "output": "./cmd/entire/cli/status_test.go:1062-1181\n  1062| \t}\n  1063| }\n  1064| \n  1065| func TestWriteActiveSessions_OmitsTokensWhenNoTokenData(t *testing.T) {\n  1066| \tsetupTestRepo(t)\n  1067| \n  1068| \tstore, err := session.NewStateStore(context.Background())\n  1069| \tif err != nil {\n  1070| \t\tt.Fatalf(\"NewStateStore() error = %v\", err)\n  1071| \t}\n  1072| \n  1073| \tnow := time.Now()\n  1074| \trecentInteraction := now.Add(-5 * time.Minute)\n  1075| \n  1076| \tstates := []*session.State{\n  1077| \t\t{\n  1078",
+      "output_tokens": 4103,
+      "duration_ms": 0.4811286926269531,
+      "turn_number": 12
+    }
+  ],
+  "total_tool_calls": 18,
+  "total_turns": 12,
+  "wall_clock_ms": 29204.97989654541,
+  "input_tokens": 167344,
+  "output_tokens": 1512,
+  "tool_output_tokens": 63543,
+  "total_cost_usd": 0.5247120000000001,
+  "first_call_tool": "search_code",
+  "first_call_produced_file": false,
+  "retry_count": 0,
+  "error": "",
+  "total_tool_duration_ms": 76.67970657348633,
+  "tool_execution_share": 0.002625569572213833,
+  "search_call_count": 3,
+  "avg_search_code_duration_ms": 19.747575124104817,
+  "median_search_code_duration_ms": 15.59591293334961,
+  "avg_read_code_duration_ms": 0.5673680986676898,
+  "median_read_code_duration_ms": 0.5400180816650391
+}

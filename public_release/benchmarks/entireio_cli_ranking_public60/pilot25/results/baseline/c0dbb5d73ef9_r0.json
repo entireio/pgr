@@ -1,0 +1,284 @@
+{
+  "repeat": 0,
+  "task_id": "c0dbb5d73ef9",
+  "repo": "entireio-cli",
+  "task_type": "debug_or_validation",
+  "condition": "baseline",
+  "prompt": "I still saw slow unit test performance after applying the fixes:",
+  "answer": "Now I have a comprehensive picture of all the slow test issues. Here is a detailed breakdown:\n\n---\n\n## Root Causes of Remaining Slow Unit Tests\n\nThere are **three distinct sources** of unnecessary `time.Sleep` calls across the unit/integration tests that weren't addressed by the previous fixes.\n\n---\n\n### 1. `perf/span_test.go` \u2014 Three `time.Sleep(10ms)` calls for duration assertions\n\n**Files:** `perf/span_test.go`, lines 59, 72, 77, 92\n\nThese tests use real `time.Sleep` to prove that a measured duration is non-zero or meets a minimum threshold. Since `Span.duration` is simply `time.Since(s.start)`, this can be tested without sleeping by **manually setting `start` to a point in the past**:\n\n```go\n// TestEnd_RecordsDuration \u2014 line 54\nfunc TestEnd_RecordsDuration(t *testing.T) {\n    t.Parallel()\n    ctx := context.Background()\n    _, span := Start(ctx, \"timed_op\")\n-   time.Sleep(10 * time.Millisecond)\n+   span.start = span.start.Add(-10 * time.Millisecond) // backdate start\n    span.End()\n    if span.duration < 10*time.Millisecond {\n        t.Errorf(\"span.duration = %v, want >= 10ms\", span.duration)\n    }\n}\n```\n\nSame pattern applies to `TestEnd_Idempotent` (lines 72, 77) and `TestEnd_AutoEndsChildren` (line 92). Because `Span.start` is an unexported field within the same `perf` package, these tests already have direct access to it and can write `span.start = ...` with no additional API changes.\n\n---\n\n### 2. `cmd/entire/cli/agent/cursor/lifecycle_test.go` \u2014 Two `time.Sleep(100ms)` calls in goroutines for `PrepareTranscript`\n\n**File:** `cmd/entire/cli/agent/cursor/lifecycle_test.go`, lines 691 and 715\n\n`TestPrepareTranscript_FileAppearsAfterDelay` and `TestPrepareTranscript_EmptyFileGrowsDuringPolling` both launch a goroutine that sleeps 100 ms before writing the file, while `PrepareTranscript` polls every 50 ms. The production code has `pollInterval = 50ms` and `maxWait = 5s` hardcoded as constants in `cursor.go` (lines 151\u2013152). This means each of these tests always burns at least 100 ms of wall time.\n\nThe fix is to make `pollInterval` and `maxWait` injectable (e.g., via functional options or a small config struct on `CursorAgent`) so tests can pass much smaller values like 1 ms / 50 ms respectively, and the goroutine delay can drop to 5 ms:\n\n```go\n// In cursor.go\ntype transcriptWaitConfig struct {\n    maxWait      time.Duration\n    pollInterval time.Duration\n}\n\nvar defaultTranscriptWaitConfig = transcriptWaitConfig{\n    maxWait:      5 * time.Second,\n    pollInterval: 50 * time.Millisecond,\n}\n```\n\nThen in the test:\n```go\n// TestPrepareTranscript_FileAppearsAfterDelay\nag := &CursorAgent{transcriptWait: transcriptWaitConfig{maxWait: 50*time.Millisecond, pollInterval: 1*time.Millisecond}}\ngo func() {\n-   time.Sleep(100 * time.Millisecond)\n+   time.Sleep(5 * time.Millisecond)\n    _ = os.WriteFile(path, ...)\n}()\n```\n\n---\n\n### 3. `cmd/entire/cli/integration_test/last_interaction_test.go` \u2014 Three `time.Sleep(10ms)` calls for timestamp ordering\n\n**File:** `cmd/entire/cli/integration_test/last_interaction_test.go`, lines 61, 102\n\n`TestLastInteractionTime_UpdatedOnSubsequentPrompts` and `TestLastInteractionTime_PreservedAcrossCheckpoints` sleep 10 ms between two simulated prompts solely to guarantee `LastInteractionTime` values are strictly ordered (`After`). The right fix is to make the timestamp injectable \u2014 either by accepting a `clock` interface or a `now func() time.Time` in `SimulateUserPromptSubmit` / the session state writer \u2014 so tests can advance a fake clock deterministically with zero wall time:\n\n```go\n// Use a fake clock in the test environment\nfakeClock := &fakeClock{t: time.Now()}\nenv := NewRepoWithCommit(t, WithClock(fakeClock))\n\n// First prompt\nenv.SimulateUserPromptSubmit(session.ID)\nfirstTime := fakeClock.Now()\n\nfakeClock.Advance(time.Millisecond) // instant, no sleep\n\n// Second prompt\nenv.SimulateUserPromptSubmit(session.ID)\n// guaranteed to be After(firstTime)\n```\n\n---\n\n### Summary Table\n\n| File | Line(s) | Sleep Duration | # Occurrences | Fix Strategy |\n|------|---------|---------------|---------------|--------------|\n| `perf/span_test.go` | 59, 72, 77, 92 | 10 ms each | 4 | Backdate `span.start` directly (same package access) |\n| `cursor/lifecycle_test.go` | 691, 715 | 100 ms each | 2 | Make `pollInterval`/`maxWait` injectable on `CursorAgent`; reduce goroutine delay |\n| `integration_test/last_interaction_test.go` | 61, 102 | 10 ms each | 2 (across 2 tests) | Inject a fake/controllable clock into the session state writer |\n\nThe highest-impact fix is **#2** (cursor lifecycle tests) since each of the two tests waits a full 100 ms. The `perf` and integration timestamp fixes are individually small but add up across repeated test runs and CI parallelism.",
+  "tool_calls": [
+    {
+      "tool_name": "list_dir",
+      "tool_input": {},
+      "output": ".allowed-licenses\n.claude/\n.codex/\n.devcontainer/\n.entire/\n.ferrata/\n.gemini/\n.git/\n.github/\n.gitignore\n.golangci.yaml\n.goreleaser.yaml\n.opencode/\n.vscode/\nAGENTS.md\nCHANGELOG.md\nCLAUDE.md\nCODE_OF_CONDUCT.md\nCONTRIBUTING.md\nLICENSE\nREADME.md\nSECURITY.md\nWINDOWS.md\ncmd/\ndocs/\ne2e/\ngo.mod\ngo.sum\nmise-tasks/\nmise.toml\nperf/\nredact/\nscripts/",
+      "output_tokens": 339,
+      "duration_ms": 0.3159046173095703,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "def test_",
+        "file_type": "python",
+        "max_files": 10
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 11.837005615234375,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "func Test",
+        "file_type": "go",
+        "max_files": 10
+      },
+      "output": "./perf/span_test.go\n  10-13:\n    10| )\n    11| \n    12| func TestStart_CreatesRootSpan(t *testing.T) {\n    13| \tt.Parallel()\n  31-34:\n    31| }\n    32| \n    33| func TestStart_NestsChildSpan(t *testing.T) {\n    34| \tt.Parallel()\n  52-55:\n    52| }\n    53| \n    54| func TestEnd_RecordsDuration(t *testing.T) {\n    55| \tt.Parallel()\n\n./e2e/agents/codex_test.go\n  8-10:\n    8| )\n    9| \n    10| func TestSeedCodexHome_WritesAPIKeyAuth(t *testing.T) {\n\n./e2e/tests/mid_turn_commit_test.go\n  27-29:\n    2",
+      "output_tokens": 4683,
+      "duration_ms": 47.796010971069336,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": "cmd"
+      },
+      "output": "entire/",
+      "output_tokens": 7,
+      "duration_ms": 0.1220703125,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": "perf"
+      },
+      "output": "context.go\nspan.go\nspan_test.go",
+      "output_tokens": 31,
+      "duration_ms": 0.051975250244140625,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": "cmd",
+        "recursive": true,
+        "max_results": 80
+      },
+      "output": "entire/main.go\nentire/cli/api_client.go\nentire/cli/attach.go\nentire/cli/attach_test.go\nentire/cli/attach_transcript.go\nentire/cli/bench_enable_test.go\nentire/cli/bench_test.go\nentire/cli/clean.go\nentire/cli/clean_test.go\nentire/cli/commit_message.go\nentire/cli/commit_message_test.go\nentire/cli/config.go\nentire/cli/config_test.go\nentire/cli/constants.go\nentire/cli/doctor.go\nentire/cli/doctor_test.go\nentire/cli/errors.go\nentire/cli/explain.go\nentire/cli/explain_test.go\nentire/cli/fetch_no_config_p",
+      "output_tokens": 2130,
+      "duration_ms": 3.7589073181152344,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "perf/span_test.go"
+      },
+      "output": "perf/span_test.go:1-80\n  1| package perf\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"errors\"\n  6| \t\"testing\"\n  7| \t\"time\"\n  8| \n  9| \t\"github.com/stretchr/testify/require\"\n  10| )\n  11| \n  12| func TestStart_CreatesRootSpan(t *testing.T) {\n  13| \tt.Parallel()\n  14| \tctx := context.Background()\n  15| \n  16| \tctx, span := Start(ctx, \"test_op\")\n  17| \trequire.NotNil(t, span, \"Start() returned nil span\")\n  18| \tif span.name != \"test_op\" {\n  19| \t\tt.Errorf(\"span.name = %q, want %q\", span.name, \"test_o",
+      "output_tokens": 2138,
+      "duration_ms": 0.3120899200439453,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "perf/span_test.go",
+        "start_line": 80,
+        "end_line": 381
+      },
+      "output": "perf/span_test.go:80-381\n  80| \tif span.duration != firstDuration {\n  81| \t\tt.Errorf(\"second End() changed duration from %v to %v\", firstDuration, span.duration)\n  82| \t}\n  83| }\n  84| \n  85| func TestEnd_AutoEndsChildren(t *testing.T) {\n  86| \tt.Parallel()\n  87| \tctx := context.Background()\n  88| \n  89| \tctx, parent := Start(ctx, \"parent\")\n  90| \t_, child := Start(ctx, \"child\")\n  91| \n  92| \ttime.Sleep(10 * time.Millisecond)\n  93| \tparent.End()\n  94| \n  95| \tif !child.ended {\n  96| \t\tt.Error(\"c",
+      "output_tokens": 9884,
+      "duration_ms": 0.6358623504638672,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "perf/span.go"
+      },
+      "output": "perf/span.go:1-80\n  1| package perf\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"fmt\"\n  6| \t\"log/slog\"\n  7| \t\"time\"\n  8| \n  9| \t\"github.com/entireio/cli/cmd/entire/cli/logging\"\n  10| )\n  11| \n  12| // Span tracks timing for an operation and its substeps.\n  13| // A Span is not safe for concurrent use from multiple goroutines.\n  14| type Span struct {\n  15| \tname     string\n  16| \tstart    time.Time\n  17| \tparent   *Span\n  18| \tchildren []*Span\n  19| \tduration time.Duration\n  20| \tattrs    []slog.A",
+      "output_tokens": 2659,
+      "duration_ms": 0.25200843811035156,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "perf/span.go",
+        "start_line": 80
+      },
+      "output": "perf/span.go:80-159\n  80| \n  81| \t// Add child step durations (and error flags) as flat keys.\n  82| \t// Disambiguate duplicate child names (from loops) with ~1, ~2, etc. suffixes\n  83| \t// to prevent later values from overwriting earlier ones in JSON output.\n  84| \t//\n  85| \t// Group spans (children that have their own children) also emit grandchildren\n  86| \t// with 0-based indexing: steps.<name>.0_ms, steps.<name>.1_ms, etc. The ~N\n  87| \t// suffix avoids collisions with this .0, .1, ... itera",
+      "output_tokens": 3237,
+      "duration_ms": 0.17213821411132812,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "perf/context.go"
+      },
+      "output": "perf/context.go:1-20\n  1| package perf\n  2| \n  3| import \"context\"\n  4| \n  5| type contextKey struct{}\n  6| \n  7| // spanFromContext retrieves the current span from context, or nil if none.\n  8| func spanFromContext(ctx context.Context) *Span {\n  9| \tif v := ctx.Value(contextKey{}); v != nil {\n  10| \t\tif s, ok := v.(*Span); ok {\n  11| \t\t\treturn s\n  12| \t\t}\n  13| \t}\n  14| \treturn nil\n  15| }\n  16| \n  17| // contextWithSpan returns a new context with the span stored.\n  18| func contextWithSpan(ctx",
+      "output_tokens": 606,
+      "duration_ms": 0.049114227294921875,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "entire/cli/bench_test.go"
+      },
+      "output": "cmd/entire/cli/bench_test.go:1-80\n  1| package cli\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"io\"\n  6| \t\"testing\"\n  7| \n  8| \t\"github.com/entireio/cli/cmd/entire/cli/benchutil\"\n  9| \t\"github.com/entireio/cli/cmd/entire/cli/paths\"\n  10| \t\"github.com/entireio/cli/cmd/entire/cli/session\"\n  11| )\n  12| \n  13| /* To use the interactive flame graph, run:\n  14| \n  15| mise exec -- go tool pprof -http=:8089 /tmp/status_cpu.prof &>/dev/null & echo \"pprof server started on http://localhost:8089\"\n  16| \n  ",
+      "output_tokens": 3578,
+      "duration_ms": 2.933979034423828,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "entire/cli/global_test.go"
+      },
+      "output": "cmd/entire/cli/global_test.go:1-27\n  1| package cli\n  2| \n  3| import (\n  4| \t\"fmt\"\n  5| \t\"os\"\n  6| \t\"testing\"\n  7| \n  8| \t_ \"unsafe\"\n  9| \n  10| \t\"github.com/go-git/go-git/v6/x/plugin\"\n  11| \t\"github.com/go-git/go-git/v6/x/plugin/config\"\n  12| )\n  13| \n  14| func TestMain(m *testing.M) {\n  15| \t// Register a default ConfigSource so tests that call ConfigScoped\n  16| \t// (directly or indirectly via Commit/CreateTag) don't fail with\n  17| \t// \"no config loader registered\".\n  18| \terr := plugin.Re",
+      "output_tokens": 827,
+      "duration_ms": 2.0318031311035156,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "entire/cli/bench_enable_test.go"
+      },
+      "output": "cmd/entire/cli/bench_enable_test.go:1-70\n  1| package cli\n  2| \n  3| import (\n  4| \t\"bytes\"\n  5| \t\"context\"\n  6| \t\"os\"\n  7| \t\"testing\"\n  8| \n  9| \t\"github.com/entireio/cli/cmd/entire/cli/agent\"\n  10| \t\"github.com/entireio/cli/cmd/entire/cli/benchutil\"\n  11| \t\"github.com/entireio/cli/cmd/entire/cli/paths\"\n  12| \t\"github.com/entireio/cli/cmd/entire/cli/strategy\"\n  13| )\n  14| \n  15| // BenchmarkEnableCommand benchmarks the non-interactive enable path\n  16| // (setupAgentHooksNonInteractive) which ",
+      "output_tokens": 2492,
+      "duration_ms": 3.3140182495117188,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "time.Sleep",
+        "file_type": "go",
+        "path_glob": "**/*_test.go",
+        "max_files": 10
+      },
+      "output": "./perf/span_test.go\n  57-57:\n    57| \n  59-61:\n    59| \ttime.Sleep(10 * time.Millisecond)\n    60| \tspan.End()\n    61| \n  70-70:\n    70| \n\n./e2e/tests/factory_hooks_test.go\n  90-94:\n    90| \t\t\treturn point\n    91| \t\t}\n    92| \t\ttime.Sleep(500 * time.Millisecond)\n    93| \t}\n    94| \n\n./e2e/tests/edge_cases_test.go\n  48-52:\n    48| \t\t\t\tbreak\n    49| \t\t\t}\n    50| \t\t\ttime.Sleep(200 * time.Millisecond)\n    51| \t\t}\n    52| \n\n./e2e/tests/single_session_test.go\n  30-34:\n    30| \n    31| \t\t// Give the pos",
+      "output_tokens": 2447,
+      "duration_ms": 17.98415184020996,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "perf/span_test.go",
+        "start_line": 54,
+        "end_line": 101
+      },
+      "output": "perf/span_test.go:54-101\n  54| func TestEnd_RecordsDuration(t *testing.T) {\n  55| \tt.Parallel()\n  56| \tctx := context.Background()\n  57| \n  58| \t_, span := Start(ctx, \"timed_op\")\n  59| \ttime.Sleep(10 * time.Millisecond)\n  60| \tspan.End()\n  61| \n  62| \tif span.duration < 10*time.Millisecond {\n  63| \t\tt.Errorf(\"span.duration = %v, want >= 10ms\", span.duration)\n  64| \t}\n  65| }\n  66| \n  67| func TestEnd_Idempotent(t *testing.T) {\n  68| \tt.Parallel()\n  69| \tctx := context.Background()\n  70| \n  71| \t",
+      "output_tokens": 1381,
+      "duration_ms": 0.33473968505859375,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "time.Sleep",
+        "file_type": "go",
+        "path_glob": "cmd/entire/cli/agent/cursor/lifecycle_test.go",
+        "max_matches_per_file": 10
+      },
+      "output": "./cmd/entire/cli/agent/cursor/lifecycle_test.go\n  689-691:\n    689| \t// Create the file after a short delay, simulating async flush.\n    690| \tgo func() {\n    691| \t\ttime.Sleep(100 * time.Millisecond)\n  693-693:\n    693| \t}()\n  713-715:\n    713| \t// Write content after a short delay.\n    714| \tgo func() {\n    715| \t\ttime.Sleep(100 * time.Millisecond)\n  717-717:\n    717| \t}()",
+      "output_tokens": 377,
+      "duration_ms": 13.849973678588867,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/agent/cursor/lifecycle_test.go",
+        "start_line": 680,
+        "end_line": 760
+      },
+      "output": "cmd/entire/cli/agent/cursor/lifecycle_test.go:680-740\n  680| \t}\n  681| }\n  682| \n  683| func TestPrepareTranscript_FileAppearsAfterDelay(t *testing.T) {\n  684| \tt.Parallel()\n  685| \n  686| \ttmpDir := t.TempDir()\n  687| \tpath := filepath.Join(tmpDir, \"delayed.jsonl\")\n  688| \n  689| \t// Create the file after a short delay, simulating async flush.\n  690| \tgo func() {\n  691| \t\ttime.Sleep(100 * time.Millisecond)\n  692| \t\t_ = os.WriteFile(path, []byte(`{\"role\":\"assistant\"}`+\"\\n\"), 0o644) //nolint:errc",
+      "output_tokens": 2125,
+      "duration_ms": 0.40984153747558594,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "time.Sleep",
+        "file_type": "go",
+        "path_glob": "cmd/entire/cli/integration_test/last_interaction_test.go",
+        "max_matches_per_file": 10
+      },
+      "output": "./cmd/entire/cli/integration_test/last_interaction_test.go\n  59-63:\n    59| \n    60| \t// Small delay to ensure timestamps differ\n    61| \ttime.Sleep(10 * time.Millisecond)\n    62| \n    63| \t// Second prompt\n  100-104:\n    100| \t}\n    101| \n    102| \ttime.Sleep(10 * time.Millisecond)\n    103| \n    104| \t// Second prompt",
+      "output_tokens": 320,
+      "duration_ms": 14.715194702148438,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "PrepareTranscript",
+        "file_type": "go",
+        "path_glob": "cmd/entire/cli/agent/cursor/*.go",
+        "max_files": 5
+      },
+      "output": "./cmd/entire/cli/agent/cursor/lifecycle_test.go\n  641-647:\n    641| }\n    642| \n    643| // --- PrepareTranscript ---\n    644| \n    645| func TestPrepareTranscript_FileExistsWithContent(t *testing.T) {\n    646| \tt.Parallel()\n    647| \n  653-653:\n    653| \n  655-656:\n    655| \terr := ag.PrepareTranscript(context.Background(), path)\n    656| \tif err != nil {\n\n./cmd/entire/cli/agent/cursor/cursor.go\n  143-151:\n    143| }\n    144| \n    145| // PrepareTranscript waits for Cursor's transcript file to ",
+      "output_tokens": 894,
+      "duration_ms": 14.363288879394531,
+      "turn_number": 10
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/integration_test/last_interaction_test.go"
+      },
+      "output": "cmd/entire/cli/integration_test/last_interaction_test.go:1-80\n  1| //go:build integration\n  2| \n  3| package integration\n  4| \n  5| import (\n  6| \t\"testing\"\n  7| \t\"time\"\n  8| )\n  9| \n  10| // TestLastInteractionTime_SetOnFirstPrompt verifies that LastInteractionTime is set\n  11| // when a session is first initialized via UserPromptSubmit.\n  12| func TestLastInteractionTime_SetOnFirstPrompt(t *testing.T) {\n  13| \tt.Parallel()\n  14| \tenv := NewRepoWithCommit(t)\n  15| \tsession := env.NewSession()\n ",
+      "output_tokens": 2928,
+      "duration_ms": 0.20694732666015625,
+      "turn_number": 10
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/agent/cursor/cursor.go",
+        "start_line": 145,
+        "end_line": 200
+      },
+      "output": "cmd/entire/cli/agent/cursor/cursor.go:145-200\n  145| // PrepareTranscript waits for Cursor's transcript file to be flushed to disk.\n  146| // Cursor writes transcripts asynchronously; during mid-turn commits the file\n  147| // may not yet contain data. This polls until the file exists and is non-empty,\n  148| // or until the timeout expires.\n  149| func (c *CursorAgent) PrepareTranscript(ctx context.Context, sessionRef string) error {\n  150| \tconst (\n  151| \t\tmaxWait      = 5 * time.Second\n  152",
+      "output_tokens": 2101,
+      "duration_ms": 0.3218650817871094,
+      "turn_number": 11
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/integration_test/last_interaction_test.go",
+        "start_line": 80
+      },
+      "output": "cmd/entire/cli/integration_test/last_interaction_test.go:80-122\n  80| }\n  81| \n  82| // TestLastInteractionTime_PreservedAcrossCheckpoints verifies that LastInteractionTime\n  83| // survives a full checkpoint cycle (prompt \u2192 stop \u2192 prompt).\n  84| func TestLastInteractionTime_PreservedAcrossCheckpoints(t *testing.T) {\n  85| \tt.Parallel()\n  86| \tenv := NewRepoWithCommit(t)\n  87| \tsession := env.NewSession()\n  88| \n  89| \t// First prompt + checkpoint\n  90| \tif err := env.SimulateUserPromptSubmit(se",
+      "output_tokens": 1725,
+      "duration_ms": 0.14090538024902344,
+      "turn_number": 11
+    }
+  ],
+  "total_tool_calls": 23,
+  "total_turns": 12,
+  "wall_clock_ms": 57255.54013252258,
+  "input_tokens": 150401,
+  "output_tokens": 3353,
+  "tool_output_tokens": 46926,
+  "total_cost_usd": 0.501498,
+  "first_call_tool": "list_dir",
+  "first_call_produced_file": true,
+  "retry_count": 0,
+  "error": "",
+  "total_tool_duration_ms": 135.9097957611084,
+  "tool_execution_share": 0.0023737405226906282,
+  "search_call_count": 6,
+  "read_call_count": 13,
+  "avg_search_code_duration_ms": 20.090937614440918,
+  "median_search_code_duration_ms": 14.539241790771484
+}

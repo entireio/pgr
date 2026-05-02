@@ -1,0 +1,277 @@
+{
+  "repeat": 0,
+  "task_id": "8b5b4eca788e",
+  "repo": "entireio-cli",
+  "task_type": "debug_or_validation",
+  "condition": "rg_ranked",
+  "prompt": "I am running this test on Windows TestSingleSessionSubagentCommitInTurn. And it is failing, not always, it fails because after running the test we identify that there is a shadow branch that should not be there. I copied the entire.log on windows execution windows-broken-test.json (failing one) and the same test but this time running on macos the entire.log are inside mac-ok-test.json.",
+  "answer": "",
+  "tool_calls": [
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "TestSingleSessionSubagentCommitInTurn"
+      },
+      "output": "e2e/tests/single_session_test.go\n  89-89:\n    89| // TestSingleSessionSubagentCommitInTurn: one prompt with subagent creates a file and commits it.\n  92-92:\n    92| func TestSingleSessionSubagentCommitInTurn(t *testing.T) {",
+      "output_tokens": 223,
+      "duration_ms": 15.887022018432617,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "pattern": "windows-broken-test.json"
+      },
+      "output": "No files found.",
+      "output_tokens": 15,
+      "duration_ms": 10.76197624206543,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "pattern": "windows-broken-test"
+      },
+      "output": "No files found.",
+      "output_tokens": 15,
+      "duration_ms": 14.050722122192383,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/tests/single_session_test.go",
+        "start_line": 89,
+        "max_lines": 80
+      },
+      "output": "e2e/tests/single_session_test.go:89-114\n  89| // TestSingleSessionSubagentCommitInTurn: one prompt with subagent creates a file and commits it.\n  90| // Expects both an initial checkpoint (post-commit) and a catchup checkpoint\n  91| // (end-of-turn) referencing the same checkpoint ID.\n  92| func TestSingleSessionSubagentCommitInTurn(t *testing.T) {\n  93| \ttestutil.ForEachAgent(t, 2*time.Minute, func(t *testing.T, s *testutil.RepoState, ctx context.Context) {\n  94| \t\tif s.Agent.Name() == \"copilot",
+      "output_tokens": 1585,
+      "duration_ms": 0.14090538024902344,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "glob": "**/*.json",
+        "pattern": "broken"
+      },
+      "output": "No files found.",
+      "output_tokens": 15,
+      "duration_ms": 11.049985885620117,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "WaitForNoShadowBranches"
+      },
+      "output": "e2e/testutil/assertions.go\n  137-137:\n    137| // WaitForNoShadowBranches polls until all shadow branches are cleaned up or\n  141-141:\n    141| func WaitForNoShadowBranches(t *testing.T, dir string, timeout time.Duration) {\n\ne2e/tests/attribution_test.go\n  43-43:\n    43| \t\ttestutil.WaitForNoShadowBranches(t, s.Dir, 10*time.Second)\n  73-73:\n    73| \t\ttestutil.WaitForNoShadowBranches(t, s.Dir, 10*time.Second)\n  113-113:\n    113| \t\ttestutil.WaitForNoShadowBranches(t, s.Dir, 10*time.Second)\n\ne2e/tes",
+      "output_tokens": 1887,
+      "duration_ms": 25.838851928710938,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/testutil/assertions.go",
+        "start_line": 137,
+        "max_lines": 50
+      },
+      "output": "e2e/testutil/assertions.go:137-186\n  137| // WaitForNoShadowBranches polls until all shadow branches are cleaned up or\n  138| // the timeout expires. Shadow branch cleanup can lag slightly behind checkpoint\n  139| // condensation (carry-forward creates intermediate branches that are deleted\n  140| // asynchronously).\n  141| func WaitForNoShadowBranches(t *testing.T, dir string, timeout time.Duration) {\n  142| \tt.Helper()\n  143| \tdeadline := time.Now().Add(timeout)\n  144| \tfor time.Now().Before(d",
+      "output_tokens": 2392,
+      "duration_ms": 0.18787384033203125,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "shadow branch"
+      },
+      "output": "CHANGELOG.md\n  55-55:\n    55| - Gitignore now respected for shadow branch tree writes ([#890](https://github.com/entireio/cli/pull/890))\n  57-57:\n    57| - Multi parallel sessions causing conflicts on the same shadow branch ([#879](https://github.com/entireio/cli/pull/879))\n  209-209:\n    209| - Removed `context.md` and scoped `prompt.txt` to checkpoint-only prompts; prompt source of truth is now shadow branch/filesystem, never transcript ([#572](https://github.com/entireio/cli/pull/572))\n\nCLAUD",
+      "output_tokens": 3407,
+      "duration_ms": 50.23622512817383,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "shadowBranches",
+        "file_type": "go"
+      },
+      "output": "cmd/entire/cli/strategy/cleanup.go\n  89-89:\n    89| \tvar shadowBranches []string\n  104-104:\n    104| \t\t\tshadowBranches = append(shadowBranches, branchName)\n  113-113:\n    113| \tif shadowBranches == nil {\n\ne2e/testutil/assertions.go\n  122-122:\n    122| // shadowBranches returns all shadow branches (entire/*) excluding entire/checkpoints/*.\n  123-123:\n    123| func shadowBranches(t *testing.T, dir string) []string {\n  145-145:\n    145| \t\tshadow := shadowBranches(t, dir)\n\ncmd/entire/cli/explain.go\n",
+      "output_tokens": 1889,
+      "duration_ms": 17.17209815979004,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "ShadowBranchPrefix",
+        "file_type": "go"
+      },
+      "output": "cmd/entire/cli/checkpoint/temporary.go\n  34-34:\n    34| \t// ShadowBranchPrefix is the prefix for shadow branches.\n  35-35:\n    35| \tShadowBranchPrefix = \"entire/\"\n  199-199:\n    199| \t\tif !strings.HasPrefix(branchName, ShadowBranchPrefix) {",
+      "output_tokens": 240,
+      "duration_ms": 17.034053802490234,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/testutil/assertions.go",
+        "start_line": 122,
+        "max_lines": 20
+      },
+      "output": "e2e/testutil/assertions.go:122-141\n  122| // shadowBranches returns all shadow branches (entire/*) excluding entire/checkpoints/*.\n  123| func shadowBranches(t *testing.T, dir string) []string {\n  124| \tt.Helper()\n  125| \tbranches := GitOutput(t, dir, \"for-each-ref\", \"--format=%(refname:short)\", \"refs/heads/entire/\")\n  126| \tvar shadow []string\n  127| \tfor _, b := range strings.Split(branches, \"\\n\") {\n  128| \t\tb = strings.TrimSpace(b)\n  129| \t\tif b == \"\" || strings.HasPrefix(b, \"entire/checkpoin",
+      "output_tokens": 1011,
+      "duration_ms": 0.2040863037109375,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/strategy/cleanup.go",
+        "start_line": 1,
+        "max_lines": 160
+      },
+      "output": "cmd/entire/cli/strategy/cleanup.go:1-160\n  1| package strategy\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"fmt\"\n  6| \t\"log/slog\"\n  7| \t\"regexp\"\n  8| \t\"strings\"\n  9| \t\"time\"\n  10| \n  11| \t\"github.com/entireio/cli/cmd/entire/cli/checkpoint\"\n  12| \t\"github.com/entireio/cli/cmd/entire/cli/checkpoint/id\"\n  13| \t\"github.com/entireio/cli/cmd/entire/cli/logging\"\n  14| \t\"github.com/entireio/cli/cmd/entire/cli/paths\"\n  15| \t\"github.com/entireio/cli/cmd/entire/cli/session\"\n  16| \n  17| \t\"github.com/go-git/g",
+      "output_tokens": 6566,
+      "duration_ms": 0.11205673217773438,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/strategy/manual_commit_hooks.go",
+        "start_line": 1,
+        "max_lines": 80
+      },
+      "output": "cmd/entire/cli/strategy/manual_commit_hooks.go:1-80\n  1| package strategy\n  2| \n  3| import (\n  4| \t\"bufio\"\n  5| \t\"bytes\"\n  6| \t\"context\"\n  7| \t\"encoding/json\"\n  8| \t\"fmt\"\n  9| \t\"io\"\n  10| \t\"log/slog\"\n  11| \t\"os\"\n  12| \t\"os/exec\"\n  13| \t\"path/filepath\"\n  14| \t\"strings\"\n  15| \t\"time\"\n  16| \n  17| \t\"github.com/entireio/cli/cmd/entire/cli/agent\"\n  18| \t\"github.com/entireio/cli/cmd/entire/cli/agent/claudecode\"\n  19| \t\"github.com/entireio/cli/cmd/entire/cli/agent/types\"\n  20| \n  21| \t\"github.com/enti",
+      "output_tokens": 3143,
+      "duration_ms": 0.9479522705078125,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "DeleteBranchCLI",
+        "file_type": "go"
+      },
+      "output": "cmd/entire/cli/strategy/common.go\n  1315-1315:\n    1315| // ErrBranchNotFound is returned by DeleteBranchCLI when the branch does not exist.\n  1318-1318:\n    1318| // DeleteBranchCLI deletes a git branch using the git CLI.\n  1326-1326:\n    1326| func DeleteBranchCLI(ctx context.Context, branchName string) error {\n\ncmd/entire/cli/doctor.go\n  352-352:\n    352| \t\t\tif err := strategy.DeleteBranchCLI(ctx, ss.ShadowBranch); err != nil {\n\ncmd/entire/cli/strategy/cleanup.go\n  131-131:\n    131| \t\tif err ",
+      "output_tokens": 1056,
+      "duration_ms": 17.851829528808594,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/strategy/common.go",
+        "start_line": 1315,
+        "max_lines": 60
+      },
+      "output": "cmd/entire/cli/strategy/common.go:1315-1374\n  1315| // ErrBranchNotFound is returned by DeleteBranchCLI when the branch does not exist.\n  1316| var ErrBranchNotFound = errors.New(\"branch not found\")\n  1317| \n  1318| // DeleteBranchCLI deletes a git branch using the git CLI.\n  1319| // Uses `git branch -D` instead of go-git's RemoveReference because go-git v5\n  1320| // doesn't properly persist deletions when refs are packed (.git/packed-refs)\n  1321| // or in a worktree context. This is the same",
+      "output_tokens": 3420,
+      "duration_ms": 3.1669139862060547,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/strategy/manual_commit_condensation.go",
+        "start_line": 1180,
+        "max_lines": 60
+      },
+      "output": "cmd/entire/cli/strategy/manual_commit_condensation.go:1180-1239\n  1180| \treturn nil\n  1181| }\n  1182| \n  1183| // cleanupShadowBranchIfUnused deletes a shadow branch if no other active sessions reference it.\n  1184| func (s *ManualCommitStrategy) cleanupShadowBranchIfUnused(ctx context.Context, _ *git.Repository, shadowBranchName, excludeSessionID string) error {\n  1185| \t// List all session states to check if any other session uses this shadow branch\n  1186| \tallStates, err := s.listAllSessionS",
+      "output_tokens": 2763,
+      "duration_ms": 0.2219676971435547,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "condenseAndUpdateState",
+        "file_type": "go"
+      },
+      "output": "cmd/entire/cli/strategy/manual_commit_hooks.go\n  747-747:\n    747| \t\th.condensed = h.s.condenseAndUpdateState(h.ctx, h.repo, h.checkpointID, state, h.head, h.shadowBranchName, h.shadowBranchesToDelete, h.committedFileSet, condenseOpts{\n  776-776:\n    776| \t\th.condensed = h.s.condenseAndUpdateState(h.ctx, h.repo, h.checkpointID, state, h.head, h.shadowBranchName, h.shadowBranchesToDelete, h.committedFileSet, condenseOpts{\n  1379-1379:\n    1379| // condenseAndUpdateState runs condensation for a se",
+      "output_tokens": 686,
+      "duration_ms": 24.691104888916016,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/strategy/manual_commit_hooks.go",
+        "start_line": 700,
+        "max_lines": 150
+      },
+      "output": "cmd/entire/cli/strategy/manual_commit_hooks.go:700-849\n  700| \trepo                       *git.Repository\n  701| \tcheckpointID               id.CheckpointID\n  702| \thead                       *plumbing.Reference\n  703| \tcommit                     *object.Commit\n  704| \tnewHead                    string\n  705| \trepoDir                    string\n  706| \tshadowBranchName           string\n  707| \tshadowBranchesToDelete     map[string]struct{}\n  708| \tcommittedFileSet           map[string]struct{}\n  ",
+      "output_tokens": 7678,
+      "duration_ms": 0.4589557647705078,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/strategy/manual_commit_condensation.go",
+        "start_line": 1,
+        "max_lines": 80
+      },
+      "output": "cmd/entire/cli/strategy/manual_commit_condensation.go:1-80\n  1| package strategy\n  2| \n  3| import (\n  4| \t\"bytes\"\n  5| \t\"context\"\n  6| \t\"encoding/json\"\n  7| \t\"errors\"\n  8| \t\"fmt\"\n  9| \t\"log/slog\"\n  10| \t\"os\"\n  11| \t\"path/filepath\"\n  12| \t\"slices\"\n  13| \t\"strings\"\n  14| \t\"time\"\n  15| \n  16| \t\"github.com/entireio/cli/cmd/entire/cli/agent\"\n  17| \t\"github.com/entireio/cli/cmd/entire/cli/agent/factoryaidroid\"\n  18| \t\"github.com/entireio/cli/cmd/entire/cli/agent/geminicli\"\n  19| \t\"github.com/entireio",
+      "output_tokens": 3240,
+      "duration_ms": 0.6709098815917969,
+      "turn_number": 10
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "condenseAndUpdateState",
+        "file_type": "go",
+        "context_before": 3,
+        "context_after": 60
+      },
+      "output": "cmd/entire/cli/strategy/manual_commit_hooks.go\n  747-747:\n    747| \t\th.condensed = h.s.condenseAndUpdateState(h.ctx, h.repo, h.checkpointID, state, h.head, h.shadowBranchName, h.shadowBranchesToDelete, h.committedFileSet, condenseOpts{\n  776-776:\n    776| \t\th.condensed = h.s.condenseAndUpdateState(h.ctx, h.repo, h.checkpointID, state, h.head, h.shadowBranchName, h.shadowBranchesToDelete, h.committedFileSet, condenseOpts{\n  1379-1379:\n    1379| // condenseAndUpdateState runs condensation for a se",
+      "output_tokens": 686,
+      "duration_ms": 33.87093544006348,
+      "turn_number": 10
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/strategy/manual_commit_hooks.go",
+        "start_line": 1379,
+        "max_lines": 120
+      },
+      "output": "cmd/entire/cli/strategy/manual_commit_hooks.go:1379-1498\n  1379| // condenseAndUpdateState runs condensation for a session and updates state afterward.\n  1380| // Returns true if condensation succeeded.\n  1381| func (s *ManualCommitStrategy) condenseAndUpdateState(\n  1382| \tctx context.Context,\n  1383| \trepo *git.Repository,\n  1384| \tcheckpointID id.CheckpointID,\n  1385| \tstate *SessionState,\n  1386| \thead *plumbing.Reference,\n  1387| \tshadowBranchName string,\n  1388| \tshadowBranchesToDelete map",
+      "output_tokens": 5971,
+      "duration_ms": 0.9899139404296875,
+      "turn_number": 11
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "shadowBranchesToDelete",
+        "file_type": "go"
+      },
+      "output": "cmd/entire/cli/strategy/manual_commit_hooks.go\n  707-707:\n    707| \tshadowBranchesToDelete     map[string]struct{}\n  747-747:\n    747| \t\th.condensed = h.s.condenseAndUpdateState(h.ctx, h.repo, h.checkpointID, state, h.head, h.shadowBranchName, h.shadowBranchesToDelete, h.committedFileSet, condenseOpts{\n  776-776:\n    776| \t\th.condensed = h.s.condenseAndUpdateState(h.ctx, h.repo, h.checkpointID, state, h.head, h.shadowBranchName, h.shadowBranchesToDelete, h.committedFileSet, condenseOpts{",
+      "output_tokens": 492,
+      "duration_ms": 22.037029266357422,
+      "turn_number": 12
+    }
+  ],
+  "total_tool_calls": 22,
+  "total_turns": 12,
+  "wall_clock_ms": 33694.748878479004,
+  "input_tokens": 114559,
+  "output_tokens": 1832,
+  "tool_output_tokens": 48380,
+  "total_cost_usd": 0.371157,
+  "first_call_tool": "search_code",
+  "first_call_produced_file": true,
+  "retry_count": 0,
+  "error": "",
+  "total_tool_duration_ms": 267.58337020874023,
+  "tool_execution_share": 0.007941396778880491,
+  "search_call_count": 9,
+  "read_call_count": 10,
+  "avg_search_code_duration_ms": 24.957683351304794,
+  "median_search_code_duration_ms": 22.037029266357422
+}

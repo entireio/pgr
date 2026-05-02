@@ -1,0 +1,92 @@
+{
+  "repeat": 0,
+  "task_id": "94de498254e2",
+  "repo": "entireio-cli",
+  "task_type": "code_understanding",
+  "condition": "pgr_v4",
+  "prompt": "can you help me understand what `entire clean` is doing?",
+  "answer": "Here's a thorough breakdown of what `entire clean` does:\n\n---\n\n## `entire clean` \u2014 Overview\n\n`entire clean` is a command for removing Entire session data (state files, shadow branches, checkpoints, and temp files) from a git repository. It replaced the deprecated `entire reset` command.\n\n---\n\n## Modes of Operation\n\nThe command has **three modes**, controlled by flags:\n\n### 1. Default \u2014 Clean Current HEAD (`runCleanCurrentHead`)\nRun with no flags: `entire clean`\n\n- **Checks for active sessions** on the current HEAD commit. If any are found (phase = `ACTIVE`), it **aborts** and tells you to wait or use `--force`.\n- **Prompts for confirmation** (unless `--force` is passed).\n- Calls `strat.Reset()` to clean session state and the shadow branch tied to the current HEAD commit.\n\n### 2. `--session <id>` \u2014 Clean a Specific Session (`runCleanSession`)\n\n- Loads and **verifies the session exists**.\n- Prompts for confirmation (showing phase and checkpoint count).\n- Calls `strat.ResetSession()` to remove just that one session.\n- **File changes are left in the working directory** \u2014 only the metadata is removed.\n\n### 3. `--all` \u2014 Clean Everything (`runCleanAll`)\n\n- Collects **all** Entire artifacts across the whole repo (not just orphaned ones):\n  - Shadow branches (`entire/<commit-hash>-<worktree-hash>`)\n  - Session state files (`.git/entire-sessions/*.json`)\n  - Checkpoint metadata\n  - Temp files (`.entire/tmp/`)\n- Shows a grouped preview, then **prompts for confirmation** (unless `--force`).\n- Deletes everything, then reports what was deleted and what failed.\n- The `entire/checkpoints/v1` branch itself is **preserved**.\n\n---\n\n## Flags\n\n| Flag | Short | Description |\n|---|---|---|\n| `--force` | `-f` | Skip confirmation prompt and override the active session guard |\n| `--all` | `-a` | Clean all session data across the entire repo |\n| `--dry-run` | `-d` | Preview what would be deleted without actually deleting anything |\n| `--session <id>` | | Target a single specific session by ID |\n\n> \u26a0\ufe0f `--all` and `--session` are **mutually exclusive** \u2014 using both together returns an error.\n\n---\n\n## Safety Mechanisms\n\n- **Active session guard**: By default, if sessions are still running on the current HEAD, the command refuses to clean and requires `--force` to override.\n- **Confirmation prompts**: All modes prompt interactively before deleting, unless `--force` is used.\n- **`--dry-run`**: Prints what *would* be deleted without touching anything, useful for previewing the impact first.\n- **Sandbox deletion**: Temp file deletion uses `os.OpenRoot` to ensure file removals are confined strictly to the `.entire/tmp/` directory.",
+  "tool_calls": [
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "entire clean"
+      },
+      "output": "  summary:\n    query: entire clean\n    scope: all files\n    files: 6 total, 6 shown\n    buckets: 5 source, 1 test, 0 low-priority\n    definition_candidates: 0\n    best_next_step: read CHANGELOG.md around line 47\n\nCHANGELOG.md\n  why: reference, source\n  47-47:\n    47| - `entire clean` fully replaces deprecated `entire reset` ([#858](https://github.com/entireio/cli/pull/858))\n  63-63:\n    63| - `entire clean --all` now cleans all sessions, not just orphaned ones ([#846](https://github.com/entireio",
+      "output_tokens": 1800,
+      "duration_ms": 29.88409996032715,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "entire_clean"
+      },
+      "output": "No matches found.\n  query: entire_clean\n  scope: all files\n  hint: broaden the query, remove path_glob/file_type filters, or try a simpler symbol name.",
+      "output_tokens": 151,
+      "duration_ms": 12.773752212524414,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "pattern": "clean.go"
+      },
+      "output": "./cmd/entire/cli/clean.go",
+      "output_tokens": 25,
+      "duration_ms": 12.173175811767578,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/clean.go"
+      },
+      "output": "cmd/entire/cli/clean.go:1-80\n  1| package cli\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"errors\"\n  6| \t\"fmt\"\n  7| \t\"io\"\n  8| \t\"io/fs\"\n  9| \t\"os\"\n 10| \t\"strings\"\n 11| \n 12| \t\"github.com/charmbracelet/huh\"\n 13| \t\"github.com/entireio/cli/cmd/entire/cli/checkpoint\"\n 14| \t\"github.com/entireio/cli/cmd/entire/cli/logging\"\n 15| \t\"github.com/entireio/cli/cmd/entire/cli/paths\"\n 16| \t\"github.com/entireio/cli/cmd/entire/cli/session\"\n 17| \t\"github.com/entireio/cli/cmd/entire/cli/strategy\"\n 18| \t\"github.com/g",
+      "output_tokens": 2804,
+      "duration_ms": 0.46896934509277344,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/clean.go",
+        "start_line": 80,
+        "max_lines": 400
+      },
+      "output": "cmd/entire/cli/clean.go:80-479\n 80| \tcmd.Flags().BoolVarP(&forceFlag, \"force\", \"f\", false, \"Skip confirmation prompt and override active session guard\")\n 81| \tcmd.Flags().BoolVarP(&allFlag, \"all\", \"a\", false, \"Clean all session data across the repository\")\n 82| \tcmd.Flags().BoolVarP(&dryRunFlag, \"dry-run\", \"d\", false, \"Preview what would be deleted without deleting\")\n 83| \tcmd.Flags().StringVar(&sessionFlag, \"session\", \"\", \"Clean a specific session by ID\")\n 84| \n 85| \treturn cmd\n 86| }\n 87| \n 88",
+      "output_tokens": 13559,
+      "duration_ms": 0.46706199645996094,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/clean.go",
+        "start_line": 479,
+        "max_lines": 76
+      },
+      "output": "cmd/entire/cli/clean.go:479-554\n479| }\n480| \n481| // TempFileDeleteError contains a file name and the error that occurred during deletion.\n482| type TempFileDeleteError struct {\n483| \tFile string\n484| \tErr  error\n485| }\n486| \n487| // deleteTempFiles removes all files in .entire/tmp/.\n488| // Uses os.Root to ensure deletions are confined to the temp directory.\n489| // Returns successfully deleted files and any failures with their error reasons.\n490| func deleteTempFiles(ctx context.Context, files",
+      "output_tokens": 2408,
+      "duration_ms": 0.40912628173828125,
+      "turn_number": 5
+    }
+  ],
+  "total_tool_calls": 6,
+  "total_turns": 6,
+  "wall_clock_ms": 24472.55802154541,
+  "input_tokens": 28294,
+  "output_tokens": 1137,
+  "tool_output_tokens": 20747,
+  "total_cost_usd": 0.101937,
+  "first_call_tool": "search_code",
+  "first_call_produced_file": true,
+  "retry_count": 0,
+  "error": "",
+  "total_tool_duration_ms": 56.176185607910156,
+  "tool_execution_share": 0.002295476654236683,
+  "search_call_count": 2,
+  "read_call_count": 3,
+  "avg_search_code_duration_ms": 21.32892608642578,
+  "median_search_code_duration_ms": 21.32892608642578
+}

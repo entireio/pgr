@@ -1,0 +1,137 @@
+{
+  "repeat": 0,
+  "task_id": "37f449ec7d97",
+  "repo": "entireio-cli",
+  "task_type": "code_understanding",
+  "condition": "pgr_v4",
+  "prompt": "how does auth work for codex with e2e",
+  "answer": "Here's a detailed breakdown of how auth works for Codex in the E2E framework:\n\n---\n\n## How Codex Auth Works in E2E\n\n### 1. Bootstrap Validation (`Bootstrap()`)\n\nBefore any tests run, the `Bootstrap()` method does a quick sanity check on CI:\n\n```go\n// e2e/agents/codex.go:40-45\nfunc (c *Codex) Bootstrap() error {\n    if os.Getenv(\"CI\") != \"\" && os.Getenv(\"OPENAI_API_KEY\") == \"\" {\n        return errors.New(\"OPENAI_API_KEY must be set on CI for Codex E2E tests\")\n    }\n    return nil\n}\n```\n\nIf running in CI and `OPENAI_API_KEY` is not set, the bootstrap fails fast and aborts. Locally, no such check is enforced.\n\n---\n\n### 2. Isolated `CODEX_HOME` per Test Run\n\nEach test run (both `RunPrompt` and `StartSession`) creates a **temporary, isolated `CODEX_HOME`** directory via `codexHome()`:\n\n```go\nfunc codexHome() (string, func(), error) {\n    dir, err := os.MkdirTemp(\"\", \"codex-home-*\")\n    // ...\n    return dir, func() { _ = os.RemoveAll(dir) }, nil\n}\n```\n\nThis ensures tests don't pollute or share state with each other or the developer's real Codex config. The directory is cleaned up via a `defer cleanup()` after the test.\n\n---\n\n### 3. `seedCodexHome()` \u2014 Writing Auth + Config\n\nThe core of auth setup lives in `seedCodexHome()` (`e2e/agents/codex.go:220-248`). It does two things:\n\n**a) Writes `config.toml`** with a pinned model, feature flags, and project trust level (to bypass interactive confirmation prompts):\n```toml\nmodel = \"gpt-5.4\"\n\n[features]\ncodex_hooks = true\n\n[projects.\"/path/to/project\"]\ntrust_level = \"trusted\"\n```\n\n**b) Sets up credentials** via a priority chain:\n\n| Priority | Condition | Action |\n|----------|-----------|--------|\n| **1st** | `OPENAI_API_KEY` env var is set | Calls `writeCodexAPIKeyAuth()` to write an `auth.json` with `auth_mode: \"apikey\"` |\n| **2nd** | `OPENAI_API_KEY` not set | Symlinks `~/.codex/auth.json` from the real home directory into the temp `CODEX_HOME` |\n\n---\n\n### 4. `writeCodexAPIKeyAuth()` \u2014 The `auth.json` Format\n\nWhen using the API key path, the written `auth.json` looks like:\n\n```json\n{\n  \"auth_mode\": \"apikey\",\n  \"OPENAI_API_KEY\": \"sk-...\"\n}\n```\n\nThis is what `TestSeedCodexHome_WritesAPIKeyAuth` in `codex_test.go` validates \u2014 it checks both fields are written correctly.\n\n---\n\n### 5. Passing `CODEX_HOME` to the Process\n\nThe isolated home is injected into the Codex process via the environment:\n\n- **`RunPrompt` (non-TTY)**:\n  ```go\n  env := append(filterEnv(os.Environ(), \"ENTIRE_TEST_TTY\", \"CODEX_HOME\"),\n      \"CODEX_HOME=\"+home,\n  )\n  cmd.Env = env\n  ```\n\n- **`StartSession` / `startTmuxSession` (TTY/interactive)**:\n  ```go\n  tmuxArgs := append([]string{\"CODEX_HOME=\" + home, \"HOME=\" + os.Getenv(\"HOME\"), ...}, args...)\n  return NewTmuxSession(name, dir, []string{\"CODEX_HOME\", \"ENTIRE_TEST_TTY\"}, \"env\", tmuxArgs...)\n  ```\n\nIn both cases, the real `CODEX_HOME` is stripped from the parent environment and replaced with the temp directory, so Codex reads auth exclusively from the seeded location.\n\n---\n\n### Summary Flow\n\n```\nTest starts\n   \u2502\n   \u251c\u2500 Bootstrap() \u2192 validates OPENAI_API_KEY is set on CI\n   \u2502\n   \u251c\u2500 codexHome() \u2192 creates temp dir (e.g. /tmp/codex-home-12345)\n   \u2502\n   \u251c\u2500 seedCodexHome(home, projectDir)\n   \u2502     \u251c\u2500 writes config.toml (model, trust, features)\n   \u2502     \u251c\u2500 OPENAI_API_KEY set? \u2192 write auth.json with auth_mode=apikey\n   \u2502     \u2514\u2500 otherwise \u2192 symlink ~/.codex/auth.json into temp home\n   \u2502\n   \u251c\u2500 Codex process launched with CODEX_HOME=<temp dir>\n   \u2502\n   \u2514\u2500 cleanup() \u2192 rm -rf temp dir after test\n```",
+  "tool_calls": [
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "glob": "**/*e2e*",
+        "max_results": 50
+      },
+      "output": "./scripts/download-e2e-artifacts.sh\n./scripts/test-attribution-e2e.sh",
+      "output_tokens": 69,
+      "duration_ms": 9.261846542358398,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "auth",
+        "path_glob": "**/e2e*/**",
+        "max_files": 10
+      },
+      "output": "  summary:\n    query: auth\n    scope: glob=**/e2e*/**\n    files: 10 total, 10 shown\n    buckets: 8 source, 2 test, 0 low-priority\n    definition_candidates: 1\n    best_next_step: read e2e/agents/codex_test.go around line 24\n\ne2e/agents/codex_test.go\n  why: definition, test\n  29-29:\n    29| \tvar auth struct {\n  24-24:\n    24| \tdata, err := os.ReadFile(filepath.Join(home, \"auth.json\"))\n  26-26:\n    26| \t\tt.Fatalf(\"read auth.json: %v\", err)\n\ne2e/README.md\n  why: reference, source\n  26-26:\n    26| \u251c",
+      "output_tokens": 2406,
+      "duration_ms": 9.263992309570312,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/agents/codex.go"
+      },
+      "output": "e2e/agents/codex.go:1-80\n  1| package agents\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"encoding/json\"\n  6| \t\"errors\"\n  7| \t\"fmt\"\n  8| \t\"os\"\n  9| \t\"os/exec\"\n 10| \t\"path/filepath\"\n 11| \t\"strings\"\n 12| \t\"time\"\n 13| )\n 14| \n 15| func init() {\n 16| \tif env := os.Getenv(\"E2E_AGENT\"); env != \"\" && env != \"codex\" {\n 17| \t\treturn\n 18| \t}\n 19| \tRegister(&Codex{})\n 20| \tRegisterGate(\"codex\", 2)\n 21| }\n 22| \n 23| // Codex implements the E2E Agent interface for OpenAI's Codex CLI.\n 24| type Codex struct{}\n ",
+      "output_tokens": 2345,
+      "duration_ms": 0.3070831298828125,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/agents/codex_test.go"
+      },
+      "output": "e2e/agents/codex_test.go:1-43\n  1| package agents\n  2| \n  3| import (\n  4| \t\"encoding/json\"\n  5| \t\"os\"\n  6| \t\"path/filepath\"\n  7| \t\"testing\"\n  8| )\n  9| \n 10| func TestSeedCodexHome_WritesAPIKeyAuth(t *testing.T) {\n 11| \thome := t.TempDir()\n 12| \tprojectDir := filepath.Join(t.TempDir(), \"repo\")\n 13| \tt.Setenv(\"OPENAI_API_KEY\", \"sk-test-key\")\n 14| \tt.Setenv(\"E2E_CODEX_MODEL\", \"gpt-5.4\")\n 15| \n 16| \tif err := os.MkdirAll(projectDir, 0o750); err != nil {\n 17| \t\tt.Fatalf(\"mkdir project dir: %v\", err",
+      "output_tokens": 1283,
+      "duration_ms": 0.1621246337890625,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/README.md"
+      },
+      "output": "e2e/README.md:1-80\n  1| # E2E Tests\n  2| \n  3| End-to-end tests for the `entire` CLI against real agents (Claude Code, Gemini CLI, OpenCode, Codex, Cursor, Factory AI Droid, Copilot CLI).\n  4| \n  5| ## Commands\n  6| \n  7| ```bash\n  8| mise run test:e2e [filter]                          # run filtered (or omit filter for all agents)\n  9| mise run test:e2e --agent claude-code [filter]       # Claude Code only\n 10| mise run test:e2e --agent gemini-cli [filter]        # Gemini CLI only\n 11| mise run",
+      "output_tokens": 4409,
+      "duration_ms": 0.14591217041015625,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/agents/codex.go",
+        "start_line": 80,
+        "end_line": 270
+      },
+      "output": "e2e/agents/codex.go:80-159\n 80| \tif cfg.PromptTimeout > 0 {\n 81| \t\ttimeout = cfg.PromptTimeout\n 82| \t}\n 83| \tpromptCtx, cancel := context.WithTimeout(ctx, timeout)\n 84| \tdefer cancel()\n 85| \n 86| \thome, cleanup, err := codexHome()\n 87| \tif err != nil {\n 88| \t\treturn Output{}, fmt.Errorf(\"create codex home: %w\", err)\n 89| \t}\n 90| \tdefer cleanup()\n 91| \n 92| \tabsDir, err := filepath.Abs(dir)\n 93| \tif err != nil {\n 94| \t\tabsDir = dir\n 95| \t}\n 96| \tif err := seedCodexHome(home, absDir); err != nil {",
+      "output_tokens": 2361,
+      "duration_ms": 0.39577484130859375,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "glob": "e2e/bootstrap/**"
+      },
+      "output": "./e2e/bootstrap/main.go",
+      "output_tokens": 23,
+      "duration_ms": 8.117914199829102,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/agents/codex.go",
+        "start_line": 159,
+        "end_line": 270
+      },
+      "output": "e2e/agents/codex.go:159-238\n159| \n160| \ts, err := c.startTmuxSession(name, dir, home, \"codex\", \"--dangerously-bypass-approvals-and-sandbox\")\n161| \tif err != nil {\n162| \t\tcleanup()\n163| \t\treturn nil, err\n164| \t}\n165| \ts.OnClose(cleanup)\n166| \n167| \t// Dismiss startup dialogs (model upgrade prompts, etc.) until we reach\n168| \t// the input prompt. Similar to Claude's startup dialog handling.\n169| \tfor range 5 {\n170| \t\tcontent, waitErr := s.WaitFor(c.PromptPattern(), 15*time.Second)\n171| \t\tif waitEr",
+      "output_tokens": 3153,
+      "duration_ms": 0.4589557647705078,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/bootstrap/main.go"
+      },
+      "output": "e2e/bootstrap/main.go:1-30\n  1| // Package main provides a pre-test bootstrap command that runs agent-specific\n  2| // setup (auth config, warmup) before E2E tests. Usage: go run ./e2e/bootstrap\n  3| package main\n  4| \n  5| import (\n  6| \t\"fmt\"\n  7| \t\"os\"\n  8| \n  9| \t\"github.com/entireio/cli/e2e/agents\"\n 10| )\n 11| \n 12| func main() {\n 13| \t// Optional: pass agent name as argument to bootstrap only that agent.\n 14| \tfilter := \"\"\n 15| \tif len(os.Args) > 1 {\n 16| \t\tfilter = os.Args[1]\n 17| \t}\n 18|",
+      "output_tokens": 903,
+      "duration_ms": 0.17499923706054688,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/agents/codex.go",
+        "start_line": 238,
+        "end_line": 270
+      },
+      "output": "e2e/agents/codex.go:238-270\n238| \n239| \t// Symlink auth.json from the real ~/.codex/ so API credentials are available.\n240| \tif realHome, err := os.UserHomeDir(); err == nil {\n241| \t\tsrc := filepath.Join(realHome, \".codex\", \"auth.json\")\n242| \t\tif _, err := os.Stat(src); err == nil {\n243| \t\t\t_ = os.Symlink(src, filepath.Join(home, \"auth.json\"))\n244| \t\t}\n245| \t}\n246| \n247| \treturn nil\n248| }\n249| \n250| func writeCodexAPIKeyAuth(home, apiKey string) error {\n251| \tauth := struct {\n252| \t\tAuthMode   ",
+      "output_tokens": 1022,
+      "duration_ms": 0.24819374084472656,
+      "turn_number": 5
+    }
+  ],
+  "total_tool_calls": 10,
+  "total_turns": 6,
+  "wall_clock_ms": 34730.215311050415,
+  "input_tokens": 35730,
+  "output_tokens": 1931,
+  "tool_output_tokens": 17974,
+  "total_cost_usd": 0.136155,
+  "first_call_tool": "find_files",
+  "first_call_produced_file": true,
+  "retry_count": 0,
+  "error": "",
+  "total_tool_duration_ms": 28.53679656982422,
+  "tool_execution_share": 0.0008216705918533254,
+  "search_call_count": 1,
+  "read_call_count": 7,
+  "avg_search_code_duration_ms": 9.263992309570312,
+  "median_search_code_duration_ms": 9.263992309570312
+}

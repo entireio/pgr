@@ -1,0 +1,340 @@
+{
+  "repeat": 0,
+  "task_id": "61de2c90668f",
+  "repo": "entireio-cli",
+  "task_type": "debug_or_validation",
+  "condition": "fff",
+  "prompt": "I think it's better to use `env.InitRepo()` instead of `git.PlainInit()` in tests.",
+  "answer": "",
+  "tool_calls": [
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "git.PlainInit(",
+        "file_type": "go"
+      },
+      "output": "! regex failed: regex parse error:\n    git.PlainInit(\n                 ^\nerror: unclosed group, using literal match\n30/53 matches shown\ncmd/entire/cli/agent/factoryaidroid/lifecycle_test.go\n 220: if _, err := git.PlainInit(repoDir, false); err != nil {\ncmd/entire/cli/benchutil/benchutil.go\n 108: repo, err := git.PlainInit(dir, false)\ncmd/entire/cli/benchutil/parse_tree_bench_test.go\n 21: repo, err := gogit.PlainInit(b.TempDir(), true)\ncmd/entire/cli/checkpoint/backwards_compat_test.go\n 28: repo,",
+      "output_tokens": 2091,
+      "duration_ms": 0.7870197296142578,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "env.InitRepo(",
+        "file_type": "go"
+      },
+      "output": "! regex failed: regex parse error:\n    env.InitRepo(\n                ^\nerror: unclosed group, using literal match\n30/56 matches shown\ncmd/entire/cli/integration_test/agent_strategy_test.go\n 170: env.InitRepo()\n 208: env.InitRepo()\n 248: env.InitRepo()\n 290: env.InitRepo()\ncmd/entire/cli/integration_test/agent_test.go\n 27: env.InitRepo()\n 42: env.InitRepo()\n 100: env.InitRepo()\n 154: env.InitRepo()\n 184: env.InitRepo()\n 221: env.InitRepo()\n 265: env.InitRepo()\n 414: env.InitRepo()\n 456: env.InitR",
+      "output_tokens": 1143,
+      "duration_ms": 0.308990478515625,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "func InitRepo",
+        "file_type": "go"
+      },
+      "output": "\u2192 Read cmd/entire/cli/testutil/testutil.go (only match)\ncmd/entire/cli/testutil/testutil.go\n 34: func InitRepo(t *testing.T, repoDir string) {\n  35| t.Helper()",
+      "output_tokens": 159,
+      "duration_ms": 0.5741119384765625,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "func.*InitRepo",
+        "file_type": "go"
+      },
+      "output": "\u2192 Read cmd/entire/cli/integration_test/testenv.go [def]\ncmd/entire/cli/integration_test/testenv.go\n 219: func (env *TestEnv) InitRepo() {\n  220| env.T.Helper()\ncmd/entire/cli/integration_test/testenv_test.go\n 37: func TestTestEnv_InitRepo(t *testing.T) {\n  38| t.Parallel()\n  39| env := NewTestEnv(t)\n  40| env.InitRepo()\ncmd/entire/cli/testutil/testutil.go\n 34: func InitRepo(t *testing.T, repoDir string) {\n  35| t.Helper()",
+      "output_tokens": 425,
+      "duration_ms": 1.0390281677246094,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/integration_test/testenv.go",
+        "start_line": 210,
+        "end_line": 240
+      },
+      "output": "cmd/entire/cli/integration_test/testenv.go:210-240\n  210| // for session and rewind tests since Entire tracking skips main/master.\n  211| func NewFeatureBranchEnv(t *testing.T) *TestEnv {\n  212| \tt.Helper()\n  213| \tenv := NewRepoWithCommit(t)\n  214| \tenv.GitCheckoutNewBranch(\"feature/test-branch\")\n  215| \treturn env\n  216| }\n  217| \n  218| // InitRepo initializes a git repository in the test environment.\n  219| func (env *TestEnv) InitRepo() {\n  220| \tenv.T.Helper()\n  221| \n  222| \trepo, err := ",
+      "output_tokens": 1162,
+      "duration_ms": 0.942230224609375,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/testutil/testutil.go",
+        "start_line": 1,
+        "max_lines": 80
+      },
+      "output": "cmd/entire/cli/testutil/testutil.go:1-80\n  1| // Package testutil provides shared test utilities for both integration and e2e tests.\n  2| // This package has no build tags, making it usable by all test packages.\n  3| package testutil\n  4| \n  5| import (\n  6| \t\"errors\"\n  7| \t\"os\"\n  8| \t\"os/exec\"\n  9| \t\"path/filepath\"\n  10| \t\"strings\"\n  11| \t\"sync\"\n  12| \t\"testing\"\n  13| \t\"time\"\n  14| \n  15| \t\"github.com/go-git/go-git/v6\"\n  16| \t\"github.com/go-git/go-git/v6/plumbing\"\n  17| \t\"github.com/go-git/go-g",
+      "output_tokens": 2852,
+      "duration_ms": 1.1589527130126953,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "git.PlainInit",
+        "file_type": "go",
+        "max_files": 20,
+        "max_matches_per_file": 10
+      },
+      "output": "0 matches.",
+      "output_tokens": 10,
+      "duration_ms": 5.928993225097656,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "PlainInit",
+        "file_type": "go",
+        "max_files": 20,
+        "max_matches_per_file": 10
+      },
+      "output": "cmd/entire/cli/agent/factoryaidroid/lifecycle_test.go\n 220: if _, err := git.PlainInit(repoDir, false); err != nil {\ncmd/entire/cli/benchutil/benchutil.go\n 108: repo, err := git.PlainInit(dir, false)\ncmd/entire/cli/benchutil/parse_tree_bench_test.go\n 21: repo, err := gogit.PlainInit(b.TempDir(), true)\ncmd/entire/cli/checkpoint/backwards_compat_test.go\n 28: repo, err := git.PlainInit(tempDir, false)\ncmd/entire/cli/checkpoint/checkpoint_test.go\n 49: repo, err := git.PlainInit(tempDir, false)\n 109:",
+      "output_tokens": 2466,
+      "duration_ms": 0.7741451263427734,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "PlainInit",
+        "file_type": "go",
+        "max_files": 20,
+        "max_matches_per_file": 10,
+        "context_after": 0,
+        "context_before": 0
+      },
+      "output": "cmd/entire/cli/agent/factoryaidroid/lifecycle_test.go\n 220: if _, err := git.PlainInit(repoDir, false); err != nil {\ncmd/entire/cli/benchutil/benchutil.go\n 108: repo, err := git.PlainInit(dir, false)\ncmd/entire/cli/benchutil/parse_tree_bench_test.go\n 21: repo, err := gogit.PlainInit(b.TempDir(), true)\ncmd/entire/cli/checkpoint/backwards_compat_test.go\n 28: repo, err := git.PlainInit(tempDir, false)\ncmd/entire/cli/checkpoint/checkpoint_test.go\n 49: repo, err := git.PlainInit(tempDir, false)\n 109:",
+      "output_tokens": 2467,
+      "duration_ms": 0.8077621459960938,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/checkpoint/checkpoint_test.go",
+        "start_line": 40,
+        "end_line": 80
+      },
+      "output": "cmd/entire/cli/checkpoint/checkpoint_test.go:40-80\n  40| \t\tt.Errorf(\"expected zero value of Type to be Temporary, got %d\", defaultType)\n  41| \t}\n  42| }\n  43| \n  44| func TestCopyMetadataDir_SkipsSymlinks(t *testing.T) {\n  45| \t// Create a temp directory for the test\n  46| \ttempDir := t.TempDir()\n  47| \n  48| \t// Initialize a git repository\n  49| \trepo, err := git.PlainInit(tempDir, false)\n  50| \tif err != nil {\n  51| \t\tt.Fatalf(\"failed to init git repo: %v\", err)\n  52| \t}\n  53| \n  54| \t// Creat",
+      "output_tokens": 1748,
+      "duration_ms": 1.2569427490234375,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/explain_test.go",
+        "start_line": 270,
+        "end_line": 320
+      },
+      "output": "cmd/entire/cli/explain_test.go:270-320\n  270| }\n  271| \n  272| func TestExplainCommit_NotFound(t *testing.T) {\n  273| \ttmpDir := t.TempDir()\n  274| \tt.Chdir(tmpDir)\n  275| \n  276| \t// Initialize git repo\n  277| \tif _, err := git.PlainInit(tmpDir, false); err != nil {\n  278| \t\tt.Fatalf(\"failed to init git repo: %v\", err)\n  279| \t}\n  280| \n  281| \tvar stdout bytes.Buffer\n  282| \terr := runExplainCommit(context.Background(), &stdout, \"nonexistent\", false, false, false, false)\n  283| \n  284| \tif err",
+      "output_tokens": 1809,
+      "duration_ms": 1.8360614776611328,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/git_operations_test.go",
+        "start_line": 25,
+        "end_line": 75
+      },
+      "output": "cmd/entire/cli/git_operations_test.go:25-75\n  25| }\n  26| \n  27| func TestGetCurrentBranch(t *testing.T) {\n  28| \t// Create temp directory for test repo\n  29| \ttmpDir := t.TempDir()\n  30| \tt.Chdir(tmpDir)\n  31| \n  32| \t// Initialize repo\n  33| \trepo, err := git.PlainInit(tmpDir, false)\n  34| \tif err != nil {\n  35| \t\tt.Fatalf(\"Failed to init repo: %v\", err)\n  36| \t}\n  37| \n  38| \t// Create initial commit\n  39| \tw, err := repo.Worktree()\n  40| \tif err != nil {\n  41| \t\tt.Fatalf(\"Failed to get workt",
+      "output_tokens": 1817,
+      "duration_ms": 0.2429485321044922,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/checkpoint/backwards_compat_test.go",
+        "start_line": 1,
+        "end_line": 60
+      },
+      "output": "cmd/entire/cli/checkpoint/backwards_compat_test.go:1-60\n  1| package checkpoint\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"os\"\n  6| \t\"path/filepath\"\n  7| \t\"testing\"\n  8| \n  9| \t\"github.com/entireio/cli/cmd/entire/cli/agent\"\n  10| \t\"github.com/entireio/cli/cmd/entire/cli/checkpoint/id\"\n  11| \t\"github.com/entireio/cli/redact\"\n  12| \n  13| \t\"github.com/go-git/go-git/v6\"\n  14| \t\"github.com/go-git/go-git/v6/plumbing/object\"\n  15| )\n  16| \n  17| // TestReadCommitted_MissingTokenUsage verifies that rea",
+      "output_tokens": 2378,
+      "duration_ms": 1.2600421905517578,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/checkpoint/committed_update_test.go",
+        "start_line": 1,
+        "end_line": 60
+      },
+      "output": "cmd/entire/cli/checkpoint/committed_update_test.go:1-60\n  1| package checkpoint\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"encoding/json\"\n  6| \t\"os\"\n  7| \t\"path/filepath\"\n  8| \t\"testing\"\n  9| \n  10| \t\"github.com/entireio/cli/cmd/entire/cli/checkpoint/id\"\n  11| \t\"github.com/entireio/cli/cmd/entire/cli/paths\"\n  12| \t\"github.com/entireio/cli/redact\"\n  13| \n  14| \t\"github.com/go-git/go-git/v6\"\n  15| \t\"github.com/go-git/go-git/v6/config\"\n  16| \t\"github.com/go-git/go-git/v6/plumbing\"\n  17| \t\"github.co",
+      "output_tokens": 2157,
+      "duration_ms": 0.35834312438964844,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/agent/factoryaidroid/lifecycle_test.go",
+        "start_line": 210,
+        "end_line": 240
+      },
+      "output": "cmd/entire/cli/agent/factoryaidroid/lifecycle_test.go:210-240\n  210| \tif event.SubagentID != \"agent-789\" {\n  211| \t\tt.Errorf(\"expected SubagentID 'agent-789', got %q\", event.SubagentID)\n  212| \t}\n  213| \tif event.ToolUseID == \"\" {\n  214| \t\tt.Fatal(\"expected fallback tool_use_id, got empty string\")\n  215| \t}\n  216| }\n  217| \n  218| func TestParseHookEvent_MissingToolUseID_RepeatedInputsStayUniqueAndCorrelate(t *testing.T) {\n  219| \trepoDir := t.TempDir()\n  220| \tif _, err := git.PlainInit(repoDir",
+      "output_tokens": 1473,
+      "duration_ms": 0.5009174346923828,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/checkpoint/parse_tree_test.go",
+        "start_line": 1,
+        "end_line": 50
+      },
+      "output": "cmd/entire/cli/checkpoint/parse_tree_test.go:1-50\n  1| package checkpoint\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"fmt\"\n  6| \t\"testing\"\n  7| \n  8| \t\"github.com/go-git/go-git/v6\"\n  9| \t\"github.com/go-git/go-git/v6/plumbing\"\n  10| \t\"github.com/go-git/go-git/v6/plumbing/filemode\"\n  11| \t\"github.com/go-git/go-git/v6/plumbing/object\"\n  12| )\n  13| \n  14| // storeBlob is a test helper that stores a blob in the repo and returns its hash.\n  15| func storeBlob(t *testing.T, repo *git.Repository, conten",
+      "output_tokens": 1730,
+      "duration_ms": 0.5791187286376953,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/clean_test.go",
+        "start_line": 1,
+        "end_line": 60
+      },
+      "output": "cmd/entire/cli/clean_test.go:1-60\n  1| package cli\n  2| \n  3| import (\n  4| \t\"bytes\"\n  5| \t\"context\"\n  6| \t\"encoding/json\"\n  7| \t\"os\"\n  8| \t\"path/filepath\"\n  9| \t\"strings\"\n  10| \t\"testing\"\n  11| \t\"time\"\n  12| \n  13| \t\"github.com/entireio/cli/cmd/entire/cli/checkpoint\"\n  14| \t\"github.com/entireio/cli/cmd/entire/cli/paths\"\n  15| \t\"github.com/entireio/cli/cmd/entire/cli/strategy\"\n  16| \t\"github.com/go-git/go-git/v6\"\n  17| \t\"github.com/go-git/go-git/v6/plumbing\"\n  18| \t\"github.com/go-git/go-git/v6/p",
+      "output_tokens": 1933,
+      "duration_ms": 0.30422210693359375,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/checkpoint/tree_surgery_equiv_test.go",
+        "start_line": 180,
+        "end_line": 210
+      },
+      "output": "cmd/entire/cli/checkpoint/tree_surgery_equiv_test.go:180-210\n  180| \tt.Helper()\n  181| \n  182| \tdir := t.TempDir()\n  183| \tif resolved, err := filepath.EvalSymlinks(dir); err == nil {\n  184| \t\tdir = resolved\n  185| \t}\n  186| \n  187| \trepo, err := gogit.PlainInit(dir, false)\n  188| \tif err != nil {\n  189| \t\tt.Fatalf(\"git init: %v\", err)\n  190| \t}\n  191| \n  192| \twt, err := repo.Worktree()\n  193| \tif err != nil {\n  194| \t\tt.Fatalf(\"worktree: %v\", err)\n  195| \t}\n  196| \n  197| \t// Create initial fi",
+      "output_tokens": 1031,
+      "duration_ms": 0.44798851013183594,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "entireio/cli/cmd/entire/cli/testutil",
+        "file_type": "go"
+      },
+      "output": "30/33 matches shown\ncmd/entire/cli/attach_test.go\n 21: \"github.com/entireio/cli/cmd/entire/cli/testutil\"\ncmd/entire/cli/checkpoint/checkpoint_test.go\n 19: \"github.com/entireio/cli/cmd/entire/cli/testutil\"\ncmd/entire/cli/checkpoint/v2_store_test.go\n 13: \"github.com/entireio/cli/cmd/entire/cli/testutil\"\ncmd/entire/cli/explain_test.go\n 21: \"github.com/entireio/cli/cmd/entire/cli/testutil\"\ncmd/entire/cli/fetch_no_config_pollution_test.go\n 12: \"github.com/entireio/cli/cmd/entire/cli/testutil\"\ncmd/ent",
+      "output_tokens": 2530,
+      "duration_ms": 1.1560916900634766,
+      "turn_number": 10
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/benchutil/parse_tree_bench_test.go",
+        "start_line": 1,
+        "end_line": 40
+      },
+      "output": "cmd/entire/cli/benchutil/parse_tree_bench_test.go:1-40\n  1| package benchutil\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"fmt\"\n  6| \t\"testing\"\n  7| \n  8| \t\"github.com/entireio/cli/cmd/entire/cli/checkpoint\"\n  9| \n  10| \tgogit \"github.com/go-git/go-git/v6\"\n  11| \t\"github.com/go-git/go-git/v6/plumbing\"\n  12| \t\"github.com/go-git/go-git/v6/plumbing/filemode\"\n  13| \t\"github.com/go-git/go-git/v6/plumbing/object\"\n  14| )\n  15| \n  16| // --- Helpers ---\n  17| \n  18| // benchInitBareRepo creates a bare gi",
+      "output_tokens": 1389,
+      "duration_ms": 6.3343048095703125,
+      "turn_number": 10
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/git_operations_test.go",
+        "start_line": 1,
+        "end_line": 25
+      },
+      "output": "cmd/entire/cli/git_operations_test.go:1-25\n  1| package cli\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"os\"\n  6| \t\"os/exec\"\n  7| \t\"path/filepath\"\n  8| \t\"testing\"\n  9| \n  10| \t\"github.com/go-git/go-git/v6\"\n  11| \t\"github.com/go-git/go-git/v6/plumbing\"\n  12| \t\"github.com/go-git/go-git/v6/plumbing/object\"\n  13| \t\"github.com/stretchr/testify/require\"\n  14| )\n  15| \n  16| // gitCheckout uses git CLI instead of go-git to work around go-git v5 bug\n  17| // where Checkout deletes untracked files (see htt",
+      "output_tokens": 889,
+      "duration_ms": 0.5018711090087891,
+      "turn_number": 11
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/agent/factoryaidroid/lifecycle_test.go",
+        "start_line": 1,
+        "end_line": 30
+      },
+      "output": "cmd/entire/cli/agent/factoryaidroid/lifecycle_test.go:1-30\n  1| package factoryaidroid\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"path/filepath\"\n  6| \t\"strings\"\n  7| \t\"testing\"\n  8| \n  9| \t\"github.com/entireio/cli/cmd/entire/cli/agent\"\n  10| \t\"github.com/entireio/cli/cmd/entire/cli/paths\"\n  11| \tgit \"github.com/go-git/go-git/v6\"\n  12| \t\"github.com/stretchr/testify/require\"\n  13| )\n  14| \n  15| func TestParseHookEvent_SessionStart(t *testing.T) {\n  16| \tt.Parallel()\n  17| \n  18| \tag := &FactoryAI",
+      "output_tokens": 1119,
+      "duration_ms": 0.4458427429199219,
+      "turn_number": 11
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/checkpoint/checkpoint_test.go",
+        "start_line": 1,
+        "end_line": 40
+      },
+      "output": "cmd/entire/cli/checkpoint/checkpoint_test.go:1-40\n  1| package checkpoint\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"encoding/json\"\n  6| \t\"errors\"\n  7| \t\"fmt\"\n  8| \t\"os\"\n  9| \t\"os/exec\"\n  10| \t\"path/filepath\"\n  11| \t\"strconv\"\n  12| \t\"strings\"\n  13| \t\"testing\"\n  14| \t\"time\"\n  15| \n  16| \t\"github.com/entireio/cli/cmd/entire/cli/agent\"\n  17| \t\"github.com/entireio/cli/cmd/entire/cli/checkpoint/id\"\n  18| \t\"github.com/entireio/cli/cmd/entire/cli/paths\"\n  19| \t\"github.com/entireio/cli/cmd/entire/cli/te",
+      "output_tokens": 1367,
+      "duration_ms": 0.86212158203125,
+      "turn_number": 11
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/checkpoint/checkpoint_test.go",
+        "start_line": 100,
+        "end_line": 160
+      },
+      "output": "cmd/entire/cli/checkpoint/checkpoint_test.go:100-160\n  100| \t}\n  101| }\n  102| \n  103| // TestWriteCommitted_AgentField verifies that the Agent field is written\n  104| // to both metadata.json and the commit message trailer.\n  105| func TestWriteCommitted_AgentField(t *testing.T) {\n  106| \ttempDir := t.TempDir()\n  107| \n  108| \t// Initialize a git repository with an initial commit\n  109| \trepo, err := git.PlainInit(tempDir, false)\n  110| \tif err != nil {\n  111| \t\tt.Fatalf(\"failed to init git rep",
+      "output_tokens": 2424,
+      "duration_ms": 1.0700225830078125,
+      "turn_number": 12
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/explain_test.go",
+        "start_line": 1,
+        "end_line": 30
+      },
+      "output": "cmd/entire/cli/explain_test.go:1-30\n  1| package cli\n  2| \n  3| import (\n  4| \t\"bytes\"\n  5| \t\"context\"\n  6| \t\"errors\"\n  7| \t\"os\"\n  8| \t\"os/exec\"\n  9| \t\"path/filepath\"\n  10| \t\"strings\"\n  11| \t\"testing\"\n  12| \t\"time\"\n  13| \n  14| \t\"github.com/entireio/cli/cmd/entire/cli/agent\"\n  15| \t\"github.com/entireio/cli/cmd/entire/cli/agent/types\"\n  16| \t\"github.com/entireio/cli/cmd/entire/cli/checkpoint\"\n  17| \t\"github.com/entireio/cli/cmd/entire/cli/checkpoint/id\"\n  18| \t\"github.com/entireio/cli/cmd/entire/",
+      "output_tokens": 1054,
+      "duration_ms": 0.9012222290039062,
+      "turn_number": 12
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/git_operations_test.go",
+        "start_line": 75,
+        "end_line": 145
+      },
+      "output": "cmd/entire/cli/git_operations_test.go:75-145\n  75| \t\tt.Errorf(\"GetCurrentBranch(context.Background()) = %v, want feature\", branch)\n  76| \t}\n  77| }\n  78| \n  79| func TestGetCurrentBranchDetachedHead(t *testing.T) {\n  80| \t// Create temp directory for test repo\n  81| \ttmpDir := t.TempDir()\n  82| \tt.Chdir(tmpDir)\n  83| \n  84| \t// Initialize repo\n  85| \trepo, err := git.PlainInit(tmpDir, false)\n  86| \tif err != nil {\n  87| \t\tt.Fatalf(\"Failed to init repo: %v\", err)\n  88| \t}\n  89| \n  90| \t// Create ",
+      "output_tokens": 2413,
+      "duration_ms": 0.20503997802734375,
+      "turn_number": 12
+    }
+  ],
+  "total_tool_calls": 26,
+  "total_turns": 12,
+  "wall_clock_ms": 42430.81593513489,
+  "input_tokens": 107718,
+  "output_tokens": 2732,
+  "tool_output_tokens": 42036,
+  "total_cost_usd": 0.364134,
+  "first_call_tool": "search_code",
+  "first_call_produced_file": true,
+  "retry_count": 0,
+  "error": "",
+  "total_tool_duration_ms": 30.584335327148438,
+  "tool_execution_share": 0.0007208047889982488,
+  "search_call_count": 8,
+  "read_call_count": 18,
+  "avg_search_code_duration_ms": 1.4220178127288818,
+  "median_search_code_duration_ms": 0.7973909378051758
+}

@@ -1,0 +1,350 @@
+{
+  "repeat": 0,
+  "task_id": "751884f8707a",
+  "repo": "entireio-cli",
+  "task_type": "code_understanding",
+  "condition": "fff",
+  "prompt": "We got a report yesterday from someone who enabled agents claude and codex using entire configure, then they manually committed, and they said reviewing with codex it seems to be an issue on the CLI on how it opens a session and if it fails it remains open and fallbacks to Claude Code which is the default value, here is their entire status, remotion-demos/public/screenshots/image.png\\",
+  "answer": "",
+  "tool_calls": [
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "codex",
+        "context_before": 3,
+        "context_after": 3
+      },
+      "output": "30/53 matches shown\n.codex/config.toml\n 3: codex_hooks = true\n.codex/hooks.json\n 9: \"command\": \"go run \\\"$(git rev-parse --show-toplevel)\\\"/cmd/entire/main.go hooks codex session-start\",\n 21: \"command\": \"go run \\\"$(git rev-parse --show-toplevel)\\\"/cmd/entire/main.go hooks codex stop\",\n 33: \"command\": \"go run \\\"$(git rev-parse --show-toplevel)\\\"/cmd/entire/main.go hooks codex user-prompt-submit\",\n.github/workflows/e2e-isolated.yml\n 11: options: [claude-code, opencode, gemini-cli, cursor-cli, fact",
+      "output_tokens": 3152,
+      "duration_ms": 2.216339111328125,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "claude",
+        "context_before": 3,
+        "context_after": 3
+      },
+      "output": "30/50 matches shown\n.claude/commands/dev-cycle.md\n 41: - Developer: `.claude/agents/dev.md`\n 42: - Reviewer: `.claude/agents/reviewer.md`\n 66: Read and follow .claude/agents/dev.md\n 83: Read and follow .claude/agents/reviewer.md\n.claude/commands/dev.md\n 14: Read and follow the instructions in .claude/agents/dev.md\n 19: 1. Read .claude/agents/dev.md for your role and process\n.claude/commands/reviewer.md\n 14: Read and follow the instructions in .claude/agents/reviewer.md\n 19: 1. Read .claude/agent",
+      "output_tokens": 2517,
+      "duration_ms": 1.9948482513427734,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "glob": "**/*.png",
+        "pattern": "image.png"
+      },
+      "output": "0 results (602 indexed)",
+      "output_tokens": 23,
+      "duration_ms": 1.950979232788086,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "session-start",
+        "context_before": 3,
+        "context_after": 3
+      },
+      "output": "30/54 matches shown\n.claude/settings.json\n 25: \"command\": \"go run ${CLAUDE_PROJECT_DIR}/cmd/entire/main.go hooks claude-code session-start\"\n.claude/skills/e2e/debug.md\n 69: | Hooks didn't fire | Check `entire-logs/entire.log` for missing hook entries (session-start, user-prompt-submit, stop, post-commit) |\n.claude/skills/test-repo/SKILL.md\n 204: - `session-start` - Called when session starts\n.codex/hooks.json\n 9: \"command\": \"go run \\\"$(git rev-parse --show-toplevel)\\\"/cmd/entire/main.go hooks co",
+      "output_tokens": 2402,
+      "duration_ms": 1.0979175567626953,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "fallback",
+        "context_before": 3,
+        "context_after": 3
+      },
+      "output": "\u2192 Read cmd/entire/cli/agent/copilotcli/compat_test.go [def]\n30/51 matches shown\ncmd/entire/cli/agent/copilotcli/compat_test.go\n 64: func TestParseTimestamp_NullAndZeroFallBackToNow(t *testing.T) {\n  65| t.Parallel()\ncmd/entire/cli/agent/copilotcli/transcript_test.go\n 543: func TestExtractModelFromTranscript_FallbackToToolExecComplete(t *testing.T) {\n  544| t.Parallel()\ncmd/entire/cli/agent/cursor/lifecycle_test.go\n 440: func TestParseHookEvent_ConversationIDFallback(t *testing.T) {\n  441| t.Para",
+      "output_tokens": 2514,
+      "duration_ms": 0.7359981536865234,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "glob": "**/session*.go"
+      },
+      "output": "cmd/entire/cli/agent/session.go git:clean\ncmd/entire/cli/agent/session_test.go git:clean\ncmd/entire/cli/integration_test/session_conflict_test.go git:clean\ncmd/entire/cli/sessions.go git:clean\ncmd/entire/cli/sessions_test.go git:clean\ncmd/entire/cli/strategy/session.go git:clean\ncmd/entire/cli/strategy/session_state.go git:clean\ncmd/entire/cli/strategy/session_state_test.go git:clean\ncmd/entire/cli/strategy/session_test.go git:clean\ne2e/tests/session_lifecycle_test.go git:clean",
+      "output_tokens": 482,
+      "duration_ms": 0.15997886657714844,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "OpenSession",
+        "context_before": 3,
+        "context_after": 5
+      },
+      "output": "0 exact matches. 53 approximate:\n.opencode/plugins/entire.ts\n 159:             // so this is the only reliable way to end sessions on exit.\nCHANGELOG.md\n 82: - `entire sessions` subcommands (`list`, `info`, `stop`) for managing active and ended sessions ([#822](https://github.com/entireio/cli/pull/822), [#739](https://github.com/entireio/cli/pull/739))\n 167: - Copilot checkpoint token scoping, session token backfill, and modelMetrics struct ([#717](https://github.com/entireio/cli/pull/717))",
+      "output_tokens": 495,
+      "duration_ms": 11.827945709228516,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "default.*agent\\|agent.*default\\|defaultAgent\\|DefaultAgent",
+        "context_before": 3,
+        "context_after": 3
+      },
+      "output": "0 matches.",
+      "output_tokens": 10,
+      "duration_ms": 3.2019615173339844,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/agent/session.go"
+      },
+      "output": "cmd/entire/cli/agent/session.go:1-80\n  1| package agent\n  2| \n  3| import (\n  4| \t\"time\"\n  5| \n  6| \t\"github.com/entireio/cli/cmd/entire/cli/agent/types\"\n  7| )\n  8| \n  9| // AgentSession represents a coding session's data.\n  10| // Each agent stores data in its native format (JSONL, SQLite, Markdown, etc.)\n  11| // and only the originating agent can read/write it.\n  12| //\n  13| // Design: Sessions are NOT interoperable between agents. A session created by\n  14| // Claude Code can only be read/",
+      "output_tokens": 2805,
+      "duration_ms": 0.29087066650390625,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/strategy/session.go"
+      },
+      "output": "cmd/entire/cli/strategy/session.go:1-80\n  1| package strategy\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"encoding/json\"\n  6| \t\"fmt\"\n  7| \t\"sort\"\n  8| \t\"strconv\"\n  9| \t\"strings\"\n  10| \t\"time\"\n  11| \n  12| \t\"github.com/entireio/cli/cmd/entire/cli/checkpoint\"\n  13| \t\"github.com/entireio/cli/cmd/entire/cli/checkpoint/id\"\n  14| \t\"github.com/entireio/cli/cmd/entire/cli/paths\"\n  15| \n  16| \t\"github.com/go-git/go-git/v6\"\n  17| )\n  18| \n  19| // NoDescription is the default description for sessions witho",
+      "output_tokens": 3130,
+      "duration_ms": 0.3077983856201172,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/strategy/session_state.go"
+      },
+      "output": "cmd/entire/cli/strategy/session_state.go:1-80\n  1| package strategy\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"fmt\"\n  6| \t\"log/slog\"\n  7| \t\"os\"\n  8| \t\"path/filepath\"\n  9| \t\"strings\"\n  10| \n  11| \t\"github.com/entireio/cli/cmd/entire/cli/jsonutil\"\n  12| \t\"github.com/entireio/cli/cmd/entire/cli/logging\"\n  13| \t\"github.com/entireio/cli/cmd/entire/cli/paths\"\n  14| \t\"github.com/entireio/cli/cmd/entire/cli/session\"\n  15| \t\"github.com/entireio/cli/cmd/entire/cli/validation\"\n  16| )\n  17| \n  18| // Sessi",
+      "output_tokens": 3131,
+      "duration_ms": 0.16689300537109375,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/sessions.go"
+      },
+      "output": "cmd/entire/cli/sessions.go:1-80\n  1| package cli\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"encoding/json\"\n  6| \t\"errors\"\n  7| \t\"fmt\"\n  8| \t\"io\"\n  9| \t\"path/filepath\"\n  10| \t\"sort\"\n  11| \t\"strings\"\n  12| \t\"time\"\n  13| \n  14| \t\"github.com/charmbracelet/huh\"\n  15| \t\"github.com/entireio/cli/cmd/entire/cli/paths\"\n  16| \t\"github.com/entireio/cli/cmd/entire/cli/session\"\n  17| \t\"github.com/entireio/cli/cmd/entire/cli/strategy\"\n  18| \t\"github.com/entireio/cli/cmd/entire/cli/stringutil\"\n  19| \t\"github.co",
+      "output_tokens": 2856,
+      "duration_ms": 0.1552104949951172,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/strategy/session_state.go",
+        "start_line": 80,
+        "end_line": 289
+      },
+      "output": "cmd/entire/cli/strategy/session_state.go:80-289\n  80| \t}\n  81| \n  82| \t// Atomic write: write to temp file, then rename\n  83| \ttmpFile := stateFile + \".tmp\"\n  84| \tif err := os.WriteFile(tmpFile, data, 0o600); err != nil {\n  85| \t\treturn fmt.Errorf(\"failed to write session state: %w\", err)\n  86| \t}\n  87| \tif err := os.Rename(tmpFile, stateFile); err != nil {\n  88| \t\treturn fmt.Errorf(\"failed to rename session state file: %w\", err)\n  89| \t}\n  90| \treturn nil\n  91| }\n  92| \n  93| // ListSessionSta",
+      "output_tokens": 8713,
+      "duration_ms": 2.5861263275146484,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "SessionState",
+        "context_before": 2,
+        "context_after": 4,
+        "file_type": "go",
+        "max_files": 5
+      },
+      "output": "15/52 matches shown\ncmd/entire/cli/attach.go\n 247: func saveAttachSessionState(ctx context.Context, existingState *session.State, sessionID string, agentType types.AgentType, transcriptPath \u2026\n  248| stateStore, err := session.NewStateStore(ctx)\n  249| if err != nil {\n  250| return fmt.Errorf(\"failed to open session store: %w\", err)\n  251| }\ncmd/entire/cli/benchutil/benchutil.go\n 243: func (br *BenchRepo) CreateSessionState(b *testing.B, opts SessionOpts) string {\n  244| b.Helper()\ncmd/entire/cli",
+      "output_tokens": 1724,
+      "duration_ms": 0.7259845733642578,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "session-start.*fail\\|fail.*session\\|session.*error\\|error.*session.*open\\|session.*open.*fail",
+        "context_before": 3,
+        "context_after": 5,
+        "file_type": "go"
+      },
+      "output": "0 matches.",
+      "output_tokens": 10,
+      "duration_ms": 3.998994827270508,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/agent/codex/lifecycle.go"
+      },
+      "output": "cmd/entire/cli/agent/codex/lifecycle.go:1-80\n  1| package codex\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"encoding/json\"\n  6| \t\"fmt\"\n  7| \t\"io\"\n  8| \t\"os\"\n  9| \t\"time\"\n  10| \n  11| \t\"github.com/entireio/cli/cmd/entire/cli/agent\"\n  12| )\n  13| \n  14| // Compile-time interface assertions.\n  15| var (\n  16| \t_ agent.HookSupport        = (*CodexAgent)(nil)\n  17| \t_ agent.HookResponseWriter = (*CodexAgent)(nil)\n  18| )\n  19| \n  20| // WriteHookResponse outputs a JSON hook response to stdout.\n  21| /",
+      "output_tokens": 2785,
+      "duration_ms": 0.18978118896484375,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/agent/codex/lifecycle.go",
+        "start_line": 80,
+        "end_line": 109
+      },
+      "output": "cmd/entire/cli/agent/codex/lifecycle.go:80-109\n  80| }\n  81| \n  82| func (c *CodexAgent) parseTurnStart(stdin io.Reader) (*agent.Event, error) {\n  83| \traw, err := agent.ReadAndParseHookInput[userPromptSubmitRaw](stdin)\n  84| \tif err != nil {\n  85| \t\treturn nil, err\n  86| \t}\n  87| \treturn &agent.Event{\n  88| \t\tType:       agent.TurnStart,\n  89| \t\tSessionID:  raw.SessionID,\n  90| \t\tSessionRef: derefString(raw.TranscriptPath),\n  91| \t\tPrompt:     raw.Prompt,\n  92| \t\tModel:      raw.Model,\n  93| \t\t",
+      "output_tokens": 998,
+      "duration_ms": 0.3380775451660156,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "glob": "cmd/entire/cli/agent/codex/*.go"
+      },
+      "output": "cmd/entire/cli/agent/codex/codex.go git:clean\ncmd/entire/cli/agent/codex/codex_test.go git:clean\ncmd/entire/cli/agent/codex/hooks.go git:clean\ncmd/entire/cli/agent/codex/hooks_test.go git:clean\ncmd/entire/cli/agent/codex/lifecycle.go git:clean\ncmd/entire/cli/agent/codex/lifecycle_test.go git:clean\ncmd/entire/cli/agent/codex/transcript.go git:clean\ncmd/entire/cli/agent/codex/transcript_test.go git:clean\ncmd/entire/cli/agent/codex/types.go git:clean",
+      "output_tokens": 451,
+      "duration_ms": 0.2598762512207031,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "glob": "cmd/entire/cli/agent/claudecode/*.go"
+      },
+      "output": "cmd/entire/cli/agent/claudecode/claude.go git:clean\ncmd/entire/cli/agent/claudecode/claude_test.go git:clean\ncmd/entire/cli/agent/claudecode/generate.go git:clean\ncmd/entire/cli/agent/claudecode/hooks.go git:clean\ncmd/entire/cli/agent/claudecode/hooks_test.go git:clean\ncmd/entire/cli/agent/claudecode/lifecycle.go git:clean\ncmd/entire/cli/agent/claudecode/lifecycle_test.go git:clean\ncmd/entire/cli/agent/claudecode/response.go git:clean\ncmd/entire/cli/agent/claudecode/response_test.go git:clean\ncm",
+      "output_tokens": 665,
+      "duration_ms": 0.1888275146484375,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "handleLifecycleSessionStart\\|handleSessionStart\\|SessionStart",
+        "context_before": 3,
+        "context_after": 6,
+        "file_type": "go",
+        "max_files": 8
+      },
+      "output": "0 matches.",
+      "output_tokens": 10,
+      "duration_ms": 6.844043731689453,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "configure.*agent\\|agent.*configure\\|entire configure",
+        "context_before": 2,
+        "context_after": 4,
+        "max_files": 5
+      },
+      "output": "0 matches.",
+      "output_tokens": 10,
+      "duration_ms": 3.862142562866211,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "SessionStart",
+        "context_before": 3,
+        "context_after": 6,
+        "file_type": "go",
+        "max_files": 10
+      },
+      "output": "\u2192 Read cmd/entire/cli/agent/claudecode/lifecycle_test.go [def]\n30/50 matches shown\ncmd/entire/cli/agent/claudecode/lifecycle_test.go\n 16: func TestParseHookEvent_SessionStart(t *testing.T) {\n  17| t.Parallel()\n 42: func TestParseHookEvent_SessionStart_IncludesModel(t *testing.T) {\ncmd/entire/cli/agent/claudecode/lifecycle.go\n 99: func (c *ClaudeCodeAgent) parseSessionStart(stdin io.Reader) (*agent.Event, error) {\n  100| raw, err := agent.ReadAndParseHookInput[sessionInfoRaw](stdin)\n  101| if err",
+      "output_tokens": 2590,
+      "duration_ms": 3.6890506744384766,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "glob": "cmd/entire/cli/**/*.go",
+        "pattern": "hook"
+      },
+      "output": "50/199 matches\ncmd/entire/cli/agent/cursor/hooks_test.go git:clean\ncmd/entire/cli/agent/claudecode/hooks_test.go git:clean\ncmd/entire/cli/agent/codex/hooks.go git:clean\ncmd/entire/cli/agent/codex/hooks_test.go git:clean\ncmd/entire/cli/agent/copilotcli/hooks.go git:clean\ncmd/entire/cli/agent/copilotcli/hooks_test.go git:clean\ncmd/entire/cli/agent/cursor/hooks.go git:clean\ncmd/entire/cli/agent/claudecode/hooks.go git:clean\ncmd/entire/cli/agent/factoryaidroid/hooks_test.go git:clean\ncmd/entire/cli/",
+      "output_tokens": 2691,
+      "duration_ms": 1.0569095611572266,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/hooks.go"
+      },
+      "output": "cmd/entire/cli/hooks.go:1-80\n  1| package cli\n  2| \n  3| import (\n  4| \t\"encoding/json\"\n  5| \t\"errors\"\n  6| \t\"fmt\"\n  7| \t\"io\"\n  8| \n  9| \t\"github.com/entireio/cli/cmd/entire/cli/strategy\"\n  10| )\n  11| \n  12| // TaskHookInput represents the JSON input from PreToolUse[Task] hook\n  13| type TaskHookInput struct {\n  14| \tSessionID      string          `json:\"session_id\"`\n  15| \tTranscriptPath string          `json:\"transcript_path\"`\n  16| \tToolUseID      string          `json:\"tool_use_id\"`\n  17| \t",
+      "output_tokens": 2759,
+      "duration_ms": 0.3540515899658203,
+      "turn_number": 10
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/hook_registry.go"
+      },
+      "output": "cmd/entire/cli/hook_registry.go:1-80\n  1| // hook_registry.go provides hook command registration for agents.\n  2| // The lifecycle dispatcher (DispatchLifecycleEvent) handles all lifecycle events.\n  3| // PostTodo is the only hook that's handled directly (not via lifecycle dispatcher).\n  4| package cli\n  5| \n  6| import (\n  7| \t\"errors\"\n  8| \t\"fmt\"\n  9| \t\"log/slog\"\n  10| \n  11| \t\"github.com/entireio/cli/cmd/entire/cli/agent\"\n  12| \t\"github.com/entireio/cli/cmd/entire/cli/agent/claudecode\"\n  13| ",
+      "output_tokens": 3472,
+      "duration_ms": 0.14281272888183594,
+      "turn_number": 10
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/hook_registry.go",
+        "start_line": 80,
+        "end_line": 179
+      },
+      "output": "cmd/entire/cli/hook_registry.go:80-179\n  80| \tcase claudecode.HookNamePreTask, claudecode.HookNamePostTask, claudecode.HookNamePostTodo:\n  81| \t\treturn \"subagent\"\n  82| \tcase geminicli.HookNameBeforeTool, geminicli.HookNameAfterTool:\n  83| \t\treturn \"tool\"\n  84| \tdefault:\n  85| \t\treturn \"agent\"\n  86| \t}\n  87| }\n  88| \n  89| // executeAgentHook runs the core hook execution logic for a given agent and hook name.\n  90| // It handles git repo checks, enabled checks, logging, event parsing, and lifecy",
+      "output_tokens": 4368,
+      "duration_ms": 0.5381107330322266,
+      "turn_number": 11
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/hooks_cmd.go"
+      },
+      "output": "cmd/entire/cli/hooks_cmd.go:1-74\n  1| package cli\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"fmt\"\n  6| \t\"time\"\n  7| \n  8| \t\"github.com/entireio/cli/cmd/entire/cli/agent\"\n  9| \t\"github.com/entireio/cli/cmd/entire/cli/agent/types\"\n  10| \n  11| \t// Import agents to ensure they are registered before we iterate\n  12| \t_ \"github.com/entireio/cli/cmd/entire/cli/agent/claudecode\"\n  13| \t_ \"github.com/entireio/cli/cmd/entire/cli/agent/codex\"\n  14| \t_ \"github.com/entireio/cli/cmd/entire/cli/agent/copilotc",
+      "output_tokens": 2893,
+      "duration_ms": 0.12326240539550781,
+      "turn_number": 11
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "DispatchLifecycleEvent",
+        "context_before": 3,
+        "context_after": 8,
+        "file_type": "go"
+      },
+      "output": "\u2192 Read cmd/entire/cli/hook_registry.go (best match)\ncmd/entire/cli/lifecycle.go\n 33: func DispatchLifecycleEvent(ctx context.Context, ag agent.Agent, event *agent.Event) error {\n  34| if ag == nil {\n  35| return errors.New(\"agent cannot be nil\")\n  36| }\n  37| if event == nil {\n  38| return errors.New(\"event cannot be nil\")\n  39| }\ncmd/entire/cli/lifecycle_test.go\n 89: func TestDispatchLifecycleEvent_NilAgent(t *testing.T) {\n  90| t.Parallel()\n 106: func TestDispatchLifecycleEvent_NilEvent(t *tes",
+      "output_tokens": 1411,
+      "duration_ms": 0.5218982696533203,
+      "turn_number": 12
+    }
+  ],
+  "total_tool_calls": 28,
+  "total_turns": 12,
+  "wall_clock_ms": 42085.047006607056,
+  "input_tokens": 162380,
+  "output_tokens": 2251,
+  "tool_output_tokens": 59067,
+  "total_cost_usd": 0.5209050000000001,
+  "first_call_tool": "search_code",
+  "first_call_produced_file": true,
+  "retry_count": 0,
+  "error": "",
+  "total_tool_duration_ms": 49.52669143676758,
+  "tool_execution_share": 0.001176823954336851,
+  "search_call_count": 12,
+  "avg_search_code_duration_ms": 3.393093744913737,
+  "median_search_code_duration_ms": 2.7091503143310547,
+  "avg_read_code_duration_ms": 0.47209046103737573,
+  "median_read_code_duration_ms": 0.29087066650390625
+}

@@ -1,0 +1,281 @@
+{
+  "repeat": 0,
+  "task_id": "6191df2265d1",
+  "repo": "entireio-cli",
+  "task_type": "debug_or_validation",
+  "condition": "pgr_v4",
+  "prompt": "can you look at the failing e2e tests and figure out if this are real issue or harness / flake issues",
+  "answer": "",
+  "tool_calls": [
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": "."
+      },
+      "output": "AGENTS.md\nCHANGELOG.md\nCLAUDE.md\nCODE_OF_CONDUCT.md\nCONTRIBUTING.md\nLICENSE\nREADME.md\nSECURITY.md\nWINDOWS.md\ncmd/\ndocs/\ne2e/\ngo.mod\ngo.sum\nmise-tasks/\nmise.toml\nperf/\nredact/\nscripts/",
+      "output_tokens": 183,
+      "duration_ms": 0.3819465637207031,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "glob": "**/*e2e*",
+        "max_results": 50
+      },
+      "output": "./scripts/download-e2e-artifacts.sh\n./scripts/test-attribution-e2e.sh",
+      "output_tokens": 69,
+      "duration_ms": 19.790172576904297,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": "e2e",
+        "recursive": true
+      },
+      "output": "README.md\nagents/\nagents/agent.go\nagents/claude.go\nagents/codex.go\nagents/codex_test.go\nagents/copilot-cli.go\nagents/cursor_cli.go\nagents/droid.go\nagents/gemini.go\nagents/link_unix.go\nagents/link_windows.go\nagents/opencode.go\nagents/procattr_unix.go\nagents/procattr_windows.go\nagents/roger_roger.go\nagents/tmux.go\nagents/vogon.go\nbootstrap/\nbootstrap/main.go\ncmd/\ncmd/testreport/\ncmd/testreport/main.go\nentire/\nentire/entire.go\nexploratory/\nexploratory/README.md\ntests/\ntests/attribution_test.go\ntest",
+      "output_tokens": 1215,
+      "duration_ms": 0.9357929229736328,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "glob": "**/*.log",
+        "max_results": 30
+      },
+      "output": "No files found.",
+      "output_tokens": 15,
+      "duration_ms": 12.470722198486328,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "glob": "**/testdata/**",
+        "max_results": 30
+      },
+      "output": "./cmd/entire/cli/transcript/compact/testdata/claude_expected.jsonl\n./cmd/entire/cli/transcript/compact/testdata/claude_expected2.jsonl\n./cmd/entire/cli/transcript/compact/testdata/claude_full.jsonl\n./cmd/entire/cli/transcript/compact/testdata/claude_full2.jsonl\n./cmd/entire/cli/transcript/compact/testdata/codex_expected.jsonl\n./cmd/entire/cli/transcript/compact/testdata/codex_full.jsonl\n./cmd/entire/cli/transcript/compact/testdata/copilot_expected.jsonl\n./cmd/entire/cli/transcript/compact/testda",
+      "output_tokens": 913,
+      "duration_ms": 9.240150451660156,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "glob": "**/*.xml",
+        "max_results": 20
+      },
+      "output": "No files found.",
+      "output_tokens": 15,
+      "duration_ms": 8.913040161132812,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "glob": "**/*.json",
+        "max_results": 20
+      },
+      "output": "No files found.",
+      "output_tokens": 15,
+      "duration_ms": 9.012937545776367,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "glob": "**/*.yml",
+        "max_results": 30
+      },
+      "output": "No files found.",
+      "output_tokens": 15,
+      "duration_ms": 10.323047637939453,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "glob": "**/*.yaml",
+        "max_results": 30
+      },
+      "output": "./.golangci.yaml\n./.goreleaser.yaml",
+      "output_tokens": 35,
+      "duration_ms": 8.394002914428711,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "glob": "**/.github/**",
+        "max_results": 30
+      },
+      "output": "No files found.",
+      "output_tokens": 15,
+      "duration_ms": 14.978170394897461,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": "mise-tasks"
+      },
+      "output": "bench/\nbuild\ncompletions\ndev/\ndup/\nlint/\nrelease\ntest/",
+      "output_tokens": 54,
+      "duration_ms": 0.11992454528808594,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": "mise-tasks/test"
+      },
+      "output": "ci/\ne2e/",
+      "output_tokens": 8,
+      "duration_ms": 0.1678466796875,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": "mise-tasks/dev"
+      },
+      "output": "publish",
+      "output_tokens": 7,
+      "duration_ms": 0.06389617919921875,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": "mise-tasks/test/e2e"
+      },
+      "output": "_default\ncanary\nroger-roger",
+      "output_tokens": 27,
+      "duration_ms": 0.15306472778320312,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": "mise-tasks/test/ci"
+      },
+      "output": "core\nintegration/",
+      "output_tokens": 17,
+      "duration_ms": 0.06818771362304688,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "mise-tasks/test/e2e/_default"
+      },
+      "output": "mise-tasks/test/e2e/_default:1-43\n  1| #!/bin/sh\n  2| #MISE description=\"Run E2E tests: mise run test:e2e --agent claude-code [filter]\"\n  3| #MISE quiet=true\n  4| #USAGE flag \"--agent <agent>\" help=\"Agent (claude-code, gemini-cli, opencode, cursor-cli, copilot-cli)\" default=\"\" env=\"E2E_AGENT\"\n  5| #USAGE arg \"[filter]\" help=\"Test name filter (regex)\" default=\"\"\n  6| \n  7| set -eu\n  8| \n  9| export E2E_AGENT=\"${usage_agent:-}\"\n 10| \n 11| # Build from source with version info unless a pre-built bi",
+      "output_tokens": 1721,
+      "duration_ms": 0.698089599609375,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "mise-tasks/test/e2e/canary"
+      },
+      "output": "mise-tasks/test/e2e/canary:1-68\n  1| #!/bin/sh\n  2| #MISE description=\"Run E2E canary tests with deterministic agents (no API calls)\"\n  3| #USAGE arg \"[filter]\" help=\"Test name filter (regex)\" default=\"\"\n  4| \n  5| set -eu\n  6| \n  7| # Build entire CLI\n  8| mise run build\n  9| export E2E_ENTIRE_BIN=\"$PWD/entire\"\n 10| \n 11| # Build vogon binary\n 12| go build -o vogon ./e2e/vogon\n 13| E2E_PATH=\"$PWD:$PATH\"\n 14| \n 15| if [ -z \"${E2E_ARTIFACT_DIR:-}\" ]; then\n 16|   E2E_ARTIFACT_DIR=\"$PWD/e2e/artifac",
+      "output_tokens": 2500,
+      "duration_ms": 0.720977783203125,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "mise-tasks/test/e2e/roger-roger"
+      },
+      "output": "mise-tasks/test/e2e/roger-roger:1-45\n  1| #!/bin/sh\n  2| #MISE description=\"Run E2E tests with roger-roger external agent (no API calls)\"\n  3| #USAGE arg \"[filter]\" help=\"Test name filter (regex)\" default=\"\"\n  4| \n  5| set -eu\n  6| \n  7| export E2E_AGENT=\"roger-roger\"\n  8| \n  9| # Build entire CLI\n 10| mise run build\n 11| export E2E_ENTIRE_BIN=\"$PWD/entire\"\n 12| \n 13| # Ensure roger-roger binaries are available on PATH before running E2E tests.\n 14| # They are typically installed via mise (see m",
+      "output_tokens": 1866,
+      "duration_ms": 3.8208961486816406,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/tests/main_test.go"
+      },
+      "output": "e2e/tests/main_test.go:1-78\n  1| //go:build e2e\n  2| \n  3| package tests\n  4| \n  5| import (\n  6| \t\"fmt\"\n  7| \t\"os\"\n  8| \t\"os/exec\"\n  9| \t\"path/filepath\"\n 10| \t\"runtime\"\n 11| \t\"testing\"\n 12| \n 13| \t\"github.com/entireio/cli/e2e/agents\"\n 14| \t\"github.com/entireio/cli/e2e/entire\"\n 15| \t\"github.com/entireio/cli/e2e/testutil\"\n 16| )\n 17| \n 18| func TestMain(m *testing.M) {\n 19| \trunDir := os.Getenv(\"E2E_ARTIFACT_DIR\")\n 20| \tif runDir == \"\" {\n 21| \t\t_, file, _, _ := runtime.Caller(0)\n 22| \t\ttestutil.A",
+      "output_tokens": 2989,
+      "duration_ms": 0.3857612609863281,
+      "turn_number": 10
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/tests/single_session_test.go"
+      },
+      "output": "e2e/tests/single_session_test.go:1-80\n  1| //go:build e2e\n  2| \n  3| package tests\n  4| \n  5| import (\n  6| \t\"context\"\n  7| \t\"os\"\n  8| \t\"path/filepath\"\n  9| \t\"testing\"\n 10| \t\"time\"\n 11| \n 12| \t\"github.com/entireio/cli/e2e/testutil\"\n 13| \t\"github.com/stretchr/testify/assert\"\n 14| )\n 15| \n 16| // TestHumanOnlyChangesAndCommits: human creates a file and commits without any\n 17| // agent interaction. No checkpoint should be created.\n 18| func TestHumanOnlyChangesAndCommits(t *testing.T) {\n 19| \ttest",
+      "output_tokens": 3363,
+      "duration_ms": 0.2040863037109375,
+      "turn_number": 10
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/tests/single_session_test.go",
+        "start_line": 80,
+        "end_line": 114
+      },
+      "output": "e2e/tests/single_session_test.go:80-114\n 80| \t\ttestutil.AssertCheckpointAdvanced(t, s)\n 81| \n 82| \t\tcpID := testutil.AssertHasCheckpointTrailer(t, s.Dir, \"HEAD\")\n 83| \t\ttestutil.AssertCheckpointExists(t, s.Dir, cpID)\n 84| \t\ttestutil.AssertCheckpointInLastN(t, s.Dir, cpID, 2)\n 85| \t\ttestutil.WaitForNoShadowBranches(t, s.Dir, 10*time.Second)\n 86| \t})\n 87| }\n 88| \n 89| // TestSingleSessionSubagentCommitInTurn: one prompt with subagent creates a file and commits it.\n 90| // Expects both an initial c",
+      "output_tokens": 1869,
+      "duration_ms": 0.32782554626464844,
+      "turn_number": 11
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/tests/resume_test.go"
+      },
+      "output": "e2e/tests/resume_test.go:1-80\n  1| //go:build e2e\n  2| \n  3| package tests\n  4| \n  5| import (\n  6| \t\"context\"\n  7| \t\"fmt\"\n  8| \t\"os\"\n  9| \t\"os/exec\"\n 10| \t\"path/filepath\"\n 11| \t\"testing\"\n 12| \t\"time\"\n 13| \n 14| \t\"github.com/entireio/cli/e2e/entire\"\n 15| \t\"github.com/entireio/cli/e2e/testutil\"\n 16| \t\"github.com/stretchr/testify/assert\"\n 17| \t\"github.com/stretchr/testify/require\"\n 18| )\n 19| \n 20| // TestResumeFromFeatureBranch: agent creates a file on a feature branch and\n 21| // user commits, t",
+      "output_tokens": 3561,
+      "duration_ms": 0.23293495178222656,
+      "turn_number": 11
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/tests/resume_test.go",
+        "start_line": 80,
+        "end_line": 239
+      },
+      "output": "e2e/tests/resume_test.go:80-159\n 80| \n 81| \t\t_, err := s.RunPrompt(t, ctx,\n 82| \t\t\t\"create a file at docs/red.md with a paragraph about the colour red. Do not ask for confirmation or approval, just make the change.\")\n 83| \t\tif err != nil {\n 84| \t\t\tt.Fatalf(\"prompt 1 failed: %v\", err)\n 85| \t\t}\n 86| \n 87| \t\ts.Git(t, \"add\", \".\")\n 88| \t\ts.Git(t, \"commit\", \"-m\", \"Add red doc\")\n 89| \t\ttestutil.WaitForCheckpoint(t, s, 30*time.Second)\n 90| \t\tcp1Ref := testutil.GitOutput(t, s.Dir, \"rev-parse\", \"entire/ch",
+      "output_tokens": 4078,
+      "duration_ms": 0.47016143798828125,
+      "turn_number": 12
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/tests/rewind_test.go"
+      },
+      "output": "e2e/tests/rewind_test.go:1-80\n  1| //go:build e2e\n  2| \n  3| package tests\n  4| \n  5| import (\n  6| \t\"context\"\n  7| \t\"fmt\"\n  8| \t\"os\"\n  9| \t\"path/filepath\"\n 10| \t\"testing\"\n 11| \t\"time\"\n 12| \n 13| \t\"github.com/entireio/cli/e2e/entire\"\n 14| \t\"github.com/entireio/cli/e2e/testutil\"\n 15| \t\"github.com/stretchr/testify/assert\"\n 16| \t\"github.com/stretchr/testify/require\"\n 17| )\n 18| \n 19| // TestRewindPreCommit: agent creates two files in sequence (no user commit),\n 20| // then rewinds to the point afte",
+      "output_tokens": 3434,
+      "duration_ms": 1.9049644470214844,
+      "turn_number": 12
+    }
+  ],
+  "total_tool_calls": 24,
+  "total_turns": 12,
+  "wall_clock_ms": 29950.18482208252,
+  "input_tokens": 52121,
+  "output_tokens": 1495,
+  "tool_output_tokens": 27984,
+  "total_cost_usd": 0.178788,
+  "first_call_tool": "list_dir",
+  "first_call_produced_file": true,
+  "retry_count": 0,
+  "error": "",
+  "total_tool_duration_ms": 103.77860069274902,
+  "tool_execution_share": 0.003465040409908663,
+  "search_call_count": 0,
+  "read_call_count": 9,
+  "avg_search_code_duration_ms": 0.0,
+  "median_search_code_duration_ms": 0.0
+}

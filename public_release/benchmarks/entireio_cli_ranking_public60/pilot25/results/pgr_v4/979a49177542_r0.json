@@ -1,0 +1,318 @@
+{
+  "repeat": 0,
+  "task_id": "979a49177542",
+  "repo": "entireio-cli",
+  "task_type": "debug_or_validation",
+  "condition": "pgr_v4",
+  "prompt": "give me steps to manually test my droid additions",
+  "answer": "",
+  "tool_calls": [
+    {
+      "tool_name": "list_dir",
+      "tool_input": {},
+      "output": "AGENTS.md\nCHANGELOG.md\nCLAUDE.md\nCODE_OF_CONDUCT.md\nCONTRIBUTING.md\nLICENSE\nREADME.md\nSECURITY.md\nWINDOWS.md\ncmd/\ndocs/\ne2e/\ngo.mod\ngo.sum\nmise-tasks/\nmise.toml\nperf/\nredact/\nscripts/",
+      "output_tokens": 183,
+      "duration_ms": 0.45108795166015625,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "droid",
+        "context_before": 2,
+        "context_after": 2
+      },
+      "output": "  summary:\n    query: droid\n    scope: all files\n    files: 10 total, 10 shown\n    buckets: 8 source, 2 test, 0 low-priority\n    definition_candidates: 5\n    best_next_step: read cmd/entire/cli/agent/factoryaidroid/transcript.go around line 1\n\ncmd/entire/cli/agent/factoryaidroid/transcript.go\n  why: definition, source\n  25-25:\n    25| type droidEnvelope struct {\n  32-32:\n    32| type droidMessageRole struct {\n  95-95:\n    95| \tvar env droidEnvelope\n\ne2e/agents/droid.go\n  why: definition, source\n",
+      "output_tokens": 3141,
+      "duration_ms": 27.64415740966797,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "CLAUDE.md"
+      },
+      "output": "CLAUDE.md:1-80\n  1| # Entire - CLI\n  2| \n  3| This repo contains the CLI for Entire.\n  4| \n  5| ## Architecture\n  6| \n  7| - CLI built with github.com/spf13/cobra and github.com/charmbracelet/huh\n  8| \n  9| ## Key Directories\n 10| \n 11| ### Commands (`cmd/`)\n 12| \n 13| - `entire/`: Main CLI entry point\n 14| - `entire/cli`: CLI utilities and helpers\n 15| - `entire/cli/commands`: actual command implementations\n 16| - `entire/cli/agent`: agent implementations (Claude Code, Gemini CLI, OpenCode, Cur",
+      "output_tokens": 3777,
+      "duration_ms": 0.4589557647705078,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/agents/droid.go"
+      },
+      "output": "e2e/agents/droid.go:1-80\n  1| package agents\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"encoding/json\"\n  6| \t\"errors\"\n  7| \t\"fmt\"\n  8| \t\"os\"\n  9| \t\"os/exec\"\n 10| \t\"path/filepath\"\n 11| \t\"strings\"\n 12| \t\"time\"\n 13| )\n 14| \n 15| func init() {\n 16| \tif env := os.Getenv(\"E2E_AGENT\"); env != \"\" && env != \"factoryai-droid\" {\n 17| \t\treturn\n 18| \t}\n 19| \tif _, err := exec.LookPath(\"droid\"); err != nil {\n 20| \t\treturn\n 21| \t}\n 22| \tRegister(&Droid{})\n 23| }\n 24| \n 25| // Droid implements the Agent interfa",
+      "output_tokens": 2593,
+      "duration_ms": 0.27489662170410156,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/agent/factoryaidroid/factoryaidroid.go"
+      },
+      "output": "cmd/entire/cli/agent/factoryaidroid/factoryaidroid.go:1-80\n  1| // Package factoryaidroid implements the Agent interface for Factory AI Droid.\n  2| package factoryaidroid\n  3| \n  4| import (\n  5| \t\"context\"\n  6| \t\"errors\"\n  7| \t\"fmt\"\n  8| \t\"os\"\n  9| \t\"path/filepath\"\n 10| \t\"regexp\"\n 11| \t\"time\"\n 12| \n 13| \t\"github.com/entireio/cli/cmd/entire/cli/agent\"\n 14| \t\"github.com/entireio/cli/cmd/entire/cli/agent/types\"\n 15| \t\"github.com/entireio/cli/cmd/entire/cli/paths\"\n 16| )\n 17| \n 18| // nonAlphanumer",
+      "output_tokens": 3309,
+      "duration_ms": 0.2486705780029297,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/agent/factoryaidroid/factoryaidroid.go",
+        "start_line": 80
+      },
+      "output": "cmd/entire/cli/agent/factoryaidroid/factoryaidroid.go:80-159\n 80| func (f *FactoryAIDroidAgent) ChunkTranscript(_ context.Context, content []byte, maxSize int) ([][]byte, error) {\n 81| \tchunks, err := agent.ChunkJSONL(content, maxSize)\n 82| \tif err != nil {\n 83| \t\treturn nil, fmt.Errorf(\"failed to chunk transcript: %w\", err)\n 84| \t}\n 85| \treturn chunks, nil\n 86| }\n 87| \n 88| // ReassembleTranscript concatenates JSONL chunks with newlines.\n 89| func (f *FactoryAIDroidAgent) ReassembleTranscript(c",
+      "output_tokens": 3624,
+      "duration_ms": 0.41985511779785156,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/agent/factoryaidroid/hooks.go"
+      },
+      "output": "cmd/entire/cli/agent/factoryaidroid/hooks.go:1-80\n  1| package factoryaidroid\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"encoding/json\"\n  6| \t\"fmt\"\n  7| \t\"os\"\n  8| \t\"path/filepath\"\n  9| \t\"slices\"\n 10| \n 11| \t\"github.com/entireio/cli/cmd/entire/cli/agent\"\n 12| \t\"github.com/entireio/cli/cmd/entire/cli/jsonutil\"\n 13| \t\"github.com/entireio/cli/cmd/entire/cli/paths\"\n 14| )\n 15| \n 16| // Ensure FactoryAIDroidAgent implements HookSupport\n 17| var _ agent.HookSupport = (*FactoryAIDroidAgent)(nil)\n 18| \n",
+      "output_tokens": 3575,
+      "duration_ms": 0.47206878662109375,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/agent/factoryaidroid/lifecycle.go"
+      },
+      "output": "cmd/entire/cli/agent/factoryaidroid/lifecycle.go:1-80\n  1| package factoryaidroid\n  2| \n  3| import (\n  4| \t\"bytes\"\n  5| \t\"context\"\n  6| \t\"encoding/json\"\n  7| \t\"fmt\"\n  8| \t\"io\"\n  9| \t\"os\"\n 10| \t\"strings\"\n 11| \t\"time\"\n 12| \n 13| \t\"github.com/entireio/cli/cmd/entire/cli/agent\"\n 14| \t\"github.com/entireio/cli/cmd/entire/cli/textutil\"\n 15| \t\"github.com/entireio/cli/cmd/entire/cli/transcript\"\n 16| )\n 17| \n 18| // Compile-time interface assertions.\n 19| var (\n 20| \t_ agent.TranscriptAnalyzer     = (*Fa",
+      "output_tokens": 2941,
+      "duration_ms": 0.518798828125,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/agent/factoryaidroid/lifecycle.go",
+        "start_line": 80
+      },
+      "output": "cmd/entire/cli/agent/factoryaidroid/lifecycle.go:80-159\n 80| \n 81| // GetTranscriptPosition returns the current line count of the JSONL transcript.\n 82| func (f *FactoryAIDroidAgent) GetTranscriptPosition(path string) (int, error) {\n 83| \t_, pos, err := ParseDroidTranscript(path, 0)\n 84| \tif err != nil {\n 85| \t\treturn 0, err\n 86| \t}\n 87| \treturn pos, nil\n 88| }\n 89| \n 90| // ExtractModifiedFilesFromOffset extracts files modified since a given line offset.\n 91| func (f *FactoryAIDroidAgent) Extra",
+      "output_tokens": 3343,
+      "duration_ms": 0.28967857360839844,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/agent/factoryaidroid/hooks.go",
+        "start_line": 80
+      },
+      "output": "cmd/entire/cli/agent/factoryaidroid/hooks.go:80-159\n 80| \t\t\t\treturn 0, fmt.Errorf(\"failed to parse hooks in settings.json: %w\", err)\n 81| \t\t\t}\n 82| \t\t}\n 83| \t\tif permRaw, ok := rawSettings[\"permissions\"]; ok {\n 84| \t\t\tif err := json.Unmarshal(permRaw, &rawPermissions); err != nil {\n 85| \t\t\t\treturn 0, fmt.Errorf(\"failed to parse permissions in settings.json: %w\", err)\n 86| \t\t\t}\n 87| \t\t}\n 88| \t} else {\n 89| \t\trawSettings = make(map[string]json.RawMessage)\n 90| \t}\n 91| \n 92| \tif rawHooks == nil {\n ",
+      "output_tokens": 4040,
+      "duration_ms": 0.13899803161621094,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/agent/factoryaidroid/hooks.go",
+        "start_line": 159
+      },
+      "output": "cmd/entire/cli/agent/factoryaidroid/hooks.go:159-238\n159| \t}\n160| \tif !hookCommandExists(stop, stopCmd) {\n161| \t\tstop = addHookToMatcher(stop, \"\", stopCmd)\n162| \t\tcount++\n163| \t}\n164| \tif !hookCommandExists(userPromptSubmit, userPromptSubmitCmd) {\n165| \t\tuserPromptSubmit = addHookToMatcher(userPromptSubmit, \"\", userPromptSubmitCmd)\n166| \t\tcount++\n167| \t}\n168| \tif !hookCommandExistsWithMatcher(preToolUse, \"Task\", preTaskCmd) {\n169| \t\tpreToolUse = addHookToMatcher(preToolUse, \"Task\", preTaskCmd)\n1",
+      "output_tokens": 3215,
+      "duration_ms": 0.4189014434814453,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/agent/factoryaidroid/lifecycle.go",
+        "start_line": 159
+      },
+      "output": "cmd/entire/cli/agent/factoryaidroid/lifecycle.go:159-238\n159| \treturn ExtractAllModifiedFilesFromBytes(transcriptData, fromOffset, subagentsDir)\n160| }\n161| \n162| // CalculateTotalTokenUsage computes token usage including all spawned subagents.\n163| func (f *FactoryAIDroidAgent) CalculateTotalTokenUsage(transcriptData []byte, fromOffset int, subagentsDir string) (*agent.TokenUsage, error) {\n164| \treturn CalculateTotalTokenUsageFromBytes(transcriptData, fromOffset, subagentsDir)\n165| }\n166| \n167|",
+      "output_tokens": 2910,
+      "duration_ms": 0.20885467529296875,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/agent/factoryaidroid/hooks.go",
+        "start_line": 238
+      },
+      "output": "cmd/entire/cli/agent/factoryaidroid/hooks.go:238-317\n238| \t}\n239| \n240| \treturn count, nil\n241| }\n242| \n243| // parseHookType parses a specific hook type from rawHooks into the target slice.\n244| // Silently ignores parse errors (leaves target unchanged).\n245| func parseHookType(rawHooks map[string]json.RawMessage, hookType string, target *[]FactoryHookMatcher) {\n246| \tif data, ok := rawHooks[hookType]; ok {\n247| \t\t//nolint:errcheck,gosec // Intentionally ignoring parse errors - leave target as ",
+      "output_tokens": 3579,
+      "duration_ms": 0.3440380096435547,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "glob": "docs/architecture/agent-integration-checklist.md"
+      },
+      "output": "./docs/architecture/agent-integration-checklist.md",
+      "output_tokens": 50,
+      "duration_ms": 11.085748672485352,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "glob": "docs/architecture/agent-guide.md"
+      },
+      "output": "./docs/architecture/agent-guide.md",
+      "output_tokens": 34,
+      "duration_ms": 7.159948348999023,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "CLAUDE.md",
+        "start_line": 80,
+        "max_lines": 120
+      },
+      "output": "CLAUDE.md:80-199\n 80| \n 81| E2E tests:\n 82| \n 83| - Use the `//go:build e2e` build tag\n 84| - Located in `e2e/tests/`\n 85| - See [`e2e/README.md`](e2e/README.md) for full documentation (structure, debugging, adding agents)\n 86| - Test real agent interactions (Claude Code, Gemini CLI, OpenCode, Cursor, Factory AI Droid, Copilot CLI, or Vogon creating files, committing, etc.)\n 87| - Validate checkpoint scenarios documented in `docs/architecture/checkpoint-scenarios.md`\n 88| - Support multiple agen",
+      "output_tokens": 5229,
+      "duration_ms": 0.39505958557128906,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "docs/architecture/agent-integration-checklist.md"
+      },
+      "output": "docs/architecture/agent-integration-checklist.md:1-80\n  1| # Agent Integration Checklist\n  2| \n  3| This document provides requirements and a checklist for integrating new AI coding agents with Entire. Use this to validate your implementation is correct and complete.\n  4| \n  5| For step-by-step implementation instructions, code templates, and testing patterns, see the [Agent Implementation Guide](agent-guide.md).\n  6| \n  7| ## Core Principle: Full Transcript Storage\n  8| \n  9| Entire stores the ",
+      "output_tokens": 5335,
+      "duration_ms": 0.19693374633789062,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "docs/architecture/agent-integration-checklist.md",
+        "start_line": 80
+      },
+      "output": "docs/architecture/agent-integration-checklist.md:80-86\n 80| See Guide: [Testing Patterns](agent-guide.md#testing-patterns)\n 81| \n 82| - [ ] **New session**: Create session, multiple turns, verify full transcript at each checkpoint\n 83| - [ ] **Resumed session**: Resume existing session, add turns, verify checkpoint includes historical messages\n 84| - [ ] **Rewind**: Rewind to earlier checkpoint, verify agent can continue from that state\n 85| - [ ] **Agent shutdown**: Verify graceful handling if ",
+      "output_tokens": 855,
+      "duration_ms": 0.32782554626464844,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/agents/droid.go",
+        "start_line": 80
+      },
+      "output": "e2e/agents/droid.go:80-159\n 80| func DefaultDroidModel() string { return defaultDroidModel }\n 81| \n 82| func (d *Droid) Bootstrap() error {\n 83| \tapiKey := os.Getenv(\"ANTHROPIC_API_KEY\")\n 84| \tif apiKey == \"\" {\n 85| \t\treturn nil\n 86| \t}\n 87| \n 88| \thome, err := os.UserHomeDir()\n 89| \tif err != nil {\n 90| \t\treturn fmt.Errorf(\"get home dir: %w\", err)\n 91| \t}\n 92| \tdir := filepath.Join(home, \".factory\")\n 93| \tif err := os.MkdirAll(dir, 0o755); err != nil {\n 94| \t\treturn fmt.Errorf(\"mkdir %s: %w\", d",
+      "output_tokens": 2761,
+      "duration_ms": 0.21600723266601562,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/agents/droid.go",
+        "start_line": 159
+      },
+      "output": "e2e/agents/droid.go:159-207\n159| \tcmd.Stdout = &stdout\n160| \tcmd.Stderr = &stderr\n161| \n162| \terr := cmd.Run()\n163| \texitCode := 0\n164| \tif err != nil {\n165| \t\texitErr := &exec.ExitError{}\n166| \t\tif errors.As(err, &exitErr) {\n167| \t\t\texitCode = exitErr.ExitCode()\n168| \t\t} else {\n169| \t\t\texitCode = -1\n170| \t\t}\n171| \t}\n172| \n173| \treturn Output{\n174| \t\tCommand:  d.Binary() + \" \" + strings.Join(displayArgs, \" \"),\n175| \t\tStdout:   stdout.String(),\n176| \t\tStderr:   stderr.String(),\n177| \t\tExitCode: e",
+      "output_tokens": 1654,
+      "duration_ms": 0.32591819763183594,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "glob": "e2e/tests/*.go"
+      },
+      "output": "./e2e/tests/attribution_test.go\n./e2e/tests/checkpoint_metadata_test.go\n./e2e/tests/codex_resume_test.go\n./e2e/tests/deleted_files_test.go\n./e2e/tests/disable_test.go\n./e2e/tests/edge_cases_test.go\n./e2e/tests/existing_files_test.go\n./e2e/tests/external_agent_test.go\n./e2e/tests/factory_hooks_test.go\n./e2e/tests/interactive_test.go\n./e2e/tests/main_test.go\n./e2e/tests/mid_turn_commit_test.go\n./e2e/tests/multi_session_test.go\n./e2e/tests/resume_remote_test.go\n./e2e/tests/resume_test.go\n./e2e/test",
+      "output_tokens": 700,
+      "duration_ms": 8.507966995239258,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/tests/factory_hooks_test.go"
+      },
+      "output": "e2e/tests/factory_hooks_test.go:1-80\n  1| //go:build e2e\n  2| \n  3| package tests\n  4| \n  5| import (\n  6| \t\"context\"\n  7| \t\"os\"\n  8| \t\"path/filepath\"\n  9| \t\"testing\"\n 10| \t\"time\"\n 11| \n 12| \t\"github.com/entireio/cli/e2e/entire\"\n 13| \t\"github.com/entireio/cli/e2e/testutil\"\n 14| \t\"github.com/stretchr/testify/assert\"\n 15| \t\"github.com/stretchr/testify/require\"\n 16| )\n 17| \n 18| func TestFactoryTaskCheckpointExistsBeforeCommit(t *testing.T) {\n 19| \ttestutil.ForEachAgent(t, 3*time.Minute, func(t *te",
+      "output_tokens": 3919,
+      "duration_ms": 0.44798851013183594,
+      "turn_number": 10
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/README.md",
+        "max_lines": 100
+      },
+      "output": "e2e/README.md:1-92\n  1| # E2E Tests\n  2| \n  3| End-to-end tests for the `entire` CLI against real agents (Claude Code, Gemini CLI, OpenCode, Codex, Cursor, Factory AI Droid, Copilot CLI).\n  4| \n  5| ## Commands\n  6| \n  7| ```bash\n  8| mise run test:e2e [filter]                          # run filtered (or omit filter for all agents)\n  9| mise run test:e2e --agent claude-code [filter]       # Claude Code only\n 10| mise run test:e2e --agent gemini-cli [filter]        # Gemini CLI only\n 11| mise run",
+      "output_tokens": 5360,
+      "duration_ms": 0.17714500427246094,
+      "turn_number": 10
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/testutil/repo.go"
+      },
+      "output": "e2e/testutil/repo.go:1-80\n  1| package testutil\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"crypto/sha256\"\n  6| \t\"encoding/hex\"\n  7| \t\"encoding/json\"\n  8| \t\"errors\"\n  9| \t\"fmt\"\n 10| \t\"os\"\n 11| \t\"os/exec\"\n 12| \t\"path/filepath\"\n 13| \t\"strings\"\n 14| \t\"testing\"\n 15| \t\"time\"\n 16| \n 17| \t\"github.com/entireio/cli/e2e/agents\"\n 18| \t\"github.com/entireio/cli/e2e/entire\"\n 19| )\n 20| \n 21| const droidRepoSettingsPath = \".factory/settings.json\"\n 22| \n 23| // RepoState holds the working state for a single test",
+      "output_tokens": 3090,
+      "duration_ms": 0.38814544677734375,
+      "turn_number": 11
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "entire install",
+        "file_type": "go",
+        "context_before": 2,
+        "context_after": 2
+      },
+      "output": "No matches found.\n  query: entire install\n  scope: type=go\n  hint: broaden the query, remove path_glob/file_type filters, or try a simpler symbol name.",
+      "output_tokens": 151,
+      "duration_ms": 16.765117645263672,
+      "turn_number": 11
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/testutil/repo.go",
+        "start_line": 80,
+        "max_lines": 80
+      },
+      "output": "e2e/testutil/repo.go:80-159\n 80| \t\tif err := os.WriteFile(filepath.Join(entireDir, \"settings.json\"),\n 81| \t\t\t[]byte(\"{\\\"external_agents\\\": true}\\n\"), 0o644); err != nil {\n 82| \t\t\tt.Fatalf(\"write external_agents setting: %v\", err)\n 83| \t\t}\n 84| \t}\n 85| \n 86| \tentire.Enable(t, dir, agent.EntireAgent())\n 87| \tif agent.Name() == \"gemini-cli\" {\n 88| \t\tsetupGeminiTestHome(t, dir)\n 89| \t}\n 90| \tif agent.Name() == \"factoryai-droid\" {\n 91| \t\tif err := configureDroidRepoSettings(dir); err != nil {\n 92| \t\t",
+      "output_tokens": 3485,
+      "duration_ms": 3.770112991333008,
+      "turn_number": 12
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "entire enable",
+        "context_before": 2,
+        "context_after": 2,
+        "max_files": 5
+      },
+      "output": "  summary:\n    query: entire enable\n    scope: all files\n    files: 5 total, 5 shown\n    buckets: 5 source, 0 test, 0 low-priority\n    definition_candidates: 1\n    best_next_step: read cmd/entire/cli/setup.go around line 40\n\ncmd/entire/cli/setup.go\n  why: definition, source\n  897-897:\n    897| const DisabledMessage = \"Entire is disabled. Run `entire enable` to re-enable.\"\n  40-40:\n    40| // EnableOptions holds the flags for `entire enable`.\n  80-80:\n    80| // enableUsesSetupFlow reports whethe",
+      "output_tokens": 1923,
+      "duration_ms": 19.116878509521484,
+      "turn_number": 12
+    }
+  ],
+  "total_tool_calls": 27,
+  "total_turns": 12,
+  "wall_clock_ms": 35945.637226104736,
+  "input_tokens": 193208,
+  "output_tokens": 1856,
+  "tool_output_tokens": 74776,
+  "total_cost_usd": 0.607464,
+  "first_call_tool": "list_dir",
+  "first_call_produced_file": true,
+  "retry_count": 0,
+  "error": "",
+  "total_tool_duration_ms": 100.7697582244873,
+  "tool_execution_share": 0.0028033932905578165,
+  "search_call_count": 3,
+  "read_call_count": 20,
+  "avg_search_code_duration_ms": 21.175384521484375,
+  "median_search_code_duration_ms": 19.116878509521484
+}

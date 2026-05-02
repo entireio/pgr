@@ -1,0 +1,320 @@
+{
+  "repeat": 0,
+  "task_id": "6dcf16e1b2ba",
+  "repo": "entireio-cli",
+  "task_type": "code_understanding",
+  "condition": "baseline",
+  "prompt": "what's the coverage for e2e and integration tests in regards to git push / git pull (everything remote related)",
+  "answer": "",
+  "tool_calls": [
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": "."
+      },
+      "output": ".allowed-licenses\n.claude/\n.codex/\n.devcontainer/\n.entire/\n.ferrata/\n.gemini/\n.git/\n.github/\n.gitignore\n.golangci.yaml\n.goreleaser.yaml\n.opencode/\n.vscode/\nAGENTS.md\nCHANGELOG.md\nCLAUDE.md\nCODE_OF_CONDUCT.md\nCONTRIBUTING.md\nLICENSE\nREADME.md\nSECURITY.md\nWINDOWS.md\ncmd/\ndocs/\ne2e/\ngo.mod\ngo.sum\nmise-tasks/\nmise.toml\nperf/\nredact/\nscripts/",
+      "output_tokens": 339,
+      "duration_ms": 0.6477832794189453,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "glob": "**/*e2e*",
+        "max_results": 50
+      },
+      "output": "./scripts/download-e2e-artifacts.sh\n./scripts/test-attribution-e2e.sh",
+      "output_tokens": 69,
+      "duration_ms": 12.733936309814453,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": "e2e",
+        "recursive": true
+      },
+      "output": "README.md\ncmd/testreport/main.go\nbootstrap/main.go\ntests/attribution_test.go\ntests/checkpoint_metadata_test.go\ntests/codex_resume_test.go\ntests/deleted_files_test.go\ntests/disable_test.go\ntests/edge_cases_test.go\ntests/existing_files_test.go\ntests/external_agent_test.go\ntests/factory_hooks_test.go\ntests/interactive_test.go\ntests/main_test.go\ntests/mid_turn_commit_test.go\ntests/multi_session_test.go\ntests/resume_remote_test.go\ntests/resume_test.go\ntests/rewind_test.go\ntests/session_lifecycle_test",
+      "output_tokens": 1130,
+      "duration_ms": 0.9119510650634766,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": "cmd",
+        "recursive": false
+      },
+      "output": "entire/",
+      "output_tokens": 7,
+      "duration_ms": 0.057697296142578125,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "glob": "**/*integration*",
+        "max_results": 50
+      },
+      "output": "./docs/architecture/agent-integration-checklist.md\n./docs/architecture/claude-hooks-integration.md\n./scripts/test-codex-agent-integration.sh\n./scripts/test-copilot-cli-agent-integration.sh",
+      "output_tokens": 188,
+      "duration_ms": 13.305187225341797,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "git push",
+        "path_glob": "e2e/**/*.go",
+        "context_before": 3,
+        "context_after": 3
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 10.44774055480957,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "git pull",
+        "path_glob": "e2e/**/*.go",
+        "context_before": 3,
+        "context_after": 3
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 11.973142623901367,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "remote",
+        "path_glob": "e2e/**/*.go",
+        "context_before": 2,
+        "context_after": 2,
+        "max_matches_per_file": 10
+      },
+      "output": "./e2e/testutil/repo.go\n  686-692:\n    686| \t\tbareDir, err = os.MkdirTemp(\"\", \"e2e-bare-*\")\n    687| \t\tif err != nil {\n    688| \t\t\tt.Fatalf(\"create bare remote dir: %v\", err)\n    689| \t\t}\n    690| \t\tt.Logf(\"E2E_KEEP_REPOS: bare remote will be preserved at %s\", bareDir)\n    691| \t} else {\n    692| \t\tbareDir = t.TempDir()\n  694-698:\n    694| \n    695| \tGit(t, bareDir, \"init\", \"--bare\")\n    696| \tGit(t, s.Dir, \"remote\", \"add\", \"origin\", bareDir)\n    697| \tGit(t, s.Dir, \"push\", \"-u\", \"origin\", \"HEAD\"",
+      "output_tokens": 1304,
+      "duration_ms": 12.591123580932617,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/tests/resume_remote_test.go"
+      },
+      "output": "e2e/tests/resume_remote_test.go:1-80\n  1| //go:build e2e\n  2| \n  3| package tests\n  4| \n  5| import (\n  6| \t\"context\"\n  7| \t\"os\"\n  8| \t\"path/filepath\"\n  9| \t\"testing\"\n  10| \t\"time\"\n  11| \n  12| \t\"github.com/entireio/cli/e2e/entire\"\n  13| \t\"github.com/entireio/cli/e2e/testutil\"\n  14| \t\"github.com/stretchr/testify/assert\"\n  15| \t\"github.com/stretchr/testify/require\"\n  16| )\n  17| \n  18| // TestResumeFromClonedRepo: agent creates a file on a feature branch and user\n  19| // commits, then the repo i",
+      "output_tokens": 3732,
+      "duration_ms": 0.3237724304199219,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/testutil/repo.go",
+        "max_lines": 100
+      },
+      "output": "e2e/testutil/repo.go:1-100\n  1| package testutil\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"crypto/sha256\"\n  6| \t\"encoding/hex\"\n  7| \t\"encoding/json\"\n  8| \t\"errors\"\n  9| \t\"fmt\"\n  10| \t\"os\"\n  11| \t\"os/exec\"\n  12| \t\"path/filepath\"\n  13| \t\"strings\"\n  14| \t\"testing\"\n  15| \t\"time\"\n  16| \n  17| \t\"github.com/entireio/cli/e2e/agents\"\n  18| \t\"github.com/entireio/cli/e2e/entire\"\n  19| )\n  20| \n  21| const droidRepoSettingsPath = \".factory/settings.json\"\n  22| \n  23| // RepoState holds the working state fo",
+      "output_tokens": 4116,
+      "duration_ms": 0.25916099548339844,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/tests/resume_remote_test.go",
+        "start_line": 80,
+        "end_line": 124
+      },
+      "output": "e2e/tests/resume_remote_test.go:80-124\n  80| \t\tassert.Equal(t, \"feature\", current, \"should be on feature branch after resume\")\n  81| \t\tassert.Contains(t, out, \"To continue\", \"resume output should show resume instructions\")\n  82| \n  83| \t\t// Verify the metadata branch now exists locally.\n  84| \t\t_, err = testutil.GitOutputErr(cloneDir, \"rev-parse\", \"--verify\", \"refs/heads/entire/checkpoints/v1\")\n  85| \t\tassert.NoError(t, err, \"metadata branch should exist locally after resume\")\n  86| \t})\n  87| }\n",
+      "output_tokens": 2247,
+      "duration_ms": 0.28967857360839844,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/testutil/repo.go",
+        "start_line": 660,
+        "end_line": 720
+      },
+      "output": "e2e/testutil/repo.go:660-719\n  660| \tblob := \"entire/checkpoints/v1:\" + path\n  661| \n  662| \tdeadline := time.Now().Add(timeout)\n  663| \tfor time.Now().Before(deadline) {\n  664| \t\traw := gitOutputSafe(dir, \"show\", blob)\n  665| \t\tif raw != \"\" {\n  666| \t\t\tvar meta SessionMetadata\n  667| \t\t\tif err := json.Unmarshal([]byte(raw), &meta); err != nil {\n  668| \t\t\t\tt.Fatalf(\"unmarshal session metadata from %s: %v\", blob, err)\n  669| \t\t\t}\n  670| \t\t\treturn meta\n  671| \t\t}\n  672| \t\ttime.Sleep(500 * time.Mil",
+      "output_tokens": 2305,
+      "duration_ms": 0.2651214599609375,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "push\\|pull\\|fetch\\|remote\\|clone",
+        "path_glob": "e2e/tests/*.go",
+        "context_before": 3,
+        "context_after": 3,
+        "max_matches_per_file": 20,
+        "max_files": 20
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 13.41700553894043,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "SetupBareRemote\\|git push\\|git pull\\|git fetch\\|git clone",
+        "path_glob": "e2e/**/*.go",
+        "context_before": 3,
+        "context_after": 3,
+        "max_matches_per_file": 20
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 11.831045150756836,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "push",
+        "path_glob": "e2e/tests/*.go",
+        "context_before": 2,
+        "context_after": 2,
+        "max_matches_per_file": 15,
+        "max_files": 20
+      },
+      "output": "./e2e/tests/resume_remote_test.go\n  22-24:\n    22| func TestResumeFromClonedRepo(t *testing.T) {\n    23| \ttestutil.ForEachAgent(t, 3*time.Minute, func(t *testing.T, s *testutil.RepoState, ctx context.Context) {\n    24| \t\t// Set up a bare remote so we can push and clone.\n  26-26:\n    26| \n  28-32:\n    28| \t\ts.Git(t, \"add\", \".\")\n    29| \t\ts.Git(t, \"commit\", \"-m\", \"Enable entire\")\n    30| \t\ts.Git(t, \"push\")\n    31| \n    32| \t\t// Do agent work on a feature branch.\n  44-49:\n    44| \n    45| \t\t// Push",
+      "output_tokens": 774,
+      "duration_ms": 12.598037719726562,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "fetch",
+        "path_glob": "e2e/tests/*.go",
+        "context_before": 2,
+        "context_after": 2,
+        "max_matches_per_file": 15,
+        "max_files": 20
+      },
+      "output": "./e2e/tests/resume_remote_test.go\n  19-22:\n    19| // commits, then the repo is cloned (simulating a teammate). The clone has no\n    20| // local entire/checkpoints/v1 branch. `entire resume feature` should fetch\n    21| // the metadata branch automatically and restore the session.\n    22| func TestResumeFromClonedRepo(t *testing.T) {\n  73-75:\n    73| \t\ttestutil.Git(t, cloneDir, \"commit\", \"-m\", \"Enable entire in clone\")\n    74| \n    75| \t\t// Run resume from the clone \u2014 should fetch metadata and ",
+      "output_tokens": 825,
+      "duration_ms": 13.632774353027344,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "push\\|pull\\|fetch\\|remote\\|clone\\|origin",
+        "path_glob": "e2e/tests/stash_workflows_test.go",
+        "context_before": 2,
+        "context_after": 2,
+        "max_matches_per_file": 20
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 14.961957931518555,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "push\\|pull\\|fetch\\|remote\\|clone\\|origin",
+        "path_glob": "e2e/tests/multi_session_test.go",
+        "context_before": 2,
+        "context_after": 2,
+        "max_matches_per_file": 20
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 10.303258895874023,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "origin",
+        "path_glob": "e2e/tests/*.go",
+        "context_before": 2,
+        "context_after": 2,
+        "max_matches_per_file": 15,
+        "max_files": 20
+      },
+      "output": "./e2e/tests/resume_remote_test.go\n  44-49:\n    44| \n    45| \t\t// Push feature branch and metadata branch to the bare remote.\n    46| \t\ts.Git(t, \"push\", \"-u\", \"origin\", \"feature\")\n    47| \t\ts.Git(t, \"push\", \"origin\", \"entire/checkpoints/v1:entire/checkpoints/v1\")\n    48| \n    49| \t\t// Clone the repo to a new directory (simulating a teammate).\n  62-65:\n    62| \t\trequire.Error(t, err, \"metadata branch should not exist locally in clone\")\n    63| \n    64| \t\t// Create the local feature branch (clone o",
+      "output_tokens": 1248,
+      "duration_ms": 15.562057495117188,
+      "turn_number": 10
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "push\\|pull\\|fetch\\|remote\\|clone\\|origin",
+        "path_glob": "e2e/entire/*.go",
+        "context_before": 2,
+        "context_after": 2,
+        "max_matches_per_file": 15
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 10.841131210327148,
+      "turn_number": 11
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "push\\|pull\\|fetch\\|remote\\|clone\\|origin",
+        "path_glob": "cmd/**/*.go",
+        "context_before": 2,
+        "context_after": 2,
+        "max_matches_per_file": 15,
+        "max_files": 20
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 17.795085906982422,
+      "turn_number": 11
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": "cmd/entire",
+        "recursive": false
+      },
+      "output": "cli/\nmain.go",
+      "output_tokens": 12,
+      "duration_ms": 0.23698806762695312,
+      "turn_number": 12
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": "cmd",
+        "recursive": true
+      },
+      "output": "entire/main.go\nentire/cli/api_client.go\nentire/cli/attach.go\nentire/cli/attach_test.go\nentire/cli/attach_transcript.go\nentire/cli/bench_enable_test.go\nentire/cli/bench_test.go\nentire/cli/clean.go\nentire/cli/clean_test.go\nentire/cli/commit_message.go\nentire/cli/commit_message_test.go\nentire/cli/config.go\nentire/cli/config_test.go\nentire/cli/constants.go\nentire/cli/doctor.go\nentire/cli/doctor_test.go\nentire/cli/errors.go\nentire/cli/explain.go\nentire/cli/explain_test.go\nentire/cli/fetch_no_config_p",
+      "output_tokens": 3095,
+      "duration_ms": 5.080223083496094,
+      "turn_number": 12
+    }
+  ],
+  "total_tool_calls": 23,
+  "total_turns": 12,
+  "wall_clock_ms": 33061.349868774414,
+  "input_tokens": 78683,
+  "output_tokens": 2486,
+  "tool_output_tokens": 21527,
+  "total_cost_usd": 0.273339,
+  "first_call_tool": "list_dir",
+  "first_call_produced_file": true,
+  "retry_count": 0,
+  "error": "",
+  "total_tool_duration_ms": 190.06586074829102,
+  "tool_execution_share": 0.005748883862960577,
+  "search_call_count": 12,
+  "read_call_count": 4,
+  "avg_search_code_duration_ms": 12.996196746826172,
+  "median_search_code_duration_ms": 12.59458065032959
+}

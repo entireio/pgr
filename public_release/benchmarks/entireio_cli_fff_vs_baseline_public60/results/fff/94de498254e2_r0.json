@@ -1,0 +1,128 @@
+{
+  "repeat": 0,
+  "task_id": "94de498254e2",
+  "repo": "entireio-cli",
+  "task_type": "code_understanding",
+  "condition": "fff",
+  "prompt": "can you help me understand what `entire clean` is doing?",
+  "answer": "Here's a thorough breakdown of what `entire clean` does:\n\n---\n\n## `entire clean` \u2014 Overview\n\n`entire clean` is a CLI command that **cleans up Entire session data** (shadow branches, session state files, checkpoints, and temp files) from a git repository. It replaced the deprecated `entire reset` command.\n\n---\n\n## Modes of Operation\n\nThe command has three distinct modes, controlled by flags:\n\n### 1. Default \u2014 Clean current HEAD (`runCleanCurrentHead`)\n```\nentire clean\n```\n- Finds session state files and shadow branches associated with the **current HEAD commit**.\n- **Guards against active sessions**: if any session on the current HEAD is still in an active phase, it aborts (unless `--force` is passed).\n- Prompts for confirmation, then calls `strat.Reset(...)` to delete the session data.\n\n### 2. `--session <id>` \u2014 Clean a specific session (`runCleanSession`)\n```\nentire clean --session <id>\n```\n- Loads a single session by ID and cleans only that session via `strat.ResetSession(...)`.\n- Prompts for confirmation (skippable with `--force`).\n- **Note:** File changes in the working directory are preserved \u2014 only the session metadata is removed.\n\n### 3. `--all` \u2014 Clean everything (`runCleanAll`)\n```\nentire clean --all\n```\n- Collects **all** Entire data across the entire repo (not just orphaned):\n  - All **shadow branches** matching `entire/<commit-hash>[-<worktree-hash>]`\n  - All **session state files** (`.git/entire-sessions/<id>.json`)\n  - All **temp files** (`.entire/tmp/`)\n- The `entire/checkpoints/v1` metadata branch is **always preserved**.\n- Shows a preview and prompts for confirmation before deleting.\n\n---\n\n## Supporting Flags\n| Flag | Behavior |\n|---|---|\n| `--force` / `-f` | Skips confirmation prompt and overrides the active session guard |\n| `--dry-run` / `-d` | Previews what would be deleted without actually deleting anything |\n| `--all` / `-a` | Cleans all session data repo-wide, not just the current HEAD |\n| `--session <id>` | Targets a single specific session (mutually exclusive with `--all`) |\n\n---\n\n## What Gets Deleted\n\n| Item | Description |\n|---|---|\n| **Shadow branches** | Git branches like `entire/<commit>-<worktree>` used to store AI agent checkpoints |\n| **Session state files** | `.git/entire-sessions/<session-id>.json` \u2014 JSON files tracking session phase, step count, base commit, etc. |\n| **Checkpoint metadata** | Entries on the `entire/checkpoints/v1` branch (only in orphan-cleanup paths) |\n| **Temp files** | Files in `.entire/tmp/` (only with `--all`) |\n\n---\n\n## Orphan Detection Logic (used internally)\n\nWhen determining what's \"orphaned\" (e.g. for `ListOrphanedSessionStates`), a session is considered orphaned if **both** of the following are true:\n1. No checkpoints on `entire/checkpoints/v1` reference its session ID.\n2. No shadow branch exists for its base commit + worktree.\n\nSessions newer than **10 minutes** are always skipped (grace period for newly started sessions that haven't made their first checkpoint yet).",
+  "tool_calls": [
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "entire clean"
+      },
+      "output": "CHANGELOG.md\n 47: - `entire clean` fully replaces deprecated `entire reset` ([#858](https://github.com/entireio/cli/pull/858))\n 63: - `entire clean --all` now cleans all sessions, not just orphaned ones ([#846](https://github.com/entireio/cli/pull/846))\n 90: - Deprecated `entire reset` command in favor of `entire clean` ([#720](https://github.com/entireio/cli/pull/720))\nREADME.md\n 234: | `entire clean`   | Clean up session data and orphaned Entire data (use `--all` for repo-wide cleanup)        ",
+      "output_tokens": 1290,
+      "duration_ms": 1.0571479797363281,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "entire_clean"
+      },
+      "output": "0 exact matches. 27 approximate:\nCHANGELOG.md\n 47: - `entire clean` fully replaces deprecated `entire reset` ([#858](https://github.com/entireio/cli/pull/858))\n 63: - `entire clean --all` now cleans all sessions, not just orphaned ones ([#846](https://github.com/entireio/cli/pull/846))\n 90: - Deprecated `entire reset` command in favor of `entire clean` ([#720](https://github.com/entireio/cli/pull/720))",
+      "output_tokens": 405,
+      "duration_ms": 9.890079498291016,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "pattern": "clean",
+        "file_type": "go"
+      },
+      "output": "50/429 matches\ncmd/entire/cli/clean.go git:clean\ncmd/entire/cli/clean_test.go git:clean\ncmd/entire/cli/strategy/clean_test.go git:clean\ncmd/entire/cli/strategy/cleanup.go git:clean\ncmd/entire/cli/explain.go git:clean\ncmd/entire/cli/explain_test.go git:clean\ncmd/entire/cli/api/client.go git:clean\ncmd/entire/cli/api/client_test.go git:clean\ncmd/entire/cli/api_client.go git:clean\ncmd/entire/cli/auth/client.go git:clean\ncmd/entire/cli/auth/client_test.go git:clean\ncmd/entire/cli/agent/agent_test.go ",
+      "output_tokens": 2621,
+      "duration_ms": 1.5349388122558594,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/clean.go"
+      },
+      "output": "cmd/entire/cli/clean.go:1-80\n  1| package cli\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"errors\"\n  6| \t\"fmt\"\n  7| \t\"io\"\n  8| \t\"io/fs\"\n  9| \t\"os\"\n  10| \t\"strings\"\n  11| \n  12| \t\"github.com/charmbracelet/huh\"\n  13| \t\"github.com/entireio/cli/cmd/entire/cli/checkpoint\"\n  14| \t\"github.com/entireio/cli/cmd/entire/cli/logging\"\n  15| \t\"github.com/entireio/cli/cmd/entire/cli/paths\"\n  16| \t\"github.com/entireio/cli/cmd/entire/cli/session\"\n  17| \t\"github.com/entireio/cli/cmd/entire/cli/strategy\"\n  18| \t\"git",
+      "output_tokens": 2874,
+      "duration_ms": 0.39196014404296875,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/strategy/cleanup.go"
+      },
+      "output": "cmd/entire/cli/strategy/cleanup.go:1-80\n  1| package strategy\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"fmt\"\n  6| \t\"log/slog\"\n  7| \t\"regexp\"\n  8| \t\"strings\"\n  9| \t\"time\"\n  10| \n  11| \t\"github.com/entireio/cli/cmd/entire/cli/checkpoint\"\n  12| \t\"github.com/entireio/cli/cmd/entire/cli/checkpoint/id\"\n  13| \t\"github.com/entireio/cli/cmd/entire/cli/logging\"\n  14| \t\"github.com/entireio/cli/cmd/entire/cli/paths\"\n  15| \t\"github.com/entireio/cli/cmd/entire/cli/session\"\n  16| \n  17| \t\"github.com/go-git/go",
+      "output_tokens": 3543,
+      "duration_ms": 0.2770423889160156,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/clean.go",
+        "start_line": 80,
+        "end_line": 300
+      },
+      "output": "cmd/entire/cli/clean.go:80-300\n  80| \tcmd.Flags().BoolVarP(&forceFlag, \"force\", \"f\", false, \"Skip confirmation prompt and override active session guard\")\n  81| \tcmd.Flags().BoolVarP(&allFlag, \"all\", \"a\", false, \"Clean all session data across the repository\")\n  82| \tcmd.Flags().BoolVarP(&dryRunFlag, \"dry-run\", \"d\", false, \"Preview what would be deleted without deleting\")\n  83| \tcmd.Flags().StringVar(&sessionFlag, \"session\", \"\", \"Clean a specific session by ID\")\n  84| \n  85| \treturn cmd\n  86| }\n  ",
+      "output_tokens": 8384,
+      "duration_ms": 0.4851818084716797,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/strategy/cleanup.go",
+        "start_line": 80,
+        "end_line": 300
+      },
+      "output": "cmd/entire/cli/strategy/cleanup.go:80-300\n  80| \tif err != nil {\n  81| \t\treturn nil, fmt.Errorf(\"failed to open git repository: %w\", err)\n  82| \t}\n  83| \n  84| \trefs, err := repo.References()\n  85| \tif err != nil {\n  86| \t\treturn nil, fmt.Errorf(\"failed to get references: %w\", err)\n  87| \t}\n  88| \n  89| \tvar shadowBranches []string\n  90| \n  91| \terr = refs.ForEach(func(ref *plumbing.Reference) error {\n  92| \t\tif err := ctx.Err(); err != nil {\n  93| \t\t\treturn err //nolint:wrapcheck // Propagating",
+      "output_tokens": 8277,
+      "duration_ms": 0.32210350036621094,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/clean.go",
+        "start_line": 300,
+        "end_line": 555
+      },
+      "output": "cmd/entire/cli/clean.go:300-555\n  300| \n  301| \t// Show preview when not in force mode\n  302| \tif !force || dryRun {\n  303| \t\ttotalItems := len(items) + len(tempFiles)\n  304| \t\tfmt.Fprintf(w, \"Found %d %s to clean:\\n\\n\", totalItems, itemWord(totalItems))\n  305| \n  306| \t\tif len(branches) > 0 {\n  307| \t\t\tfmt.Fprintf(w, \"Shadow branches (%d):\\n\", len(branches))\n  308| \t\t\tfor _, item := range branches {\n  309| \t\t\t\tfmt.Fprintf(w, \"  %s\\n\", item.ID)\n  310| \t\t\t}\n  311| \t\t\tfmt.Fprintln(w)\n  312| \t\t}\n  ",
+      "output_tokens": 8505,
+      "duration_ms": 0.40984153747558594,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/strategy/cleanup.go",
+        "start_line": 300,
+        "end_line": 500
+      },
+      "output": "cmd/entire/cli/strategy/cleanup.go:300-500\n  300| \n  301| \t// Create commit\n  302| \tcommit := &object.Commit{\n  303| \t\tAuthor: object.Signature{\n  304| \t\t\tName:  \"Entire CLI\",\n  305| \t\t\tEmail: \"cli@entire.io\",\n  306| \t\t\tWhen:  parentCommit.Author.When,\n  307| \t\t},\n  308| \t\tCommitter: object.Signature{\n  309| \t\t\tName:  \"Entire CLI\",\n  310| \t\t\tEmail: \"cli@entire.io\",\n  311| \t\t\tWhen:  parentCommit.Committer.When,\n  312| \t\t},\n  313| \t\tMessage:      fmt.Sprintf(\"Cleanup: removed %d orphaned checkpoin",
+      "output_tokens": 7365,
+      "duration_ms": 0.22125244140625,
+      "turn_number": 5
+    }
+  ],
+  "total_tool_calls": 9,
+  "total_turns": 6,
+  "wall_clock_ms": 28198.670148849487,
+  "input_tokens": 43181,
+  "output_tokens": 1478,
+  "tool_output_tokens": 43264,
+  "total_cost_usd": 0.151713,
+  "first_call_tool": "search_code",
+  "first_call_produced_file": true,
+  "retry_count": 0,
+  "error": "",
+  "total_tool_duration_ms": 14.589548110961914,
+  "tool_execution_share": 0.000517384260816185,
+  "search_call_count": 2,
+  "avg_search_code_duration_ms": 5.473613739013672,
+  "median_search_code_duration_ms": 5.473613739013672,
+  "avg_read_code_duration_ms": 0.35123030344645184,
+  "median_read_code_duration_ms": 0.35703182220458984
+}

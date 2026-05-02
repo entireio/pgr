@@ -1,0 +1,207 @@
+{
+  "repeat": 0,
+  "task_id": "7d66f047ac98",
+  "repo": "entireio-cli",
+  "task_type": "repo_task",
+  "condition": "fff",
+  "prompt": "on which data does \"entire session list\" operates?",
+  "answer": "",
+  "tool_calls": [
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "entire session list"
+      },
+      "output": "0 matches for 'entire session list'. Auto-broadened to 'session list':\n\u2192 Read CLAUDE.md (best match)\nCLAUDE.md\n 387: - `manual_commit_logs.go` - Session log retrieval and session listing\ncmd/entire/cli/utils.go\n 54: // It appends a \"(most recent)\" label to the last entry in a multi-session list,\ndocs/architecture/checkpoint-scenarios.md\n 604: - **Session states**: Cleaned up during session listing when shadow branch no longer exists (and session is not ACTIVE, has no `LastCheckpointID`)",
+      "output_tokens": 491,
+      "duration_ms": 2.035856246948242,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "entire session list",
+        "path_glob": "**/*.go"
+      },
+      "output": "0 exact matches. 2 approximate:\ncmd/entire/cli/sessions.go\n 34:   entire sessions list                     List all sessions\n 182:   entire sessions list    List all sessions across all worktrees`,",
+      "output_tokens": 197,
+      "duration_ms": 12.620687484741211,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "session list",
+        "path_glob": "cmd/entire/**/*.go"
+      },
+      "output": "\u2192 Read cmd/entire/cli/utils.go (only match)\ncmd/entire/cli/utils.go\n 54: // It appends a \"(most recent)\" label to the last entry in a multi-session list,",
+      "output_tokens": 153,
+      "duration_ms": 0.3018379211425781,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/sessions.go"
+      },
+      "output": "cmd/entire/cli/sessions.go:1-80\n  1| package cli\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"encoding/json\"\n  6| \t\"errors\"\n  7| \t\"fmt\"\n  8| \t\"io\"\n  9| \t\"path/filepath\"\n  10| \t\"sort\"\n  11| \t\"strings\"\n  12| \t\"time\"\n  13| \n  14| \t\"github.com/charmbracelet/huh\"\n  15| \t\"github.com/entireio/cli/cmd/entire/cli/paths\"\n  16| \t\"github.com/entireio/cli/cmd/entire/cli/session\"\n  17| \t\"github.com/entireio/cli/cmd/entire/cli/strategy\"\n  18| \t\"github.com/entireio/cli/cmd/entire/cli/stringutil\"\n  19| \t\"github.co",
+      "output_tokens": 2856,
+      "duration_ms": 0.6997585296630859,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/sessions.go",
+        "start_line": 160,
+        "max_lines": 120
+      },
+      "output": "cmd/entire/cli/sessions.go:160-279\n  160| \n  161| // sessionPhaseLabel returns the display status for a session.\n  162| func sessionPhaseLabel(s *strategy.SessionState) string {\n  163| \tif s.EndedAt != nil {\n  164| \t\treturn \"ended\"\n  165| \t}\n  166| \tstatus := string(s.Phase)\n  167| \tif status == \"\" {\n  168| \t\treturn \"idle\"\n  169| \t}\n  170| \treturn status\n  171| }\n  172| \n  173| func newListCmd() *cobra.Command {\n  174| \tcmd := &cobra.Command{\n  175| \t\tUse:   \"list\",\n  176| \t\tShort: \"List all ses",
+      "output_tokens": 4183,
+      "duration_ms": 0.5829334259033203,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "func ListSessionStates",
+        "file_type": "go"
+      },
+      "output": "\u2192 Read cmd/entire/cli/strategy/session_state.go (only match)\ncmd/entire/cli/strategy/session_state.go\n 95: func ListSessionStates(ctx context.Context) ([]*SessionState, error) {\n  96| store, err := session.NewStateStore(ctx)\n  97| if err != nil {\n  98| return nil, fmt.Errorf(\"failed to create state store: %w\", err)\n  99| }",
+      "output_tokens": 324,
+      "duration_ms": 0.9820461273193359,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/strategy/session_state.go"
+      },
+      "output": "cmd/entire/cli/strategy/session_state.go:1-80\n  1| package strategy\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"fmt\"\n  6| \t\"log/slog\"\n  7| \t\"os\"\n  8| \t\"path/filepath\"\n  9| \t\"strings\"\n  10| \n  11| \t\"github.com/entireio/cli/cmd/entire/cli/jsonutil\"\n  12| \t\"github.com/entireio/cli/cmd/entire/cli/logging\"\n  13| \t\"github.com/entireio/cli/cmd/entire/cli/paths\"\n  14| \t\"github.com/entireio/cli/cmd/entire/cli/session\"\n  15| \t\"github.com/entireio/cli/cmd/entire/cli/validation\"\n  16| )\n  17| \n  18| // Sessi",
+      "output_tokens": 3131,
+      "duration_ms": 2.1409988403320312,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/strategy/session_state.go",
+        "start_line": 80,
+        "max_lines": 130
+      },
+      "output": "cmd/entire/cli/strategy/session_state.go:80-209\n  80| \t}\n  81| \n  82| \t// Atomic write: write to temp file, then rename\n  83| \ttmpFile := stateFile + \".tmp\"\n  84| \tif err := os.WriteFile(tmpFile, data, 0o600); err != nil {\n  85| \t\treturn fmt.Errorf(\"failed to write session state: %w\", err)\n  86| \t}\n  87| \tif err := os.Rename(tmpFile, stateFile); err != nil {\n  88| \t\treturn fmt.Errorf(\"failed to rename session state file: %w\", err)\n  89| \t}\n  90| \treturn nil\n  91| }\n  92| \n  93| // ListSessionSta",
+      "output_tokens": 5233,
+      "duration_ms": 0.3478527069091797,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "func (s *StateStore) List",
+        "file_type": "go"
+      },
+      "output": "0 exact matches. 2 approximate:\ncmd/entire/cli/session/state.go\n 438: func (s *StateStore) List(ctx context.Context) ([]*State, error) {\n 471: func (s *StateStore) stateFilePath(sessionID string) string {",
+      "output_tokens": 204,
+      "duration_ms": 7.769107818603516,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "type SessionState struct",
+        "file_type": "go"
+      },
+      "output": "0 exact matches. 6 approximate:\ncmd/entire/cli/agent/codex/types.go\n 30: type sessionStartRaw struct {\ncmd/entire/cli/agent/copilotcli/transcript.go\n 235: type sessionShutdownData struct {\ncmd/entire/cli/agent/cursor/types.go\n 39: type sessionStartRaw struct {",
+      "output_tokens": 260,
+      "duration_ms": 5.667209625244141,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "type SessionState struct",
+        "path_glob": "cmd/entire/cli/strategy/*.go"
+      },
+      "output": "0 exact matches. 1 approximate:\ncmd/entire/cli/strategy/common.go\n 435: type sessionMetadataLite struct {",
+      "output_tokens": 105,
+      "duration_ms": 5.974054336547852,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/session/state.go",
+        "start_line": 430,
+        "max_lines": 80
+      },
+      "output": "cmd/entire/cli/session/state.go:430-509\n  430| func (s *StateStore) RemoveAll() error {\n  431| \tif err := os.RemoveAll(s.stateDir); err != nil {\n  432| \t\treturn fmt.Errorf(\"failed to remove session state directory: %w\", err)\n  433| \t}\n  434| \treturn nil\n  435| }\n  436| \n  437| // List returns all session states.\n  438| func (s *StateStore) List(ctx context.Context) ([]*State, error) {\n  439| \tentries, err := os.ReadDir(s.stateDir)\n  440| \tif os.IsNotExist(err) {\n  441| \t\treturn nil, nil\n  442| \t",
+      "output_tokens": 2945,
+      "duration_ms": 0.33974647521972656,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "type State struct",
+        "path_glob": "cmd/entire/cli/session/state.go"
+      },
+      "output": "\u2192 Read cmd/entire/cli/session/state.go (only match)\ncmd/entire/cli/session/state.go\n 39: type State struct {\n  40| // SessionID is the unique session identifier\n  41| SessionID string `json:\"session_id\"`",
+      "output_tokens": 203,
+      "duration_ms": 0.23698806762695312,
+      "turn_number": 10
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "SessionState",
+        "path_glob": "cmd/entire/cli/strategy/common.go",
+        "max_matches_per_file": 5
+      },
+      "output": "\u2192 Read cmd/entire/cli/strategy/common.go (only match)\ncmd/entire/cli/strategy/common.go\n 307: func resolveAgentType(ctxAgentType types.AgentType, state *SessionState) types.AgentType {\n  308| if state != nil && state.AgentType != \"\" {\n  309| return state.AgentType\n  310| }\n  311| return ctxAgentType\n  312| }\n 1640: func prepareTranscriptForState(ctx context.Context, state *SessionState) {",
+      "output_tokens": 391,
+      "duration_ms": 0.14972686767578125,
+      "turn_number": 10
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/session/state.go",
+        "start_line": 1,
+        "max_lines": 130
+      },
+      "output": "cmd/entire/cli/session/state.go:1-130\n  1| package session\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"encoding/json\"\n  6| \t\"fmt\"\n  7| \t\"log/slog\"\n  8| \t\"os\"\n  9| \t\"os/exec\"\n  10| \t\"path/filepath\"\n  11| \t\"strings\"\n  12| \t\"sync\"\n  13| \t\"time\"\n  14| \n  15| \t\"github.com/entireio/cli/cmd/entire/cli/agent\"\n  16| \t\"github.com/entireio/cli/cmd/entire/cli/agent/types\"\n  17| \t\"github.com/entireio/cli/cmd/entire/cli/checkpoint/id\"\n  18| \t\"github.com/entireio/cli/cmd/entire/cli/jsonutil\"\n  19| \t\"github.com/",
+      "output_tokens": 6929,
+      "duration_ms": 0.6630420684814453,
+      "turn_number": 11
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/session/state.go",
+        "start_line": 130,
+        "max_lines": 100
+      },
+      "output": "cmd/entire/cli/session/state.go:130-229\n  130| \t// sessions that have been condensed at least once. Cleared on new prompt.\n  131| \tLastCheckpointID id.CheckpointID `json:\"last_checkpoint_id,omitempty\"`\n  132| \n  133| \t// FullyCondensed indicates this session has been condensed and has no remaining\n  134| \t// carry-forward files. PostCommit skips fully-condensed sessions entirely.\n  135| \t// Set after successful condensation when no files remain for carry-forward\n  136| \t// and the session phase ",
+      "output_tokens": 6179,
+      "duration_ms": 0.5500316619873047,
+      "turn_number": 12
+    }
+  ],
+  "total_tool_calls": 16,
+  "total_turns": 12,
+  "wall_clock_ms": 25479.64382171631,
+  "input_tokens": 74513,
+  "output_tokens": 1303,
+  "tool_output_tokens": 33784,
+  "total_cost_usd": 0.243084,
+  "first_call_tool": "search_code",
+  "first_call_produced_file": true,
+  "retry_count": 0,
+  "error": "",
+  "total_tool_duration_ms": 41.0618782043457,
+  "tool_execution_share": 0.001611556209013748,
+  "search_call_count": 9,
+  "read_call_count": 7,
+  "avg_search_code_duration_ms": 3.9708349439832897,
+  "median_search_code_duration_ms": 2.035856246948242
+}

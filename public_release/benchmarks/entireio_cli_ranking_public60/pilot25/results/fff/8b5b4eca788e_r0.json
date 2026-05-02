@@ -1,0 +1,265 @@
+{
+  "repeat": 0,
+  "task_id": "8b5b4eca788e",
+  "repo": "entireio-cli",
+  "task_type": "debug_or_validation",
+  "condition": "fff",
+  "prompt": "I am running this test on Windows TestSingleSessionSubagentCommitInTurn. And it is failing, not always, it fails because after running the test we identify that there is a shadow branch that should not be there. I copied the entire.log on windows execution windows-broken-test.json (failing one) and the same test but this time running on macos the entire.log are inside mac-ok-test.json.",
+  "answer": "",
+  "tool_calls": [
+    {
+      "tool_name": "list_dir",
+      "tool_input": {},
+      "output": ".allowed-licenses\n.claude/\n.codex/\n.devcontainer/\n.entire/\n.ferrata/\n.gemini/\n.git/\n.github/\n.gitignore\n.golangci.yaml\n.goreleaser.yaml\n.opencode/\n.vscode/\nAGENTS.md\nCHANGELOG.md\nCLAUDE.md\nCODE_OF_CONDUCT.md\nCONTRIBUTING.md\nLICENSE\nREADME.md\nSECURITY.md\nWINDOWS.md\ncmd/\ndocs/\ne2e/\ngo.mod\ngo.sum\nmise-tasks/\nmise.toml\nperf/\nredact/\nscripts/",
+      "output_tokens": 339,
+      "duration_ms": 0.5297660827636719,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "pattern": "windows-broken-test.json"
+      },
+      "output": "0 results (602 indexed)",
+      "output_tokens": 23,
+      "duration_ms": 1.1661052703857422,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "pattern": "mac-ok-test.json"
+      },
+      "output": "cmd/entire/cli/transcript/compact/testdata/claude_full.jsonl git:clean\ncmd/entire/cli/transcript/compact/testdata/gemini_full.jsonl git:clean\ncmd/entire/cli/transcript/compact/testdata/claude_full2.jsonl git:clean\ncmd/entire/cli/transcript/compact/testdata/copilot_full.jsonl git:clean\ncmd/entire/cli/transcript/compact/testdata/opencode_full.jsonl git:clean\ncmd/entire/cli/transcript/compact/testdata/codex_expected.jsonl git:clean\ncmd/entire/cli/transcript/compact/testdata/droid_expected.jsonl git",
+      "output_tokens": 949,
+      "duration_ms": 1.2428760528564453,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": ".entire"
+      },
+      "output": ".gitignore\nsettings.json",
+      "output_tokens": 24,
+      "duration_ms": 0.24509429931640625,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "TestSingleSessionSubagentCommitInTurn"
+      },
+      "output": "\u2192 Read .claude/skills/agent-integration/implementer.md (best match)\ne2e/tests/single_session_test.go\n 92: func TestSingleSessionSubagentCommitInTurn(t *testing.T) {\n  93| testutil.ForEachAgent(t, 2*time.Minute, func(t *testing.T, s *testutil.RepoState, ctx context.Context) {\n  94| if s.Agent.Name() == \"copilot-cli\" {\n  95| t.Skip(\"copilot-cli may run prompt-mode subagents in the background while the foreground process returns and fires agent-stop/session-end hooks first; when the later subagent ",
+      "output_tokens": 779,
+      "duration_ms": 0.47898292541503906,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": "e2e"
+      },
+      "output": "README.md\nagents/\nbootstrap/\ncmd/\nentire/\nexploratory/\ntests/\ntestutil/\nvogon/",
+      "output_tokens": 78,
+      "duration_ms": 0.15592575073242188,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/tests/single_session_test.go",
+        "start_line": 89,
+        "max_lines": 80
+      },
+      "output": "e2e/tests/single_session_test.go:89-114\n  89| // TestSingleSessionSubagentCommitInTurn: one prompt with subagent creates a file and commits it.\n  90| // Expects both an initial checkpoint (post-commit) and a catchup checkpoint\n  91| // (end-of-turn) referencing the same checkpoint ID.\n  92| func TestSingleSessionSubagentCommitInTurn(t *testing.T) {\n  93| \ttestutil.ForEachAgent(t, 2*time.Minute, func(t *testing.T, s *testutil.RepoState, ctx context.Context) {\n  94| \t\tif s.Agent.Name() == \"copilot",
+      "output_tokens": 1585,
+      "duration_ms": 0.5168914794921875,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": "e2e/testutil"
+      },
+      "output": "artifacts.go\nartifacts_unix.go\nartifacts_windows.go\nassertions.go\nmetadata.go\nrepo.go",
+      "output_tokens": 85,
+      "duration_ms": 0.17714500427246094,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/testutil/assertions.go"
+      },
+      "output": "e2e/testutil/assertions.go:1-80\n  1| package testutil\n  2| \n  3| import (\n  4| \t\"crypto/sha256\"\n  5| \t\"encoding/hex\"\n  6| \t\"encoding/json\"\n  7| \t\"fmt\"\n  8| \t\"os\"\n  9| \t\"path/filepath\"\n  10| \t\"regexp\"\n  11| \t\"strings\"\n  12| \t\"testing\"\n  13| \t\"time\"\n  14| \n  15| \t\"github.com/stretchr/testify/assert\"\n  16| \t\"github.com/stretchr/testify/require\"\n  17| )\n  18| \n  19| // DeepCheckpointValidation contains expected values for comprehensive checkpoint validation.\n  20| type DeepCheckpointValidation struc",
+      "output_tokens": 3009,
+      "duration_ms": 0.4119873046875,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/testutil/repo.go"
+      },
+      "output": "e2e/testutil/repo.go:1-80\n  1| package testutil\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"crypto/sha256\"\n  6| \t\"encoding/hex\"\n  7| \t\"encoding/json\"\n  8| \t\"errors\"\n  9| \t\"fmt\"\n  10| \t\"os\"\n  11| \t\"os/exec\"\n  12| \t\"path/filepath\"\n  13| \t\"strings\"\n  14| \t\"testing\"\n  15| \t\"time\"\n  16| \n  17| \t\"github.com/entireio/cli/e2e/agents\"\n  18| \t\"github.com/entireio/cli/e2e/entire\"\n  19| )\n  20| \n  21| const droidRepoSettingsPath = \".factory/settings.json\"\n  22| \n  23| // RepoState holds the working state for",
+      "output_tokens": 3160,
+      "duration_ms": 0.28014183044433594,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/testutil/assertions.go",
+        "start_line": 80,
+        "max_lines": 120
+      },
+      "output": "e2e/testutil/assertions.go:80-199\n  80| \tAssertNewCommitsWithTimeout(t, s, atLeast, 20*time.Second)\n  81| }\n  82| \n  83| // AssertNewCommitsWithTimeout is like AssertNewCommits but with a configurable\n  84| // timeout. Use this when WaitFor may settle on stale pane content (e.g.\n  85| // multi-turn interactive tests where the previous turn's prompt is still\n  86| // visible), giving the agent more time to complete its commit.\n  87| func AssertNewCommitsWithTimeout(t *testing.T, s *RepoState, atL",
+      "output_tokens": 5467,
+      "duration_ms": 0.3509521484375,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/testutil/repo.go",
+        "start_line": 80,
+        "max_lines": 120
+      },
+      "output": "e2e/testutil/repo.go:80-199\n  80| \t\tif err := os.WriteFile(filepath.Join(entireDir, \"settings.json\"),\n  81| \t\t\t[]byte(\"{\\\"external_agents\\\": true}\\n\"), 0o644); err != nil {\n  82| \t\t\tt.Fatalf(\"write external_agents setting: %v\", err)\n  83| \t\t}\n  84| \t}\n  85| \n  86| \tentire.Enable(t, dir, agent.EntireAgent())\n  87| \tif agent.Name() == \"gemini-cli\" {\n  88| \t\tsetupGeminiTestHome(t, dir)\n  89| \t}\n  90| \tif agent.Name() == \"factoryai-droid\" {\n  91| \t\tif err := configureDroidRepoSettings(dir); err != n",
+      "output_tokens": 5199,
+      "duration_ms": 0.20694732666015625,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": "cmd"
+      },
+      "output": "entire/",
+      "output_tokens": 7,
+      "duration_ms": 0.26106834411621094,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "pattern": "shadow"
+      },
+      "output": "scripts/download-e2e-artifacts.sh git:clean\ne2e/agents/procattr_windows.go git:clean\ne2e/testutil/artifacts_windows.go git:clean\nmise-tasks/test/ci/integration/shard git:clean\ncmd/entire/cli/integration_test/procattr_windows.go git:clean\ncmd/entire/cli/telemetry/detached_windows.go git:clean\ne2e/tests/stash_workflows_test.go git:clean\ncmd/entire/cli/strategy/phase_wiring_test.go git:clean\n.github/CODEOWNERS git:clean\ncmd/entire/cli/integration_test/hook_overwrite_test.go git:clean\ncmd/entire/cli",
+      "output_tokens": 1648,
+      "duration_ms": 1.1677742004394531,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "shadow",
+        "path_glob": "cmd/entire/cli/**/*.go",
+        "max_files": 20
+      },
+      "output": "\u2192 Read cmd/entire/cli/benchutil/benchutil_test.go [def]\ncmd/entire/cli/checkpoint/temporary_test.go\n 99: func TestParseShadowBranchName(t *testing.T) {\n  100| tests := []struct {\n  101| name         string\n  102| branchName   string\n  103| wantCommit   string\n  104| wantWorktree string\n  105| wantOK       bool\n  106| }{\n  107| {\ncmd/entire/cli/benchutil/benchutil.go\n 356: func (br *BenchRepo) SeedShadowBranch(b *testing.B, sessionID string, checkpointCount int, filesPerCheckpoint int) {\n  357| b",
+      "output_tokens": 3539,
+      "duration_ms": 1.7709732055664062,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/checkpoint/checkpoint.go",
+        "start_line": 1,
+        "max_lines": 80
+      },
+      "output": "cmd/entire/cli/checkpoint/checkpoint.go:1-80\n  1| // Package checkpoint provides types and interfaces for checkpoint storage.\n  2| //\n  3| // A Checkpoint captures a point-in-time within a session, containing either\n  4| // full state (Temporary) or metadata with a commit reference (Committed).\n  5| //\n  6| // See docs/architecture/sessions-and-checkpoints.md for the full domain model.\n  7| package checkpoint\n  8| \n  9| import (\n  10| \t\"context\"\n  11| \t\"encoding/json\"\n  12| \t\"errors\"\n  13| \t\"tim",
+      "output_tokens": 3585,
+      "duration_ms": 0.43702125549316406,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "pattern": "temporary.go",
+        "glob": "cmd/entire/cli/checkpoint/*.go"
+      },
+      "output": "\u2192 Read cmd/entire/cli/checkpoint/temporary.go (best match \u2014 Read this file directly)\ncmd/entire/cli/checkpoint/temporary.go git:clean",
+      "output_tokens": 133,
+      "duration_ms": 0.26416778564453125,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/checkpoint/temporary.go"
+      },
+      "output": "cmd/entire/cli/checkpoint/temporary.go:1-80\n  1| package checkpoint\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"crypto/sha256\"\n  6| \t\"encoding/hex\"\n  7| \t\"encoding/json\"\n  8| \t\"errors\"\n  9| \t\"fmt\"\n  10| \t\"log/slog\"\n  11| \t\"os\"\n  12| \t\"os/exec\"\n  13| \t\"path/filepath\"\n  14| \t\"sort\"\n  15| \t\"strings\"\n  16| \t\"time\"\n  17| \n  18| \t\"github.com/entireio/cli/cmd/entire/cli/agent\"\n  19| \t\"github.com/entireio/cli/cmd/entire/cli/agent/types\"\n  20| \t\"github.com/entireio/cli/cmd/entire/cli/jsonutil\"\n  21| \t\"git",
+      "output_tokens": 3355,
+      "duration_ms": 0.6299018859863281,
+      "turn_number": 10
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/checkpoint/temporary.go",
+        "start_line": 80,
+        "max_lines": 120
+      },
+      "output": "cmd/entire/cli/checkpoint/temporary.go:80-199\n  80| \t\tif lastCommit, err := s.repo.CommitObject(parentHash); err == nil {\n  81| \t\t\tlastTreeHash = lastCommit.TreeHash\n  82| \t\t}\n  83| \t}\n  84| \n  85| \t// Collect all files to include\n  86| \tvar allFiles []string\n  87| \tvar allDeletedFiles []string\n  88| \tif opts.IsFirstCheckpoint {\n  89| \t\t// For the first checkpoint, capture all changed files (modified tracked + untracked)\n  90| \t\t// using `git status --porcelain -z` which respects both repo and g",
+      "output_tokens": 5553,
+      "duration_ms": 0.6361007690429688,
+      "turn_number": 11
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "DeleteShadowBranch\\|deleteShadowBranch\\|delete.*shadow\\|shadow.*delete",
+        "path_glob": "cmd/entire/cli/**/*.go",
+        "max_files": 15
+      },
+      "output": "0 matches.",
+      "output_tokens": 10,
+      "duration_ms": 4.844903945922852,
+      "turn_number": 11
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "shadow.*branch.*delet\\|delet.*shadow.*branch\\|RemoveReference.*entire\\|entire.*RemoveReference",
+        "path_glob": "cmd/entire/cli/**/*.go",
+        "max_files": 15
+      },
+      "output": "0 matches.",
+      "output_tokens": 10,
+      "duration_ms": 5.133628845214844,
+      "turn_number": 12
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "CondenseShadow\\|condenseShadow\\|Condense\\|condense",
+        "path_glob": "cmd/entire/cli/**/*.go",
+        "max_files": 15
+      },
+      "output": "0 matches.",
+      "output_tokens": 10,
+      "duration_ms": 4.357814788818359,
+      "turn_number": 12
+    }
+  ],
+  "total_tool_calls": 22,
+  "total_turns": 12,
+  "wall_clock_ms": 30793.962001800537,
+  "input_tokens": 97805,
+  "output_tokens": 1594,
+  "tool_output_tokens": 38547,
+  "total_cost_usd": 0.31732499999999997,
+  "first_call_tool": "list_dir",
+  "first_call_produced_file": true,
+  "retry_count": 0,
+  "error": "",
+  "total_tool_duration_ms": 25.266170501708984,
+  "tool_execution_share": 0.0008204910592612818,
+  "search_call_count": 5,
+  "read_call_count": 8,
+  "avg_search_code_duration_ms": 3.3172607421875,
+  "median_search_code_duration_ms": 4.357814788818359
+}

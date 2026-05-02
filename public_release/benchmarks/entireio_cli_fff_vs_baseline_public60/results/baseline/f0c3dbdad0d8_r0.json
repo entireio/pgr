@@ -1,0 +1,150 @@
+{
+  "repeat": 0,
+  "task_id": "f0c3dbdad0d8",
+  "repo": "entireio-cli",
+  "task_type": "code_understanding",
+  "condition": "baseline",
+  "prompt": "Can you tell me again how the logic works that flags if you have an active session in claude already and blocks the prompt once.",
+  "answer": "I now have a thorough picture of how the entire \"active session\" detection and \"block/prompt once\" mechanism works. Here's a complete breakdown:\n\n---\n\n## How the \"Active Claude Session\" Detection and One-Time Prompt Works\n\nThis logic lives in the **`prepare-commit-msg` git hook**, implemented in `cmd/entire/cli/strategy/manual_commit_hooks.go`, specifically within `PrepareCommitMsg()` and its helpers.\n\n---\n\n### Step 1 \u2014 Session Detection (`findSessionsForWorktree`)\n\nWhen the user runs `git commit`, the `prepare-commit-msg` hook fires. It first looks up **all sessions associated with the current worktree path**:\n\n```go\nsessions, err := s.findSessionsForWorktree(ctx, worktreePath)\nif err != nil || len(sessions) == 0 {\n    return nil // no active sessions \u2014 silently exit\n}\n```\n\nEach session is stored as a JSON file in `.git/entire-sessions/<session-id>.json` with a **`Phase`** field. A session is considered \"active\" if its phase is `ACTIVE` (i.e., `state.Phase.IsActive()`).\n\n---\n\n### Step 2 \u2014 Fast Path for Agent Commits (No TTY, or `commit_linking=always`)\n\nBefore doing any content analysis, it checks **whether a TTY is available** via `hasTTY()`:\n\n```go\nfunc hasTTY() bool {\n    // Returns false for: GEMINI_CLI env, COPILOT_CLI env, GIT_TERMINAL_PROMPT=0, or no /dev/tty\n}\n```\n\nIf **no TTY** (i.e., the commit is being made by Claude itself as a subprocess) OR if the user has set `commit_linking = \"always\"` in settings, the **fast path** fires (`tryAgentCommitFastPath`):\n\n- It finds the first ACTIVE session.\n- Silently and automatically adds a `Entire-Checkpoint: <id>` trailer to the commit message.\n- Returns immediately \u2014 **no prompt shown**.\n\n---\n\n### Step 3 \u2014 Content Check for Human Commits\n\nIf a TTY **is** present (a real human ran `git commit`), it next checks whether there's actually new Claude session content to link, via `filterSessionsWithNewContent` \u2192 `sessionHasNewContent`. This checks:\n- Has the transcript grown in size since the last checkpoint?\n- Are there uncommitted files the agent touched?\n- Do the staged files overlap with what Claude modified?\n\nIf there's **no relevant new content**, it exits silently without doing anything.\n\n---\n\n### Step 4 \u2014 The One-Time Prompt (only for `git commit -m` / `source == \"message\"`)\n\nIf there IS new content AND a human is at the terminal, the behavior depends on **how the commit was invoked**:\n\n#### For `git commit -m \"...\"` (source = `\"message\"`):\nThis is the only path where the **interactive TTY prompt** is shown \u2014 **once**:\n\n```go\nheader := \"Entire: Active \" + string(agentType) + \" session detected\"\ndetails = [\"Last prompt: <last 80 chars of prompt>\"]\n\nresult := askConfirmTTY(header, details, \"Link this commit to session context?\", true)\n```\n\nThe user sees:\n```\nEntire: Active Claude Code session detected\n  Last prompt: <your last prompt>\n\nLink this commit to session context?\n  [Y]es / [n]o / [a]lways (remember my choice):\n```\n\n- **Y (default)** \u2192 adds the `Entire-Checkpoint` trailer, links the commit.\n- **n** \u2192 skips; no trailer added. Hook exits cleanly.\n- **a (always)** \u2192 links this commit AND saves `commit_linking = \"always\"` to `settings.local.json`, so **future commits never prompt again** (they auto-link silently).\n\nThis prompt fires **only once per commit invocation** \u2014 the hook runs once, prompts once, and is done.\n\n#### For normal editor flow (source = `\"\"` or `\"template\"`):\nInstead of a TTY prompt, an `Entire-Checkpoint` trailer with an **explanatory comment** is pre-filled in the commit message editor:\n\n```\n# Remove the Entire-Checkpoint trailer above if you don't want to link this commit to Claude Code session context.\n# Last Prompt: <your prompt>\n# The trailer will be added to your next commit based on this branch.\n```\n\nThe user can **remove the trailer from the editor to opt out** \u2014 no blocking prompt, just an in-editor comment.\n\n---\n\n### Step 5 \u2014 Blocked Once (Session \"flagging\")\n\nThe `LastCheckpointID` on the session state is **cleared at each new prompt** (`InitializeSession`), and set during `PostCommit` after condensation. This means:\n\n- The \"active session\" flag is the `Phase == ACTIVE` state written to `.git/entire-sessions/<id>.json` when Claude starts via the `UserPromptSubmit` hook.\n- The prompt is only ever shown **once per `git commit -m` invocation** \u2014 there is no retry loop.\n- Once the user answers (or the hook detects no TTY), it writes/doesn't write the trailer and exits.\n\n---\n\n### Summary Flow\n\n```\ngit commit -m \"fix bug\"\n        \u2502\n        \u25bc\nprepare-commit-msg hook fires\n        \u2502\n        \u251c\u2500 Any active sessions? \u2500\u2500No\u2500\u2500\u25ba exit silently\n        \u2502         Yes\n        \u2502\n        \u251c\u2500 No TTY / commit_linking=always? \u2500\u2500Yes\u2500\u2500\u25ba auto-add trailer (no prompt)\n        \u2502         No\n        \u2502\n        \u251c\u2500 Session has new content? \u2500\u2500No\u2500\u2500\u25ba exit silently\n        \u2502         Yes\n        \u2502\n        \u2514\u2500 source==\"message\"? \u2500\u2500Yes\u2500\u2500\u25ba show ONE interactive TTY prompt\n                    [Y]es / [n]o / [a]lways\n                    \u2502\n                    \u251c\u2500\u2500 Y \u2192 add trailer\n                    \u251c\u2500\u2500 n \u2192 skip (no trailer)\n                    \u2514\u2500\u2500 a \u2192 add trailer + save \"always\" (never prompt again)\n```",
+  "tool_calls": [
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "active session",
+        "context_before": 3,
+        "context_after": 3
+      },
+      "output": "./e2e/testutil/artifacts.go\n  61-67:\n    61| \t// console.log is written incrementally to disk via s.ConsoleLog (*os.File),\n    62| \t// so it already exists in the artifact dir and survives global timeouts.\n    63| \n    64| \t// Capture final pane content from interactive sessions, then close.\n    65| \t// Must happen here (not in a separate t.Cleanup) because cleanup\n    66| \t// functions run LIFO \u2014 closing first would kill the tmux session\n    67| \t// before we can capture.\n\n./e2e/testutil/repo.g",
+      "output_tokens": 4625,
+      "duration_ms": 20.08795738220215,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "block prompt",
+        "context_before": 3,
+        "context_after": 3
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 16.5708065032959,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "already running",
+        "context_before": 3,
+        "context_after": 3
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 20.963668823242188,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "session already exists",
+        "context_before": 3,
+        "context_after": 3
+      },
+      "output": "./cmd/entire/cli/agent/opencode/opencode.go\n  227-233:\n    227| \n    228| // importSessionIntoOpenCode writes the export JSON to a temp file and runs\n    229| // `opencode import` to restore the session into OpenCode's database.\n    230| // For rewind (session already exists), the session is deleted first so the\n    231| // reimport replaces it with the checkpoint-state messages.\n    232| func (a *OpenCodeAgent) importSessionIntoOpenCode(ctx context.Context, sessionID string, exportData []byte) ",
+      "output_tokens": 211015,
+      "duration_ms": 16.386985778808594,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "Active Claude Code session detected",
+        "context_before": 5,
+        "context_after": 5
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 20.020008087158203,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "StuckActiveThreshold",
+        "context_before": 3,
+        "context_after": 10
+      },
+      "output": "./cmd/entire/cli/session/state.go\n  29-40:\n    29| \t// and will be automatically deleted during load/list operations.\n    30| \tStaleSessionThreshold = 7 * 24 * time.Hour\n    31| \n    32| \t// StuckActiveThreshold is the duration after which an ACTIVE session with no\n    33| \t// interaction is considered stuck (used by \"entire doctor\" and \"entire status\").\n    34| \tStuckActiveThreshold = 1 * time.Hour\n    35| )\n    36| \n    37| // State represents the state of an active session.\n    38| // This is",
+      "output_tokens": 1343,
+      "duration_ms": 15.750885009765625,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "WarnOnce\\|warn_once\\|warned\\|warnedAbout\\|hasWarned\\|warningShown\\|promptOnce",
+        "context_before": 3,
+        "context_after": 5
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 14.914751052856445,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "SessionIDConflictError\\|conflict.*session\\|session.*conflict",
+        "context_before": 3,
+        "context_after": 8
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 14.826059341430664,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "SessionIDConflict",
+        "context_before": 3,
+        "context_after": 10
+      },
+      "output": "./CLAUDE.md\n  583-587:\n    583| - A shadow branch is \"orphaned\" if it exists but has no corresponding session state file\n    584| - This can happen if the state file is manually deleted or lost\n    585| - When a new session starts with an orphaned branch, the branch is automatically reset\n    586| - If the existing session DOES have a state file (concurrent session in same directory), a `SessionIDConflictError` is returned\n    587| \n  589-591:\n    589| \n    590| - If user does stash \u2192 pull \u2192 app",
+      "output_tokens": 212396,
+      "duration_ms": 18.772363662719727,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "findSessionsForWorktree",
+        "context_before": 2,
+        "context_after": 20,
+        "max_matches_per_file": 3
+      },
+      "output": "./docs/architecture/commit-hook-perf-analysis.md\n  86-86:\n    86| `StateStore.List()` does `os.ReadDir()` + `Load()` for every `.json` file in `.git/entire-sessions/`. Each `Load()` reads a file, parses JSON, runs `NormalizeAfterLoad()`, and checks staleness. Called once per hook via `listAllSessionStates()` \u2192 `findSessionsForWorktree()`.\n\n./cmd/entire/cli/transcript/compact/testdata/claude_expected2.jsonl\n  73-73:\n    73| {\"v\":1,\"agent\":\"claude-code\",\"cli_version\":\"0.5.1\",\"type\":\"assistant\",\"ts",
+      "output_tokens": 124137,
+      "duration_ms": 15.394210815429688,
+      "turn_number": 5
+    }
+  ],
+  "total_tool_calls": 10,
+  "total_turns": 6,
+  "wall_clock_ms": 62174.668073654175,
+  "input_tokens": 445606,
+  "output_tokens": 2425,
+  "tool_output_tokens": 553601,
+  "total_cost_usd": 1.373193,
+  "first_call_tool": "search_code",
+  "first_call_produced_file": true,
+  "retry_count": 0,
+  "error": "",
+  "total_tool_duration_ms": 173.68769645690918,
+  "tool_execution_share": 0.0027935444102597053,
+  "search_call_count": 10,
+  "avg_search_code_duration_ms": 17.368769645690918,
+  "median_search_code_duration_ms": 16.478896141052246,
+  "avg_read_code_duration_ms": 0.0,
+  "median_read_code_duration_ms": 0.0
+}

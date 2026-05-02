@@ -1,0 +1,263 @@
+{
+  "repeat": 0,
+  "task_id": "30646c347ecd",
+  "repo": "entireio-cli",
+  "task_type": "code_understanding",
+  "condition": "baseline",
+  "prompt": "Can you explain to me what `entire rewind` does and how it works? Start on a high level and show me what a user would see and example how and why they'd",
+  "answer": "Now I have a thorough understanding of the full system. Here's a comprehensive explanation:\n\n---\n\n## What is `entire rewind`?\n\n`entire rewind` is a **time-travel command** \u2014 it lets you undo AI agent work and go back to any prior \"save point\" (called a **checkpoint**) in your session, restoring both your **working directory files** _and_ the **AI agent's conversation history** to exactly how they were at that moment.\n\nThink of it like video game save states: as your AI agent makes changes, Entire continuously saves snapshots behind the scenes. If the agent goes off the rails or you just don't like what it did, `entire rewind` lets you jump back to any of those saves \u2014 and then immediately pick up the conversation from that exact point.\n\n---\n\n## What Does a User See?\n\n### The Default Flow (Interactive)\n\nRunning `entire rewind` with no flags launches an interactive terminal UI:\n\n```\nSelect a checkpoint to restore\nYour working directory will be restored to this checkpoint's state\n\n  \u25b6  a3b2c4d (2026-01-15 14:32) Add authentication module\n       (2026-01-15 14:28) [Task] Set up database schema\n       (2026-01-15 14:20) Add user model\n       (2026-01-15 14:10) Initial project scaffold\n     Cancel\n```\n\nAfter picking one:\n\n```\nSelected: a3b2c4d Add authentication module\n\nReset to a3b2c4d?\nThis will reset to: Add authentication module\nChanges after this point may be lost!\n\n[ Yes ]  [ No ]\n```\n\nThen it executes and reports what happened:\n\n```\n  Deleted: src/auth/token_refresh.go\n  Restored: src/auth/login.go\n  Restored: src/models/user.go\n\nRestored files from shadow commit a3b2c4d\n\n\u2713 Rewound to a3b2c4d. claude --resume 2026-01-15-abc123de-f456-7890-abcd-ef1234567890\n```\n\nThat final line is key \u2014 it hands the user the exact command to re-open the AI agent session right where the checkpoint was taken.\n\n---\n\n## A Concrete Example \u2014 Why Would You Use This?\n\n**Scenario:** You're using Claude Code to build a feature. The agent makes three rounds of changes:\n\n```\nPrompt 1 \u2192 \"Add a user model\"       \u2192 checkpoint saved\nPrompt 2 \u2192 \"Add a login endpoint\"   \u2192 checkpoint saved\nPrompt 3 \u2192 \"Add token refresh\"      \u2192 things went wrong \ud83d\ude2c\n```\n\nAt prompt 3, the agent produced messy, incorrect code and left your project in a broken state. You run:\n\n```\nentire rewind\n```\n\nYou select the checkpoint from after Prompt 2. Entire:\n1. **Deletes** `src/auth/token_refresh.go` (created after the checkpoint)\n2. **Restores** the files as they were at that save point\n3. **Replaces** Claude's conversation transcript with the version from that checkpoint\n\nThen you re-launch Claude with the given resume command and try again \u2014 with a better prompt this time.\n\n---\n\n## How It Works \u2014 Under the Hood\n\n### Three Types of Rewind Points\n\nThe system builds a combined list of up to 20 checkpoints from two sources:\n\n| Type | What it is | How files are restored |\n|---|---|---|\n| **Shadow checkpoint** | An uncommitted snapshot captured by Entire's git hooks during an active session, stored on a hidden `entire/sessions/<id>` branch | Files are read directly from that shadow branch's git tree and written to disk |\n| **Task checkpoint** | A mid-session snapshot taken _within_ a tool-use step (e.g., after a sub-agent task), before the user commits | Same as above, but the agent transcript is also _truncated_ at the exact tool-use boundary |\n| **Logs-only point** | A past _committed_ state (real git commit) that has session logs stored on `entire/checkpoints/v1` but no longer has a live shadow branch | Files can only be restored via `git checkout`/`git reset --hard`; logs are recovered from the checkpoint branch |\n\n### Step-by-Step Execution of a Shadow Checkpoint Rewind\n\nHere's exactly what `strategy.Rewind()` does ([`manual_commit_rewind.go:289`](./cmd/entire/cli/strategy/manual_commit_rewind.go)):\n\n1. **Safety check** \u2014 `CanRewind()` confirms there are no uncommitted changes that would be silently clobbered (warns the user if there are).\n\n2. **Preview** \u2014 `PreviewRewind()` computes which untracked files would be _deleted_ and shows a warning before asking for confirmation.\n\n3. **Reset the shadow branch** \u2014 `resetShadowBranchToCheckpoint()` moves the hidden shadow branch's `HEAD` pointer back to the chosen checkpoint commit. This ensures future checkpoints within the same session won't include \"future\" history from after the rewind.\n\n4. **Delete newly-added untracked files** \u2014 runs `git ls-files --others` to find untracked files now, cross-references against:\n   - Files present in the checkpoint tree (will be restored, so skip)\n   - Files tracked in git `HEAD` (user's committed work \u2014 don't touch)\n   - Files that existed at session start (user pre-existed files \u2014 preserve them)\n   - Everything else \u2192 **deleted**\n\n5. **Restore files** \u2014 iterates every file in the shadow commit's git tree, skips the internal `.entire/` metadata directory, and writes each file to disk (with correct permissions, including executable bits).\n\n6. **Restore the agent transcript** \u2014 this is what lets the AI pick up the conversation:\n   - For **committed checkpoints**: reads from `entire/checkpoints/v1` branch\n   - For **uncommitted/shadow checkpoints**: reads from the shadow branch commit tree\n   - For **task checkpoints**: reads the transcript and _truncates_ it at the exact tool-use UUID boundary, so the agent only sees the history up to that mid-step snapshot\n   - Falls back to the local file if neither branch source is available\n\n7. **Print the resume command** \u2014 e.g. `claude --resume <session-id>` or `gemini --resume <session-id>`, so the user knows exactly how to re-open the agent at the restored point.\n\n### Non-Interactive / Scripting Modes\n\nThe command also supports non-interactive flags for scripting or automation:\n\n| Flag | Effect |\n|---|---|\n| `--list` | Outputs all rewind points as JSON (used by scripts, the test suite, etc.) |\n| `--to <id>` | Skips the picker UI and rewinds directly to the given commit ID (full or 7-char prefix) |\n| `--logs-only` | Restores the agent transcript only \u2014 does **not** modify the working directory |\n| `--reset` | For logs-only points: performs a `git reset --hard` to actually move the branch pointer back to that commit (destructive, shows commit-count warnings and a recovery hint) |\n\n### The Logs-Only Sub-Menu\n\nWhen a user selects a **logs-only** point (a real committed git commit) in interactive mode, they get a second-level menu since Entire can't just replay file state from a shadow branch that no longer exists:\n\n```\nLogs-only point: a3b2c4d\nThis commit has session logs but no checkpoint state. Choose an action:\n\n  \u25b6  Restore logs only (keep current files)\n     Checkout commit (detached HEAD, for viewing)\n     Reset branch to this commit (destructive!)\n     Cancel\n```",
+  "tool_calls": [
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "entire rewind"
+      },
+      "output": "./CHANGELOG.md\n  151-151:\n    151| - Auto-discover external agents during `entire enable`, `entire rewind`, and `entire resume` ([#678](https://github.com/entireio/cli/pull/678))\n  198-198:\n    198| - `entire rewind` now supports squash-merged commits ([#612](https://github.com/entireio/cli/pull/612))\n\n./README.md\n  122-126:\n    122| \n    123| ```\n    124| entire rewind\n    125| ```\n    126| \n  240-244:\n    240| | `entire login`   | Authenticate the CLI with Entire device auth                   ",
+      "output_tokens": 2816,
+      "duration_ms": 25.35390853881836,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "pattern": "rewind"
+      },
+      "output": "./cmd/entire/cli/integration_test/logs_only_rewind_test.go\n./cmd/entire/cli/integration_test/rewind_test.go\n./cmd/entire/cli/rewind.go\n./cmd/entire/cli/strategy/manual_commit_rewind.go\n./cmd/entire/cli/strategy/rewind_test.go\n./e2e/tests/rewind_test.go",
+      "output_tokens": 252,
+      "duration_ms": 10.844945907592773,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "./cmd/entire/cli/rewind.go"
+      },
+      "output": "./cmd/entire/cli/rewind.go:1-80\n  1| package cli\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"errors\"\n  6| \t\"fmt\"\n  7| \t\"io\"\n  8| \t\"log/slog\"\n  9| \t\"os\"\n  10| \t\"os/exec\"\n  11| \t\"path/filepath\"\n  12| \t\"strings\"\n  13| \t\"time\"\n  14| \t\"unicode\"\n  15| \n  16| \tagentpkg \"github.com/entireio/cli/cmd/entire/cli/agent\"\n  17| \t\"github.com/entireio/cli/cmd/entire/cli/agent/external\"\n  18| \t\"github.com/entireio/cli/cmd/entire/cli/agent/types\"\n  19| \t\"github.com/entireio/cli/cmd/entire/cli/checkpoint\"\n  20| \t\"g",
+      "output_tokens": 2912,
+      "duration_ms": 0.9009838104248047,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "./README.md",
+        "start_line": 100,
+        "end_line": 200
+      },
+      "output": "./README.md:100-200\n  100| ```\n  101| \n  102| On a repo that has not been enabled yet, `entire enable` runs the initial enable flow: it creates Entire settings, installs git hooks, and prompts you to choose which agent hooks to install. To enable a specific agent non-interactively, use `entire enable --agent <name>` (for example, `entire enable --agent cursor`).\n  103| \n  104| After setup:\n  105| \n  106| - Use `entire enable` to turn Entire back on if the repo is currently disabled.\n  107| - Use",
+      "output_tokens": 4589,
+      "duration_ms": 0.5838871002197266,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "./cmd/entire/cli/rewind.go",
+        "start_line": 80,
+        "end_line": 300
+      },
+      "output": "./cmd/entire/cli/rewind.go:80-300\n  80| \t\t\tif listFlag {\n  81| \t\t\t\treturn runRewindList(ctx, w)\n  82| \t\t\t}\n  83| \t\t\tif toFlag != \"\" {\n  84| \t\t\t\treturn runRewindToWithOptions(ctx, w, errW, toFlag, logsOnlyFlag, resetFlag)\n  85| \t\t\t}\n  86| \t\t\treturn runRewindInteractive(ctx, w, errW)\n  87| \t\t},\n  88| \t}\n  89| \n  90| \tcmd.Flags().BoolVar(&listFlag, \"list\", false, \"List available rewind points (JSON output)\")\n  91| \tcmd.Flags().StringVar(&toFlag, \"to\", \"\", \"Rewind to specific commit ID (non-interact",
+      "output_tokens": 8438,
+      "duration_ms": 0.28395652770996094,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "./e2e/tests/rewind_test.go"
+      },
+      "output": "./e2e/tests/rewind_test.go:1-80\n  1| //go:build e2e\n  2| \n  3| package tests\n  4| \n  5| import (\n  6| \t\"context\"\n  7| \t\"fmt\"\n  8| \t\"os\"\n  9| \t\"path/filepath\"\n  10| \t\"testing\"\n  11| \t\"time\"\n  12| \n  13| \t\"github.com/entireio/cli/e2e/entire\"\n  14| \t\"github.com/entireio/cli/e2e/testutil\"\n  15| \t\"github.com/stretchr/testify/assert\"\n  16| \t\"github.com/stretchr/testify/require\"\n  17| )\n  18| \n  19| // TestRewindPreCommit: agent creates two files in sequence (no user commit),\n  20| // then rewinds to t",
+      "output_tokens": 3506,
+      "duration_ms": 0.08702278137207031,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "./cmd/entire/cli/rewind.go",
+        "start_line": 300,
+        "end_line": 550
+      },
+      "output": "./cmd/entire/cli/rewind.go:300-550\n  300| \t\t}\n  301| \n  302| \t\tsessionID = checkpoint.SessionID\n  303| \n  304| \t\tif checkpoint.CheckpointUUID != \"\" {\n  305| \t\t\t// Truncate transcript at checkpoint UUID\n  306| \t\t\tif err := restoreTaskCheckpointTranscript(ctx, w, start, *selectedPoint, sessionID, checkpoint.CheckpointUUID, agent); err != nil {\n  307| \t\t\t\tfmt.Fprintf(errW, \"Warning: failed to restore truncated session transcript: %v\\n\", err)\n  308| \t\t\t} else {\n  309| \t\t\t\tfmt.Fprintf(w, \"\u2713 Rewound t",
+      "output_tokens": 10768,
+      "duration_ms": 0.7250308990478516,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "./cmd/entire/cli/strategy/manual_commit_rewind.go"
+      },
+      "output": "./cmd/entire/cli/strategy/manual_commit_rewind.go:1-80\n  1| package strategy\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"errors\"\n  6| \t\"fmt\"\n  7| \t\"io\"\n  8| \t\"log/slog\"\n  9| \t\"os\"\n  10| \t\"path/filepath\"\n  11| \t\"sort\"\n  12| \t\"strings\"\n  13| \t\"time\"\n  14| \n  15| \t\"github.com/entireio/cli/cmd/entire/cli/agent\"\n  16| \t\"github.com/entireio/cli/cmd/entire/cli/agent/types\"\n  17| \tcpkg \"github.com/entireio/cli/cmd/entire/cli/checkpoint\"\n  18| \t\"github.com/entireio/cli/cmd/entire/cli/checkpoint/id\"\n  19| ",
+      "output_tokens": 3220,
+      "duration_ms": 0.35500526428222656,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "./cmd/entire/cli/strategy/manual_commit_rewind.go",
+        "start_line": 80,
+        "end_line": 350
+      },
+      "output": "./cmd/entire/cli/strategy/manual_commit_rewind.go:80-350\n  80| \t\t\tsessionPrompt, ok := sessionPrompts[cp.SessionID]\n  81| \t\t\tif !ok {\n  82| \t\t\t\tsessionPrompt = readSessionPrompt(repo, cp.CommitHash, cp.MetadataDir)\n  83| \t\t\t\tsessionPrompts[cp.SessionID] = sessionPrompt\n  84| \t\t\t}\n  85| \n  86| \t\t\tallPoints = append(allPoints, RewindPoint{\n  87| \t\t\t\tID:               cp.CommitHash.String(),\n  88| \t\t\t\tMessage:          cp.Message,\n  89| \t\t\t\tMetadataDir:      cp.MetadataDir,\n  90| \t\t\t\tDate:         ",
+      "output_tokens": 10399,
+      "duration_ms": 0.6301403045654297,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "./cmd/entire/cli/rewind.go",
+        "start_line": 550,
+        "end_line": 800
+      },
+      "output": "./cmd/entire/cli/rewind.go:550-800\n  550| \t\tif err := restoreSessionTranscript(ctx, w, transcriptFile, sessionID, agent); err != nil {\n  551| \t\t\tfmt.Fprintf(errW, \"Warning: failed to restore session transcript: %v\\n\", err)\n  552| \t\t}\n  553| \t}\n  554| \n  555| \tfmt.Fprintf(w, \"\u2713 Rewound to %s. %s\\n\", selectedPoint.ID[:7], agent.FormatResumeCommand(sessionID))\n  556| \treturn nil\n  557| }\n  558| \n  559| // handleLogsOnlyRewindNonInteractive handles logs-only rewind in non-interactive mode.\n  560| //",
+      "output_tokens": 10873,
+      "duration_ms": 0.6310939788818359,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "./cmd/entire/cli/strategy/manual_commit_rewind.go",
+        "start_line": 350,
+        "end_line": 600
+      },
+      "output": "./cmd/entire/cli/strategy/manual_commit_rewind.go:350-600\n  350| \t}\n  351| \theadTree, err := headCommit.Tree()\n  352| \tif err != nil {\n  353| \t\treturn fmt.Errorf(\"failed to get HEAD tree: %w\", err)\n  354| \t}\n  355| \n  356| \t// Build set of files tracked in HEAD\n  357| \ttrackedFiles := make(map[string]bool)\n  358| \t//nolint:errcheck // Error is not critical for rewind\n  359| \t_ = headTree.Files().ForEach(func(f *object.File) error {\n  360| \t\tif err := ctx.Err(); err != nil {\n  361| \t\t\treturn err ",
+      "output_tokens": 10290,
+      "duration_ms": 0.5857944488525391,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "./cmd/entire/cli/rewind.go",
+        "start_line": 800,
+        "end_line": 1000
+      },
+      "output": "./cmd/entire/cli/rewind.go:800-1000\n  800| \n  801| \treturn nil\n  802| }\n  803| \n  804| // handleLogsOnlyRewindInteractive handles rewind for logs-only points with a sub-choice menu.\n  805| func handleLogsOnlyRewindInteractive(ctx context.Context, w, errW io.Writer, start *strategy.ManualCommitStrategy, point strategy.RewindPoint, shortID string) error {\n  806| \tvar action string\n  807| \n  808| \tform := NewAccessibleForm(\n  809| \t\thuh.NewGroup(\n  810| \t\t\thuh.NewSelect[string]().\n  811| \t\t\t\tTitle(",
+      "output_tokens": 8149,
+      "duration_ms": 0.4222393035888672,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "./cmd/entire/cli/rewind.go",
+        "start_line": 1000,
+        "end_line": 1150
+      },
+      "output": "./cmd/entire/cli/rewind.go:1000-1150\n  1000| \t\t\tstrings.Join(warnings, \"\\n\") +\n  1001| \t\t\t\"\\n\\nThis will move your branch to \" + shortID + \" and DISCARD commits after it!\"\n  1002| \t} else {\n  1003| \t\tconfirmTitle = \"Reset branch to \" + shortID + \"?\"\n  1004| \t\tconfirmDesc = \"This will move your branch pointer to this commit.\\nCommits after this point will be orphaned (but recoverable via reflog).\"\n  1005| \t}\n  1006| \n  1007| \tvar confirm bool\n  1008| \tconfirmForm := NewAccessibleForm(\n  1009| \t\th",
+      "output_tokens": 5559,
+      "duration_ms": 0.6420612335205078,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "./e2e/tests/rewind_test.go",
+        "start_line": 80,
+        "end_line": 230
+      },
+      "output": "./e2e/tests/rewind_test.go:80-225\n  80| \t\t\t\tbreak\n  81| \t\t\t}\n  82| \t\t}\n  83| \t\trequire.NotNil(t, shadowPoint, \"expected at least one shadow branch rewind point\")\n  84| \t\toldID := shadowPoint.ID\n  85| \n  86| \t\t// User commits the file.\n  87| \t\ts.Git(t, \"add\", \".\")\n  88| \t\ts.Git(t, \"commit\", \"-m\", \"Add red.md\")\n  89| \n  90| \t\ttestutil.WaitForCheckpoint(t, s, 30*time.Second)\n  91| \n  92| \t\t// Get rewind points after commit \u2014 old shadow IDs should be gone.\n  93| \t\tpointsAfter := entire.RewindList(t,",
+      "output_tokens": 6979,
+      "duration_ms": 0.26297569274902344,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "shadow branch checkpoint",
+        "file_type": "go",
+        "context_before": 1,
+        "context_after": 3,
+        "max_files": 3
+      },
+      "output": "./cmd/entire/cli/checkpoint/temporary.go\n  578-582:\n    578| // GetTranscriptFromCommit retrieves the transcript from a specific commit's tree.\n    579| // This is used for shadow branch checkpoints where the transcript is stored in the commit tree\n    580| // rather than on the entire/checkpoints/v1 branch.\n    581| // commitHash is the commit to read from, metadataDir is the path within the tree.\n    582| // agentType is used for reassembling chunked transcripts in the correct format.\n\n./cmd/e",
+      "output_tokens": 1389,
+      "duration_ms": 27.947187423706055,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "FormatResumeCommand",
+        "file_type": "go",
+        "context_before": 1,
+        "context_after": 3,
+        "max_files": 3
+      },
+      "output": "./cmd/entire/cli/integration_test/agent_test.go\n  783-786:\n    783| \n    784| \tt.Run(\"FormatResumeCommand returns gemini --resume\", func(t *testing.T) {\n    785| \t\tt.Parallel()\n    786| \n  788-794:\n    788| \t\tcmd := ag.FormatResumeCommand(\"abc123\")\n    789| \n    790| \t\tif cmd != \"gemini --resume abc123\" {\n    791| \t\t\tt.Errorf(\"FormatResumeCommand() = %q, want %q\", cmd, \"gemini --resume abc123\")\n    792| \t\t}\n    793| \t})\n    794| \n  1401-1404:\n    1401| \n    1402| \tt.Run(\"FormatResumeCommand retu",
+      "output_tokens": 1368,
+      "duration_ms": 16.67189598083496,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "IsLogsOnly IsTaskCheckpoint",
+        "file_type": "go",
+        "context_before": 2,
+        "context_after": 4,
+        "max_files": 2
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 18.030166625976562,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "type RewindPoint struct",
+        "file_type": "go",
+        "context_after": 30
+      },
+      "output": "./e2e/entire/entire.go\n  21-23:\n    21| \n    22| // RewindPoint represents a single entry from `entire rewind --list`.\n    23| type RewindPoint struct {\n  33-44:\n    33| }\n    34| \n    35| // Enable runs `entire enable` for the given agent with telemetry disabled.\n    36| func Enable(t *testing.T, dir, agent string) {\n    37| \tt.Helper()\n    38| \trun(t, dir, \"enable\", \"--agent\", agent, \"--telemetry=false\")\n    39| }\n    40| \n    41| // Disable runs `entire disable` in the given directory.\n    42",
+      "output_tokens": 2238,
+      "duration_ms": 17.75193214416504,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "./cmd/entire/cli/strategy/strategy.go",
+        "start_line": 47,
+        "end_line": 130
+      },
+      "output": "./cmd/entire/cli/strategy/strategy.go:47-130\n  47| // This abstraction allows different strategies to use different\n  48| // identifiers (commit hashes, branch names, stash refs, etc.)\n  49| type RewindPoint struct {\n  50| \t// ID is the unique identifier for this rewind point\n  51| \t// (commit hash, branch name, stash ref, etc.)\n  52| \tID string\n  53| \n  54| \t// Message is the human-readable description/summary\n  55| \tMessage string\n  56| \n  57| \t// MetadataDir is the path to the metadata direct",
+      "output_tokens": 3939,
+      "duration_ms": 0.4019737243652344,
+      "turn_number": 10
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "./e2e/entire/entire.go"
+      },
+      "output": "./e2e/entire/entire.go:1-80\n  1| package entire\n  2| \n  3| import (\n  4| \t\"encoding/json\"\n  5| \t\"log\"\n  6| \t\"os\"\n  7| \t\"os/exec\"\n  8| \t\"strings\"\n  9| \t\"testing\"\n  10| )\n  11| \n  12| // BinPath returns the path to the entire binary from E2E_ENTIRE_BIN.\n  13| // The mise test:e2e tasks set this automatically via `mise run build`.\n  14| func BinPath() string {\n  15| \tp := os.Getenv(\"E2E_ENTIRE_BIN\")\n  16| \tif p == \"\" {\n  17| \t\tlog.Fatal(\"entire: E2E_ENTIRE_BIN not set \u2014 run tests via `mise run test",
+      "output_tokens": 2849,
+      "duration_ms": 0.2281665802001953,
+      "turn_number": 10
+    }
+  ],
+  "total_tool_calls": 20,
+  "total_turns": 11,
+  "wall_clock_ms": 73170.38178443909,
+  "input_tokens": 240992,
+  "output_tokens": 3547,
+  "tool_output_tokens": 100550,
+  "total_cost_usd": 0.776181,
+  "first_call_tool": "search_code",
+  "first_call_produced_file": true,
+  "retry_count": 0,
+  "error": "",
+  "total_tool_duration_ms": 123.34036827087402,
+  "tool_execution_share": 0.0016856597609977817,
+  "search_call_count": 5,
+  "avg_search_code_duration_ms": 21.151018142700195,
+  "median_search_code_duration_ms": 18.030166625976562,
+  "avg_read_code_duration_ms": 0.481452260698591,
+  "median_read_code_duration_ms": 0.5030632019042969
+}

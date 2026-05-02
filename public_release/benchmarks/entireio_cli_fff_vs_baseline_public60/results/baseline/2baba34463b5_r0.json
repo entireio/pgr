@@ -1,0 +1,320 @@
+{
+  "repeat": 0,
+  "task_id": "2baba34463b5",
+  "repo": "entireio-cli",
+  "task_type": "debug_or_validation",
+  "condition": "baseline",
+  "prompt": "can we add e2e tests similar to those for gemini/claude (mise run test:e2e:claude)",
+  "answer": "",
+  "tool_calls": [
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": "."
+      },
+      "output": ".allowed-licenses\n.claude/\n.codex/\n.devcontainer/\n.entire/\n.ferrata/\n.gemini/\n.git/\n.github/\n.gitignore\n.golangci.yaml\n.goreleaser.yaml\n.opencode/\n.vscode/\nAGENTS.md\nCHANGELOG.md\nCLAUDE.md\nCODE_OF_CONDUCT.md\nCONTRIBUTING.md\nLICENSE\nREADME.md\nSECURITY.md\nWINDOWS.md\ncmd/\ndocs/\ne2e/\ngo.mod\ngo.sum\nmise-tasks/\nmise.toml\nperf/\nredact/\nscripts/",
+      "output_tokens": 339,
+      "duration_ms": 0.2701282501220703,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "glob": "**/*e2e*"
+      },
+      "output": "./scripts/download-e2e-artifacts.sh\n./scripts/test-attribution-e2e.sh",
+      "output_tokens": 69,
+      "duration_ms": 11.5509033203125,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": "e2e",
+        "recursive": true
+      },
+      "output": "README.md\ncmd/testreport/main.go\nbootstrap/main.go\ntests/attribution_test.go\ntests/checkpoint_metadata_test.go\ntests/codex_resume_test.go\ntests/deleted_files_test.go\ntests/disable_test.go\ntests/edge_cases_test.go\ntests/existing_files_test.go\ntests/external_agent_test.go\ntests/factory_hooks_test.go\ntests/interactive_test.go\ntests/main_test.go\ntests/mid_turn_commit_test.go\ntests/multi_session_test.go\ntests/resume_remote_test.go\ntests/resume_test.go\ntests/rewind_test.go\ntests/session_lifecycle_test",
+      "output_tokens": 1130,
+      "duration_ms": 1.1909008026123047,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": "mise-tasks",
+        "recursive": true
+      },
+      "output": "build\ncompletions\nrelease\nbench/_default\nbench/compare\nbench/cpu\nbench/mem\nlint/_default\nlint/go\nlint/gofmt\nlint/gomod\nlint/licenses\nlint/mise\nlint/shellcheck\ntest/ci/core\ntest/ci/integration/shard\ntest/e2e/_default\ntest/e2e/canary\ntest/e2e/roger-roger\ndup/_default\ndup/staged\ndev/publish",
+      "output_tokens": 288,
+      "duration_ms": 0.7159709930419922,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "mise-tasks/test/e2e/_default"
+      },
+      "output": "mise-tasks/test/e2e/_default:1-43\n  1| #!/bin/sh\n  2| #MISE description=\"Run E2E tests: mise run test:e2e --agent claude-code [filter]\"\n  3| #MISE quiet=true\n  4| #USAGE flag \"--agent <agent>\" help=\"Agent (claude-code, gemini-cli, opencode, cursor-cli, copilot-cli)\" default=\"\" env=\"E2E_AGENT\"\n  5| #USAGE arg \"[filter]\" help=\"Test name filter (regex)\" default=\"\"\n  6| \n  7| set -eu\n  8| \n  9| export E2E_AGENT=\"${usage_agent:-}\"\n  10| \n  11| # Build from source with version info unless a pre-built ",
+      "output_tokens": 1754,
+      "duration_ms": 0.8149147033691406,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "mise-tasks/test/e2e/canary"
+      },
+      "output": "mise-tasks/test/e2e/canary:1-68\n  1| #!/bin/sh\n  2| #MISE description=\"Run E2E canary tests with deterministic agents (no API calls)\"\n  3| #USAGE arg \"[filter]\" help=\"Test name filter (regex)\" default=\"\"\n  4| \n  5| set -eu\n  6| \n  7| # Build entire CLI\n  8| mise run build\n  9| export E2E_ENTIRE_BIN=\"$PWD/entire\"\n  10| \n  11| # Build vogon binary\n  12| go build -o vogon ./e2e/vogon\n  13| E2E_PATH=\"$PWD:$PATH\"\n  14| \n  15| if [ -z \"${E2E_ARTIFACT_DIR:-}\" ]; then\n  16|   E2E_ARTIFACT_DIR=\"$PWD/e2e/",
+      "output_tokens": 2558,
+      "duration_ms": 0.4000663757324219,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "mise-tasks/test/e2e/roger-roger"
+      },
+      "output": "mise-tasks/test/e2e/roger-roger:1-45\n  1| #!/bin/sh\n  2| #MISE description=\"Run E2E tests with roger-roger external agent (no API calls)\"\n  3| #USAGE arg \"[filter]\" help=\"Test name filter (regex)\" default=\"\"\n  4| \n  5| set -eu\n  6| \n  7| export E2E_AGENT=\"roger-roger\"\n  8| \n  9| # Build entire CLI\n  10| mise run build\n  11| export E2E_ENTIRE_BIN=\"$PWD/entire\"\n  12| \n  13| # Ensure roger-roger binaries are available on PATH before running E2E tests.\n  14| # They are typically installed via mise (",
+      "output_tokens": 1901,
+      "duration_ms": 0.34308433532714844,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/agents/claude.go"
+      },
+      "output": "e2e/agents/claude.go:1-80\n  1| package agents\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"errors\"\n  6| \t\"fmt\"\n  7| \t\"os\"\n  8| \t\"os/exec\"\n  9| \t\"path/filepath\"\n  10| \t\"runtime\"\n  11| \t\"strings\"\n  12| \t\"time\"\n  13| )\n  14| \n  15| // cleanEnv returns os.Environ() with agent-incompatible variables removed.\n  16| // It strips CLAUDECODE (so Claude Code doesn't refuse to start inside this\n  17| // test runner) and ENTIRE_TEST_TTY (so agents exercise the real TTY detection\n  18| // paths instead of the ",
+      "output_tokens": 2491,
+      "duration_ms": 1.3232231140136719,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/agents/gemini.go"
+      },
+      "output": "e2e/agents/gemini.go:1-80\n  1| package agents\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"errors\"\n  6| \t\"fmt\"\n  7| \t\"os\"\n  8| \t\"os/exec\"\n  9| \t\"path/filepath\"\n  10| \t\"strings\"\n  11| \t\"time\"\n  12| )\n  13| \n  14| func init() {\n  15| \tif env := os.Getenv(\"E2E_AGENT\"); env != \"\" && env != \"gemini-cli\" {\n  16| \t\treturn\n  17| \t}\n  18| \tRegister(&Gemini{})\n  19| \tRegisterGate(\"gemini-cli\", 2)\n  20| }\n  21| \n  22| const geminiDefaultModel = \"gemini-2.5-flash\"\n  23| \n  24| type Gemini struct{}\n  25| \n  26",
+      "output_tokens": 2471,
+      "duration_ms": 0.5702972412109375,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/agents/agent.go"
+      },
+      "output": "e2e/agents/agent.go:1-80\n  1| package agents\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"os\"\n  6| \t\"strconv\"\n  7| \t\"strings\"\n  8| \t\"time\"\n  9| )\n  10| \n  11| type Output struct {\n  12| \tCommand  string\n  13| \tStdout   string\n  14| \tStderr   string\n  15| \tExitCode int\n  16| }\n  17| \n  18| type Option func(*runConfig)\n  19| type runConfig struct {\n  20| \tModel          string\n  21| \tPermissionMode string\n  22| \tPromptTimeout  time.Duration\n  23| }\n  24| \n  25| func WithModel(model string) Option {\n",
+      "output_tokens": 2693,
+      "duration_ms": 0.2853870391845703,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/agents/agent.go",
+        "start_line": 80
+      },
+      "output": "e2e/agents/agent.go:80-134\n  80| // The limit can be overridden via E2E_CONCURRENT_TEST_LIMIT.\n  81| func RegisterGate(name string, defaultMax int) {\n  82| \tmax := defaultMax\n  83| \tif v, err := strconv.Atoi(os.Getenv(\"E2E_CONCURRENT_TEST_LIMIT\")); err == nil && v > 0 {\n  84| \t\tmax = v\n  85| \t}\n  86| \tgates[name] = make(chan struct{}, max)\n  87| }\n  88| \n  89| // AcquireSlot blocks until a test slot is available for the agent or the\n  90| // context is cancelled. Returns a non-nil error if the c",
+      "output_tokens": 1707,
+      "duration_ms": 0.22411346435546875,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/agents/claude.go",
+        "start_line": 80
+      },
+      "output": "e2e/agents/claude.go:80-159\n  80| \tconfig := fmt.Sprintf(`{\"primaryApiKey\":%q,\"hasCompletedOnboarding\":true}`, apiKey)\n  81| \tpath := filepath.Join(dir, \".claude.json\")\n  82| \treturn os.WriteFile(path, []byte(config), 0o644)\n  83| }\n  84| \n  85| func (c *Claude) RunPrompt(ctx context.Context, dir string, prompt string, opts ...Option) (Output, error) {\n  86| \tcfg := &runConfig{Model: \"haiku\"}\n  87| \tfor _, o := range opts {\n  88| \t\to(cfg)\n  89| \t}\n  90| \n  91| \tconfigDir, err := cleanConfigDir()",
+      "output_tokens": 3349,
+      "duration_ms": 0.09799003601074219,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/agents/gemini.go",
+        "start_line": 80
+      },
+      "output": "e2e/agents/gemini.go:80-153\n  80| \t\t\"ACCESSIBLE=1\",\n  81| \t\t\"HOME=\"+geminiTestHomeDir(dir),\n  82| \t)\n  83| \tsetupProcessGroup(cmd)\n  84| \tcmd.WaitDelay = 5 * time.Second\n  85| \n  86| \tvar stdout, stderr strings.Builder\n  87| \tcmd.Stdout = &stdout\n  88| \tcmd.Stderr = &stderr\n  89| \n  90| \terr := cmd.Run()\n  91| \texitCode := 0\n  92| \tif err != nil {\n  93| \t\texitErr := &exec.ExitError{}\n  94| \t\tif errors.As(err, &exitErr) {\n  95| \t\t\texitCode = exitErr.ExitCode()\n  96| \t\t} else {\n  97| \t\t\texitCode =",
+      "output_tokens": 2717,
+      "duration_ms": 0.064849853515625,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/agents/opencode.go"
+      },
+      "output": "e2e/agents/opencode.go:1-80\n  1| package agents\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"errors\"\n  6| \t\"fmt\"\n  7| \t\"os\"\n  8| \t\"os/exec\"\n  9| \t\"strings\"\n  10| \t\"time\"\n  11| )\n  12| \n  13| type openCodeAgent struct {\n  14| \tmodel   string\n  15| \ttimeout time.Duration\n  16| }\n  17| \n  18| func init() {\n  19| \tif env := os.Getenv(\"E2E_AGENT\"); env != \"\" && env != \"opencode\" {\n  20| \t\treturn\n  21| \t}\n  22| \tif _, err := exec.LookPath(\"opencode\"); err != nil {\n  23| \t\treturn\n  24| \t}\n  25| \tmodel :=",
+      "output_tokens": 2683,
+      "duration_ms": 0.6799697875976562,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/agents/copilot-cli.go"
+      },
+      "output": "e2e/agents/copilot-cli.go:1-80\n  1| package agents\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"errors\"\n  6| \t\"fmt\"\n  7| \t\"os\"\n  8| \t\"os/exec\"\n  9| \t\"strings\"\n  10| \t\"time\"\n  11| )\n  12| \n  13| func init() {\n  14| \tif env := os.Getenv(\"E2E_AGENT\"); env != \"\" && env != \"copilot-cli\" {\n  15| \t\treturn\n  16| \t}\n  17| \tRegister(&CopilotCLI{})\n  18| \tRegisterGate(\"copilot-cli\", 4)\n  19| }\n  20| \n  21| type CopilotCLI struct{}\n  22| \n  23| func (c *CopilotCLI) Name() string               { return \"copilo",
+      "output_tokens": 2595,
+      "duration_ms": 0.4811286926269531,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/agents/cursor_cli.go"
+      },
+      "output": "e2e/agents/cursor_cli.go:1-80\n  1| package agents\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"errors\"\n  6| \t\"fmt\"\n  7| \t\"os\"\n  8| \t\"os/exec\"\n  9| \t\"path/filepath\"\n  10| \t\"strings\"\n  11| \t\"time\"\n  12| )\n  13| \n  14| func init() {\n  15| \tif env := os.Getenv(\"E2E_AGENT\"); env != \"\" && env != \"cursor-cli\" {\n  16| \t\treturn\n  17| \t}\n  18| \tRegister(&CursorCLI{})\n  19| }\n  20| \n  21| // CursorCLI implements the E2E Agent interface for the Cursor Agent CLI binary.\n  22| // The CLI binary is called \"agent",
+      "output_tokens": 2910,
+      "duration_ms": 0.3399848937988281,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/agents/codex.go"
+      },
+      "output": "e2e/agents/codex.go:1-80\n  1| package agents\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"encoding/json\"\n  6| \t\"errors\"\n  7| \t\"fmt\"\n  8| \t\"os\"\n  9| \t\"os/exec\"\n  10| \t\"path/filepath\"\n  11| \t\"strings\"\n  12| \t\"time\"\n  13| )\n  14| \n  15| func init() {\n  16| \tif env := os.Getenv(\"E2E_AGENT\"); env != \"\" && env != \"codex\" {\n  17| \t\treturn\n  18| \t}\n  19| \tRegister(&Codex{})\n  20| \tRegisterGate(\"codex\", 2)\n  21| }\n  22| \n  23| // Codex implements the E2E Agent interface for OpenAI's Codex CLI.\n  24| type C",
+      "output_tokens": 2415,
+      "duration_ms": 0.4439353942871094,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "mise.toml"
+      },
+      "output": "mise.toml:1-39\n  1| [tools]\n  2| # Please also keep the version aligned in the go.mod file\n  3| go = { version = '1.26.2', postinstall = \"go install github.com/go-delve/delve/cmd/dlv@latest && go install gotest.tools/gotestsum@latest\" }\n  4| golangci-lint = '2.11.3'\n  5| shellcheck = 'latest'\n  6| tmux = 'latest'\n  7| \"go:github.com/entireio/roger-roger/cmd/roger-roger\" = 'latest'\n  8| \"go:github.com/entireio/roger-roger/cmd/entire-agent-roger-roger\" = 'latest'\n  9| \n  10| [tasks.fmt]\n  11| desc",
+      "output_tokens": 1525,
+      "duration_ms": 0.40221214294433594,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/agents/droid.go"
+      },
+      "output": "e2e/agents/droid.go:1-80\n  1| package agents\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"encoding/json\"\n  6| \t\"errors\"\n  7| \t\"fmt\"\n  8| \t\"os\"\n  9| \t\"os/exec\"\n  10| \t\"path/filepath\"\n  11| \t\"strings\"\n  12| \t\"time\"\n  13| )\n  14| \n  15| func init() {\n  16| \tif env := os.Getenv(\"E2E_AGENT\"); env != \"\" && env != \"factoryai-droid\" {\n  17| \t\treturn\n  18| \t}\n  19| \tif _, err := exec.LookPath(\"droid\"); err != nil {\n  20| \t\treturn\n  21| \t}\n  22| \tRegister(&Droid{})\n  23| }\n  24| \n  25| // Droid implements t",
+      "output_tokens": 2663,
+      "duration_ms": 0.2999305725097656,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "mise.toml",
+        "start_line": 39,
+        "max_lines": 80
+      },
+      "output": "mise.toml:39-39\n  39| run = \"CGO_ENABLED=0 GOOS=windows GOARCH=arm64 go build -o entire-arm64.exe ./cmd/entire/\"",
+      "output_tokens": 112,
+      "duration_ms": 0.26297569274902344,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/agents/claude.go",
+        "start_line": 159
+      },
+      "output": "e2e/agents/claude.go:159-219\n  159| \t\t// itself, clone its plugins, etc.\n  160| \t\t\"CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1\",\n  161| \t\t\"CLAUDE_CONFIG_DIR=\" + configDir,\n  162| \t}\n  163| \n  164| \targs := append([]string{\"env\"}, envArgs...)\n  165| \targs = append(args, c.Binary(), \"--dangerously-skip-permissions\")\n  166| \ts, err := NewTmuxSession(name, dir, []string{\"CLAUDECODE\", \"ENTIRE_TEST_TTY\"}, args[0], args[1:]...)\n  167| \tif err != nil {\n  168| \t\t_ = os.RemoveAll(configDir)\n  169| \t\treturn",
+      "output_tokens": 2241,
+      "duration_ms": 0.31304359436035156,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "glob": "mise-tasks/test/e2e/*"
+      },
+      "output": "./mise-tasks/test/e2e/_default\n./mise-tasks/test/e2e/canary\n./mise-tasks/test/e2e/roger-roger",
+      "output_tokens": 93,
+      "duration_ms": 12.742996215820312,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/agents/vogon.go"
+      },
+      "output": "e2e/agents/vogon.go:1-80\n  1| package agents\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"errors\"\n  6| \t\"fmt\"\n  7| \t\"os\"\n  8| \t\"os/exec\"\n  9| \t\"strings\"\n  10| \t\"time\"\n  11| )\n  12| \n  13| func init() {\n  14| \tif env := os.Getenv(\"E2E_AGENT\"); env != \"\" && env != \"vogon\" {\n  15| \t\treturn\n  16| \t}\n  17| \t// Only register if the binary exists (built by the test runner).\n  18| \tif _, err := exec.LookPath(\"vogon\"); err != nil {\n  19| \t\treturn\n  20| \t}\n  21| \tRegister(&Vogon{})\n  22| }\n  23| \n  24| // V",
+      "output_tokens": 2659,
+      "duration_ms": 0.43201446533203125,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": ".github",
+        "recursive": true
+      },
+      "output": "CODEOWNERS\ncopilot-instructions.md\ndependabot.yml\nworkflows/ci.yml\nworkflows/e2e-isolated.yml\nworkflows/e2e-windows.yml\nworkflows/e2e.yml\nworkflows/license-check.yml\nworkflows/lint.yml\nworkflows/nightly.yml\nworkflows/pr-binary-size.yml\nworkflows/release.yml\nISSUE_TEMPLATE/bug_report.yml\nISSUE_TEMPLATE/config.yml\nISSUE_TEMPLATE/feature_request.yml",
+      "output_tokens": 348,
+      "duration_ms": 0.5230903625488281,
+      "turn_number": 10
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": ".github/workflows/e2e.yml"
+      },
+      "output": ".github/workflows/e2e.yml:1-80\n  1| name: E2E Tests\n  2| \n  3| on:\n  4|   workflow_dispatch:\n  5|     inputs:\n  6|       agent:\n  7|         description: 'Run a single agent (leave empty for all)'\n  8|         required: false\n  9|         type: choice\n  10|         options:\n  11|           - ''\n  12|           - claude-code\n  13|           - opencode\n  14|           - gemini-cli\n  15|           - factoryai-droid\n  16|           - cursor-cli\n  17|           - copilot-cli\n  18|           - roger-r",
+      "output_tokens": 2932,
+      "duration_ms": 0.8478164672851562,
+      "turn_number": 11
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": ".github/workflows/e2e-isolated.yml"
+      },
+      "output": ".github/workflows/e2e-isolated.yml:1-80\n  1| name: E2E Isolated Test\n  2| \n  3| on:\n  4|   workflow_dispatch:\n  5|     inputs:\n  6|       agent:\n  7|         description: \"Agent to test\"\n  8|         required: true\n  9|         default: \"gemini-cli\"\n  10|         type: choice\n  11|         options: [claude-code, opencode, gemini-cli, cursor-cli, factoryai-droid, copilot-cli, roger-roger, codex]\n  12|       test:\n  13|         description: \"Test name filter (regex)\"\n  14|         required: true\n ",
+      "output_tokens": 3546,
+      "duration_ms": 0.6868839263916016,
+      "turn_number": 11
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": ".github/workflows/e2e.yml",
+        "start_line": 80
+      },
+      "output": ".github/workflows/e2e.yml:80-159\n  80|           echo \"$HOME/.local/bin\" >> $GITHUB_PATH\n  81| \n  82|       - name: Verify roger-roger agent\n  83|         if: matrix.agent == 'roger-roger'\n  84|         run: |\n  85|           set -euo pipefail\n  86|           echo \"Verifying roger-roger binaries on PATH...\"\n  87|           command -v roger-roger\n  88|           command -v entire-agent-roger-roger\n  89| \n  90|       - name: Bootstrap agent\n  91|         if: matrix.agent != 'roger-roger'\n  92|    ",
+      "output_tokens": 4096,
+      "duration_ms": 0.6449222564697266,
+      "turn_number": 12
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": ".github/workflows/e2e-isolated.yml",
+        "start_line": 80
+      },
+      "output": ".github/workflows/e2e-isolated.yml:80-89\n  80|           mkdir -p \"$E2E_ARTIFACT_DIR\"\n  81|           mise run test:e2e --agent ${{ inputs.agent }} \"${{ inputs.test }}\"\n  82| \n  83|       - name: Upload artifacts\n  84|         if: always()\n  85|         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7\n  86|         with:\n  87|           name: e2e-isolated-${{ inputs.agent }}-${{ inputs.test }}\n  88|           path: e2e-artifacts/\n  89|           retention-days: 7",
+      "output_tokens": 494,
+      "duration_ms": 0.21314620971679688,
+      "turn_number": 12
+    }
+  ],
+  "total_tool_calls": 28,
+  "total_turns": 12,
+  "wall_clock_ms": 31862.017154693604,
+  "input_tokens": 152387,
+  "output_tokens": 1712,
+  "tool_output_tokens": 54779,
+  "total_cost_usd": 0.48284099999999996,
+  "first_call_tool": "list_dir",
+  "first_call_produced_file": true,
+  "retry_count": 0,
+  "error": "",
+  "total_tool_duration_ms": 37.16588020324707,
+  "tool_execution_share": 0.0011664635048936993,
+  "search_call_count": 0,
+  "avg_search_code_duration_ms": 0.0,
+  "median_search_code_duration_ms": 0.0,
+  "avg_read_code_duration_ms": 0.4623586481267756,
+  "median_read_code_duration_ms": 0.4011392593383789
+}

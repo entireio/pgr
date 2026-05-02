@@ -1,0 +1,289 @@
+{
+  "repeat": 0,
+  "task_id": "6191df2265d1",
+  "repo": "entireio-cli",
+  "task_type": "debug_or_validation",
+  "condition": "fff",
+  "prompt": "can you look at the failing e2e tests and figure out if this are real issue or harness / flake issues",
+  "answer": "",
+  "tool_calls": [
+    {
+      "tool_name": "list_dir",
+      "tool_input": {},
+      "output": ".allowed-licenses\n.claude/\n.codex/\n.devcontainer/\n.entire/\n.ferrata/\n.gemini/\n.git/\n.github/\n.gitignore\n.golangci.yaml\n.goreleaser.yaml\n.opencode/\n.vscode/\nAGENTS.md\nCHANGELOG.md\nCLAUDE.md\nCODE_OF_CONDUCT.md\nCONTRIBUTING.md\nLICENSE\nREADME.md\nSECURITY.md\nWINDOWS.md\ncmd/\ndocs/\ne2e/\ngo.mod\ngo.sum\nmise-tasks/\nmise.toml\nperf/\nredact/\nscripts/",
+      "output_tokens": 339,
+      "duration_ms": 0.701904296875,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "glob": "**/*.test.*",
+        "max_results": 50
+      },
+      "output": "0 results (602 indexed)",
+      "output_tokens": 23,
+      "duration_ms": 0.4177093505859375,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": "e2e",
+        "recursive": true
+      },
+      "output": "README.md\ncmd/testreport/main.go\nbootstrap/main.go\ntests/attribution_test.go\ntests/checkpoint_metadata_test.go\ntests/codex_resume_test.go\ntests/deleted_files_test.go\ntests/disable_test.go\ntests/edge_cases_test.go\ntests/existing_files_test.go\ntests/external_agent_test.go\ntests/factory_hooks_test.go\ntests/interactive_test.go\ntests/main_test.go\ntests/mid_turn_commit_test.go\ntests/multi_session_test.go\ntests/resume_remote_test.go\ntests/resume_test.go\ntests/rewind_test.go\ntests/session_lifecycle_test",
+      "output_tokens": 1130,
+      "duration_ms": 1.9729137420654297,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "glob": "**/*_test.go",
+        "max_results": 50
+      },
+      "output": "50/227 matches\ncmd/entire/cli/logging/context_test.go git:clean\ncmd/entire/cli/agent/capabilities_test.go git:clean\ncmd/entire/cli/agent/chunking_test.go git:clean\ncmd/entire/cli/agent/claudecode/claude_test.go git:clean\ncmd/entire/cli/agent/claudecode/hooks_test.go git:clean\ncmd/entire/cli/agent/claudecode/lifecycle_test.go git:clean\ncmd/entire/cli/agent/claudecode/response_test.go git:clean\ncmd/entire/cli/agent/claudecode/transcript_test.go git:clean\ncmd/entire/cli/agent/codex/codex_test.go gi",
+      "output_tokens": 2754,
+      "duration_ms": 0.6918907165527344,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": "e2e/tests"
+      },
+      "output": "attribution_test.go\ncheckpoint_metadata_test.go\ncodex_resume_test.go\ndeleted_files_test.go\ndisable_test.go\nedge_cases_test.go\nexisting_files_test.go\nexternal_agent_test.go\nfactory_hooks_test.go\ninteractive_test.go\nmain_test.go\nmid_turn_commit_test.go\nmulti_session_test.go\nresume_remote_test.go\nresume_test.go\nrewind_test.go\nsession_lifecycle_test.go\nsingle_session_test.go\nsplit_commits_test.go\nstash_workflows_test.go\nsubagent_commit_flow_test.go",
+      "output_tokens": 448,
+      "duration_ms": 0.34308433532714844,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "glob": "**/*.yml",
+        "path_glob": "*.github*\"",
+        "max_results": 20
+      },
+      "output": "0 results (602 indexed)",
+      "output_tokens": 23,
+      "duration_ms": 0.23794174194335938,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "glob": ".github/**/*.yml",
+        "max_results": 20
+      },
+      "output": "0 results (602 indexed)",
+      "output_tokens": 23,
+      "duration_ms": 0.3383159637451172,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/tests/main_test.go"
+      },
+      "output": "e2e/tests/main_test.go:1-78\n  1| //go:build e2e\n  2| \n  3| package tests\n  4| \n  5| import (\n  6| \t\"fmt\"\n  7| \t\"os\"\n  8| \t\"os/exec\"\n  9| \t\"path/filepath\"\n  10| \t\"runtime\"\n  11| \t\"testing\"\n  12| \n  13| \t\"github.com/entireio/cli/e2e/agents\"\n  14| \t\"github.com/entireio/cli/e2e/entire\"\n  15| \t\"github.com/entireio/cli/e2e/testutil\"\n  16| )\n  17| \n  18| func TestMain(m *testing.M) {\n  19| \trunDir := os.Getenv(\"E2E_ARTIFACT_DIR\")\n  20| \tif runDir == \"\" {\n  21| \t\t_, file, _, _ := runtime.Caller(0)\n  22|",
+      "output_tokens": 3057,
+      "duration_ms": 1.0747909545898438,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/tests/single_session_test.go"
+      },
+      "output": "e2e/tests/single_session_test.go:1-80\n  1| //go:build e2e\n  2| \n  3| package tests\n  4| \n  5| import (\n  6| \t\"context\"\n  7| \t\"os\"\n  8| \t\"path/filepath\"\n  9| \t\"testing\"\n  10| \t\"time\"\n  11| \n  12| \t\"github.com/entireio/cli/e2e/testutil\"\n  13| \t\"github.com/stretchr/testify/assert\"\n  14| )\n  15| \n  16| // TestHumanOnlyChangesAndCommits: human creates a file and commits without any\n  17| // agent interaction. No checkpoint should be created.\n  18| func TestHumanOnlyChangesAndCommits(t *testing.T) {\n ",
+      "output_tokens": 3433,
+      "duration_ms": 1.2638568878173828,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/tests/resume_test.go"
+      },
+      "output": "e2e/tests/resume_test.go:1-80\n  1| //go:build e2e\n  2| \n  3| package tests\n  4| \n  5| import (\n  6| \t\"context\"\n  7| \t\"fmt\"\n  8| \t\"os\"\n  9| \t\"os/exec\"\n  10| \t\"path/filepath\"\n  11| \t\"testing\"\n  12| \t\"time\"\n  13| \n  14| \t\"github.com/entireio/cli/e2e/entire\"\n  15| \t\"github.com/entireio/cli/e2e/testutil\"\n  16| \t\"github.com/stretchr/testify/assert\"\n  17| \t\"github.com/stretchr/testify/require\"\n  18| )\n  19| \n  20| // TestResumeFromFeatureBranch: agent creates a file on a feature branch and\n  21| // use",
+      "output_tokens": 3631,
+      "duration_ms": 0.4799365997314453,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/tests/session_lifecycle_test.go"
+      },
+      "output": "e2e/tests/session_lifecycle_test.go:1-80\n  1| //go:build e2e\n  2| \n  3| package tests\n  4| \n  5| import (\n  6| \t\"context\"\n  7| \t\"os\"\n  8| \t\"path/filepath\"\n  9| \t\"testing\"\n  10| \t\"time\"\n  11| \n  12| \t\"github.com/entireio/cli/e2e/testutil\"\n  13| \t\"github.com/stretchr/testify/assert\"\n  14| )\n  15| \n  16| // TestEndedSessionUserCommitsAfterExit tests that after an agent session ends\n  17| // naturally, user commits still get checkpoint trailers.\n  18| func TestEndedSessionUserCommitsAfterExit(t *tes",
+      "output_tokens": 3592,
+      "duration_ms": 0.30517578125,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/tests/session_lifecycle_test.go",
+        "start_line": 80
+      },
+      "output": "e2e/tests/session_lifecycle_test.go:80-112\n  80| \t\tcpBranchAfterManual := testutil.GitOutput(t, s.Dir, \"rev-parse\", \"entire/checkpoints/v1\")\n  81| \t\tassert.Equal(t, cpBranchAfterAgent, cpBranchAfterManual,\n  82| \t\t\t\"manual edit after session depletion should not advance checkpoint branch\")\n  83| \t\ttestutil.AssertNoCheckpointTrailer(t, s.Dir, \"HEAD\")\n  84| \t\ttestutil.WaitForNoShadowBranches(t, s.Dir, 10*time.Second)\n  85| \t})\n  86| }\n  87| \n  88| // TestTrailerRemovalSkipsCondensation tests that ",
+      "output_tokens": 1643,
+      "duration_ms": 0.659942626953125,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/tests/single_session_test.go",
+        "start_line": 80
+      },
+      "output": "e2e/tests/single_session_test.go:80-114\n  80| \t\ttestutil.AssertCheckpointAdvanced(t, s)\n  81| \n  82| \t\tcpID := testutil.AssertHasCheckpointTrailer(t, s.Dir, \"HEAD\")\n  83| \t\ttestutil.AssertCheckpointExists(t, s.Dir, cpID)\n  84| \t\ttestutil.AssertCheckpointInLastN(t, s.Dir, cpID, 2)\n  85| \t\ttestutil.WaitForNoShadowBranches(t, s.Dir, 10*time.Second)\n  86| \t})\n  87| }\n  88| \n  89| // TestSingleSessionSubagentCommitInTurn: one prompt with subagent creates a file and commits it.\n  90| // Expects both a",
+      "output_tokens": 1918,
+      "duration_ms": 0.27298927307128906,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/tests/edge_cases_test.go"
+      },
+      "output": "e2e/tests/edge_cases_test.go:1-80\n  1| //go:build e2e\n  2| \n  3| package tests\n  4| \n  5| import (\n  6| \t\"context\"\n  7| \t\"fmt\"\n  8| \t\"os\"\n  9| \t\"path/filepath\"\n  10| \t\"testing\"\n  11| \t\"time\"\n  12| \n  13| \t\"github.com/entireio/cli/e2e/agents\"\n  14| \t\"github.com/entireio/cli/e2e/testutil\"\n  15| \t\"github.com/stretchr/testify/assert\"\n  16| )\n  17| \n  18| // TestAgentContinuesAfterCommit: agent commits, then makes more changes in a\n  19| // second prompt. User commits those. Both commits should have ",
+      "output_tokens": 3847,
+      "duration_ms": 1.062154769897461,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/tests/rewind_test.go"
+      },
+      "output": "e2e/tests/rewind_test.go:1-80\n  1| //go:build e2e\n  2| \n  3| package tests\n  4| \n  5| import (\n  6| \t\"context\"\n  7| \t\"fmt\"\n  8| \t\"os\"\n  9| \t\"path/filepath\"\n  10| \t\"testing\"\n  11| \t\"time\"\n  12| \n  13| \t\"github.com/entireio/cli/e2e/entire\"\n  14| \t\"github.com/entireio/cli/e2e/testutil\"\n  15| \t\"github.com/stretchr/testify/assert\"\n  16| \t\"github.com/stretchr/testify/require\"\n  17| )\n  18| \n  19| // TestRewindPreCommit: agent creates two files in sequence (no user commit),\n  20| // then rewinds to the",
+      "output_tokens": 3504,
+      "duration_ms": 0.40602684020996094,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/tests/edge_cases_test.go",
+        "start_line": 80
+      },
+      "output": "e2e/tests/edge_cases_test.go:80-159\n  80| \t\t\tt.Fatalf(\"agent prompt 2 failed: %v\", err)\n  81| \t\t}\n  82| \n  83| \t\ttestutil.AssertFileExists(t, s.Dir, \"docs/red.md\")\n  84| \t\ttestutil.AssertFileExists(t, s.Dir, \"docs/blue.md\")\n  85| \n  86| \t\t// The amended commit should still carry a valid checkpoint trailer.\n  87| \t\tcpID := testutil.AssertHasCheckpointTrailer(t, s.Dir, \"HEAD\")\n  88| \t\ttestutil.AssertCheckpointExists(t, s.Dir, cpID)\n  89| \t\ttestutil.WaitForNoShadowBranches(t, s.Dir, 10*time.Second)",
+      "output_tokens": 3954,
+      "duration_ms": 0.44226646423339844,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/tests/rewind_test.go",
+        "start_line": 80
+      },
+      "output": "e2e/tests/rewind_test.go:80-159\n  80| \t\t\t\tbreak\n  81| \t\t\t}\n  82| \t\t}\n  83| \t\trequire.NotNil(t, shadowPoint, \"expected at least one shadow branch rewind point\")\n  84| \t\toldID := shadowPoint.ID\n  85| \n  86| \t\t// User commits the file.\n  87| \t\ts.Git(t, \"add\", \".\")\n  88| \t\ts.Git(t, \"commit\", \"-m\", \"Add red.md\")\n  89| \n  90| \t\ttestutil.WaitForCheckpoint(t, s, 30*time.Second)\n  91| \n  92| \t\t// Get rewind points after commit \u2014 old shadow IDs should be gone.\n  93| \t\tpointsAfter := entire.RewindList(t, s",
+      "output_tokens": 3947,
+      "duration_ms": 0.4000663757324219,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/tests/rewind_test.go",
+        "start_line": 159
+      },
+      "output": "e2e/tests/rewind_test.go:159-225\n  159| \t\tmainBranch := testutil.GitOutput(t, s.Dir, \"branch\", \"--show-current\")\n  160| \n  161| \t\t// Commit files from `entire enable` so main has a clean working tree.\n  162| \t\ts.Git(t, \"add\", \".\")\n  163| \t\ts.Git(t, \"commit\", \"-m\", \"Enable entire\")\n  164| \n  165| \t\t// Create feature branch with two agent-assisted commits.\n  166| \t\ts.Git(t, \"checkout\", \"-b\", \"feature\")\n  167| \n  168| \t\t_, err := s.RunPrompt(t, ctx,\n  169| \t\t\t\"create a file at docs/red.md with a pa",
+      "output_tokens": 3160,
+      "duration_ms": 0.5381107330322266,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/tests/resume_test.go",
+        "start_line": 80
+      },
+      "output": "e2e/tests/resume_test.go:80-159\n  80| \n  81| \t\t_, err := s.RunPrompt(t, ctx,\n  82| \t\t\t\"create a file at docs/red.md with a paragraph about the colour red. Do not ask for confirmation or approval, just make the change.\")\n  83| \t\tif err != nil {\n  84| \t\t\tt.Fatalf(\"prompt 1 failed: %v\", err)\n  85| \t\t}\n  86| \n  87| \t\ts.Git(t, \"add\", \".\")\n  88| \t\ts.Git(t, \"commit\", \"-m\", \"Add red doc\")\n  89| \t\ttestutil.WaitForCheckpoint(t, s, 30*time.Second)\n  90| \t\tcp1Ref := testutil.GitOutput(t, s.Dir, \"rev-parse\",",
+      "output_tokens": 4217,
+      "duration_ms": 0.29206275939941406,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/tests/resume_test.go",
+        "start_line": 159
+      },
+      "output": "e2e/tests/resume_test.go:159-238\n  159| \t})\n  160| }\n  161| \n  162| // TestResumeNoCheckpointOnBranch: resume on a feature branch that has only\n  163| // human commits (no agent interaction). Should switch to the branch and exit\n  164| // cleanly with an informational message, not an error.\n  165| func TestResumeNoCheckpointOnBranch(t *testing.T) {\n  166| \ttestutil.ForEachAgent(t, 1*time.Minute, func(t *testing.T, s *testutil.RepoState, ctx context.Context) {\n  167| \t\tmainBranch := testutil.GitO",
+      "output_tokens": 3912,
+      "duration_ms": 0.6489753723144531,
+      "turn_number": 10
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/tests/multi_session_test.go"
+      },
+      "output": "e2e/tests/multi_session_test.go:1-78\n  1| //go:build e2e\n  2| \n  3| package tests\n  4| \n  5| import (\n  6| \t\"context\"\n  7| \t\"testing\"\n  8| \t\"time\"\n  9| \n  10| \t\"github.com/entireio/cli/e2e/agents\"\n  11| \t\"github.com/entireio/cli/e2e/testutil\"\n  12| )\n  13| \n  14| // TestMultiSessionManualCommit: two prompts create files, user commits manually.\n  15| func TestMultiSessionManualCommit(t *testing.T) {\n  16| \ttestutil.ForEachAgent(t, 3*time.Minute, func(t *testing.T, s *testutil.RepoState, ctx conte",
+      "output_tokens": 3552,
+      "duration_ms": 1.3849735260009766,
+      "turn_number": 10
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/tests/stash_workflows_test.go"
+      },
+      "output": "e2e/tests/stash_workflows_test.go:1-80\n  1| //go:build e2e\n  2| \n  3| package tests\n  4| \n  5| import (\n  6| \t\"context\"\n  7| \t\"os\"\n  8| \t\"path/filepath\"\n  9| \t\"testing\"\n  10| \t\"time\"\n  11| \n  12| \t\"github.com/entireio/cli/e2e/testutil\"\n  13| \t\"github.com/stretchr/testify/assert\"\n  14| )\n  15| \n  16| // TestPartialCommitStashNewPrompt: agent creates 3 files; user commits one,\n  17| // stashes the rest; second prompt creates 2 more files; user commits those.\n  18| // Verifies two distinct checkpoi",
+      "output_tokens": 3711,
+      "duration_ms": 1.4889240264892578,
+      "turn_number": 11
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/tests/deleted_files_test.go"
+      },
+      "output": "e2e/tests/deleted_files_test.go:1-50\n  1| //go:build e2e\n  2| \n  3| package tests\n  4| \n  5| import (\n  6| \t\"context\"\n  7| \t\"os\"\n  8| \t\"path/filepath\"\n  9| \t\"testing\"\n  10| \t\"time\"\n  11| \n  12| \t\"github.com/entireio/cli/e2e/testutil\"\n  13| \t\"github.com/stretchr/testify/assert\"\n  14| \t\"github.com/stretchr/testify/require\"\n  15| )\n  16| \n  17| // TestDeletedFilesCommitDeletion tests that deleting a file during a session\n  18| // doesn't break checkpointing. The deletion is bundled with a new file ",
+      "output_tokens": 2038,
+      "duration_ms": 0.3960132598876953,
+      "turn_number": 11
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/tests/mid_turn_commit_test.go"
+      },
+      "output": "e2e/tests/mid_turn_commit_test.go:1-62\n  1| //go:build e2e\n  2| \n  3| package tests\n  4| \n  5| import (\n  6| \t\"context\"\n  7| \t\"testing\"\n  8| \t\"time\"\n  9| \n  10| \t\"github.com/entireio/cli/e2e/testutil\"\n  11| )\n  12| \n  13| // TestMidTurnCommit_DifferentFilesThanPreviousTurn: Turn 1 creates file A\n  14| // (tracked via Stop checkpoint), Turn 2 creates+commits different files B,C.\n  15| // Validates that the mid-turn commit gets a checkpoint on entire/checkpoints/v1\n  16| // even though the committ",
+      "output_tokens": 3279,
+      "duration_ms": 1.127004623413086,
+      "turn_number": 12
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/tests/attribution_test.go"
+      },
+      "output": "e2e/tests/attribution_test.go:1-80\n  1| //go:build e2e\n  2| \n  3| package tests\n  4| \n  5| import (\n  6| \t\"context\"\n  7| \t\"os\"\n  8| \t\"path/filepath\"\n  9| \t\"strings\"\n  10| \t\"testing\"\n  11| \t\"time\"\n  12| \n  13| \t\"github.com/entireio/cli/e2e/testutil\"\n  14| \t\"github.com/stretchr/testify/assert\"\n  15| )\n  16| \n  17| // TestLineAttributionReasonable: agent creates a file, attribution metadata\n  18| // should reflect that agent wrote most/all of the content.\n  19| // GH #344: attribution metadata is s",
+      "output_tokens": 3596,
+      "duration_ms": 0.4649162292480469,
+      "turn_number": 12
+    }
+  ],
+  "total_tool_calls": 25,
+  "total_turns": 12,
+  "wall_clock_ms": 27540.98892211914,
+  "input_tokens": 139486,
+  "output_tokens": 1601,
+  "tool_output_tokens": 64731,
+  "total_cost_usd": 0.442473,
+  "first_call_tool": "list_dir",
+  "first_call_produced_file": true,
+  "retry_count": 0,
+  "error": "",
+  "total_tool_duration_ms": 17.41194725036621,
+  "tool_execution_share": 0.0006322193912355144,
+  "search_call_count": 0,
+  "read_call_count": 18,
+  "avg_search_code_duration_ms": 0.0,
+  "median_search_code_duration_ms": 0.0
+}

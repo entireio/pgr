@@ -1,0 +1,322 @@
+{
+  "repeat": 0,
+  "task_id": "979a49177542",
+  "repo": "entireio-cli",
+  "task_type": "debug_or_validation",
+  "condition": "fff",
+  "prompt": "give me steps to manually test my droid additions",
+  "answer": "",
+  "tool_calls": [
+    {
+      "tool_name": "list_dir",
+      "tool_input": {},
+      "output": ".allowed-licenses\n.claude/\n.codex/\n.devcontainer/\n.entire/\n.ferrata/\n.gemini/\n.git/\n.github/\n.gitignore\n.golangci.yaml\n.goreleaser.yaml\n.opencode/\n.vscode/\nAGENTS.md\nCHANGELOG.md\nCLAUDE.md\nCODE_OF_CONDUCT.md\nCONTRIBUTING.md\nLICENSE\nREADME.md\nSECURITY.md\nWINDOWS.md\ncmd/\ndocs/\ne2e/\ngo.mod\ngo.sum\nmise-tasks/\nmise.toml\nperf/\nredact/\nscripts/",
+      "output_tokens": 339,
+      "duration_ms": 0.7810592651367188,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "droid"
+      },
+      "output": "30/52 matches shown\ncmd/entire/cli/agent/factoryaidroid/factoryaidroid.go\n 34: type FactoryAIDroidAgent struct{}\n 37: func NewFactoryAIDroidAgent() agent.Agent {\n.github/copilot-instructions.md\n 5: \u2026ns (Claude Code, Gemini CLI, OpenCode, Cursor, Factory AI Droid, Copilot CLI, etc.) as searchable metadata stored separately from code commits. It uses a strategy pattern for sessi\u2026\n.github/workflows/e2e-isolated.yml\n 11: options: [claude-code, opencode, gemini-cli, cursor-cli, factoryai-droid, copil",
+      "output_tokens": 2414,
+      "duration_ms": 1.6508102416992188,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "glob": "**/factoryaidroid/**"
+      },
+      "output": "cmd/entire/cli/agent/factoryaidroid/factoryaidroid.go git:clean\ncmd/entire/cli/agent/factoryaidroid/factoryaidroid_test.go git:clean\ncmd/entire/cli/agent/factoryaidroid/hooks.go git:clean\ncmd/entire/cli/agent/factoryaidroid/hooks_test.go git:clean\ncmd/entire/cli/agent/factoryaidroid/lifecycle.go git:clean\ncmd/entire/cli/agent/factoryaidroid/lifecycle_test.go git:clean\ncmd/entire/cli/agent/factoryaidroid/tool_use_fallback.go git:clean\ncmd/entire/cli/agent/factoryaidroid/transcript.go git:clean\ncm",
+      "output_tokens": 617,
+      "duration_ms": 0.78582763671875,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "factoryai-droid",
+        "path_glob": "**/*.md"
+      },
+      "output": "CLAUDE.md\n 77: mise run test:e2e --agent factoryai-droid [filter]   # Factory AI Droid only\n 88: - Support multiple agents via `E2E_AGENT` env var (`claude-code`, `gemini`, `opencode`, `cursor`, `factoryai-droid`, `copilot-cli`, `vogon`)\nREADME.md\n 251: | `--agent <name>`                            | AI agent to install hooks for: `claude-code`, `codex`, `gemini`, `opencode`, `cursor`, `factoryai-droid`, or `copilot-cli` |\ndocs/architecture/agent-guide.md\n 677: {\"matcher\": \"\", \"hooks\": [{\"type\":",
+      "output_tokens": 1922,
+      "duration_ms": 2.541065216064453,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/agent/factoryaidroid/factoryaidroid.go"
+      },
+      "output": "cmd/entire/cli/agent/factoryaidroid/factoryaidroid.go:1-80\n  1| // Package factoryaidroid implements the Agent interface for Factory AI Droid.\n  2| package factoryaidroid\n  3| \n  4| import (\n  5| \t\"context\"\n  6| \t\"errors\"\n  7| \t\"fmt\"\n  8| \t\"os\"\n  9| \t\"path/filepath\"\n  10| \t\"regexp\"\n  11| \t\"time\"\n  12| \n  13| \t\"github.com/entireio/cli/cmd/entire/cli/agent\"\n  14| \t\"github.com/entireio/cli/cmd/entire/cli/agent/types\"\n  15| \t\"github.com/entireio/cli/cmd/entire/cli/paths\"\n  16| )\n  17| \n  18| // nonA",
+      "output_tokens": 3379,
+      "duration_ms": 0.2961158752441406,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/agent/factoryaidroid/hooks.go"
+      },
+      "output": "cmd/entire/cli/agent/factoryaidroid/hooks.go:1-80\n  1| package factoryaidroid\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"encoding/json\"\n  6| \t\"fmt\"\n  7| \t\"os\"\n  8| \t\"path/filepath\"\n  9| \t\"slices\"\n  10| \n  11| \t\"github.com/entireio/cli/cmd/entire/cli/agent\"\n  12| \t\"github.com/entireio/cli/cmd/entire/cli/jsonutil\"\n  13| \t\"github.com/entireio/cli/cmd/entire/cli/paths\"\n  14| )\n  15| \n  16| // Ensure FactoryAIDroidAgent implements HookSupport\n  17| var _ agent.HookSupport = (*FactoryAIDroidAgent)(nil",
+      "output_tokens": 3645,
+      "duration_ms": 0.2238750457763672,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/agent/factoryaidroid/lifecycle.go"
+      },
+      "output": "cmd/entire/cli/agent/factoryaidroid/lifecycle.go:1-80\n  1| package factoryaidroid\n  2| \n  3| import (\n  4| \t\"bytes\"\n  5| \t\"context\"\n  6| \t\"encoding/json\"\n  7| \t\"fmt\"\n  8| \t\"io\"\n  9| \t\"os\"\n  10| \t\"strings\"\n  11| \t\"time\"\n  12| \n  13| \t\"github.com/entireio/cli/cmd/entire/cli/agent\"\n  14| \t\"github.com/entireio/cli/cmd/entire/cli/textutil\"\n  15| \t\"github.com/entireio/cli/cmd/entire/cli/transcript\"\n  16| )\n  17| \n  18| // Compile-time interface assertions.\n  19| var (\n  20| \t_ agent.TranscriptAnalyzer",
+      "output_tokens": 3011,
+      "duration_ms": 0.1647472381591797,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/agent/factoryaidroid/factoryaidroid.go",
+        "start_line": 80,
+        "end_line": 187
+      },
+      "output": "cmd/entire/cli/agent/factoryaidroid/factoryaidroid.go:80-187\n  80| func (f *FactoryAIDroidAgent) ChunkTranscript(_ context.Context, content []byte, maxSize int) ([][]byte, error) {\n  81| \tchunks, err := agent.ChunkJSONL(content, maxSize)\n  82| \tif err != nil {\n  83| \t\treturn nil, fmt.Errorf(\"failed to chunk transcript: %w\", err)\n  84| \t}\n  85| \treturn chunks, nil\n  86| }\n  87| \n  88| // ReassembleTranscript concatenates JSONL chunks with newlines.\n  89| func (f *FactoryAIDroidAgent) ReassembleTr",
+      "output_tokens": 4815,
+      "duration_ms": 0.3273487091064453,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/agent/factoryaidroid/lifecycle.go",
+        "start_line": 80,
+        "end_line": 330
+      },
+      "output": "cmd/entire/cli/agent/factoryaidroid/lifecycle.go:80-330\n  80| \n  81| // GetTranscriptPosition returns the current line count of the JSONL transcript.\n  82| func (f *FactoryAIDroidAgent) GetTranscriptPosition(path string) (int, error) {\n  83| \t_, pos, err := ParseDroidTranscript(path, 0)\n  84| \tif err != nil {\n  85| \t\treturn 0, err\n  86| \t}\n  87| \treturn pos, nil\n  88| }\n  89| \n  90| // ExtractModifiedFilesFromOffset extracts files modified since a given line offset.\n  91| func (f *FactoryAIDroid",
+      "output_tokens": 9242,
+      "duration_ms": 0.2770423889160156,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/agent/factoryaidroid/hooks.go",
+        "start_line": 80,
+        "end_line": 480
+      },
+      "output": "cmd/entire/cli/agent/factoryaidroid/hooks.go:80-480\n  80| \t\t\t\treturn 0, fmt.Errorf(\"failed to parse hooks in settings.json: %w\", err)\n  81| \t\t\t}\n  82| \t\t}\n  83| \t\tif permRaw, ok := rawSettings[\"permissions\"]; ok {\n  84| \t\t\tif err := json.Unmarshal(permRaw, &rawPermissions); err != nil {\n  85| \t\t\t\treturn 0, fmt.Errorf(\"failed to parse permissions in settings.json: %w\", err)\n  86| \t\t\t}\n  87| \t\t}\n  88| \t} else {\n  89| \t\trawSettings = make(map[string]json.RawMessage)\n  90| \t}\n  91| \n  92| \tif rawHoo",
+      "output_tokens": 17109,
+      "duration_ms": 0.32210350036621094,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/agent/factoryaidroid/types.go"
+      },
+      "output": "cmd/entire/cli/agent/factoryaidroid/types.go:1-80\n  1| package factoryaidroid\n  2| \n  3| import (\n  4| \t\"crypto/sha256\"\n  5| \t\"encoding/hex\"\n  6| \t\"encoding/json\"\n  7| )\n  8| \n  9| // FactorySettings represents the .factory/settings.json structure.\n  10| type FactorySettings struct {\n  11| \tHooks FactoryHooks `json:\"hooks\"`\n  12| }\n  13| \n  14| // FactoryHooks contains the hook configurations.\n  15| type FactoryHooks struct {\n  16| \tSessionStart     []FactoryHookMatcher `json:\"SessionStart,omite",
+      "output_tokens": 3466,
+      "duration_ms": 0.5850791931152344,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/agent/factoryaidroid/transcript.go"
+      },
+      "output": "cmd/entire/cli/agent/factoryaidroid/transcript.go:1-80\n  1| package factoryaidroid\n  2| \n  3| import (\n  4| \t\"bufio\"\n  5| \t\"bytes\"\n  6| \t\"encoding/json\"\n  7| \t\"fmt\"\n  8| \t\"io\"\n  9| \t\"log/slog\"\n  10| \t\"os\"\n  11| \t\"path/filepath\"\n  12| \t\"slices\"\n  13| \t\"strings\"\n  14| \n  15| \t\"github.com/entireio/cli/cmd/entire/cli/agent\"\n  16| \t\"github.com/entireio/cli/cmd/entire/cli/transcript\"\n  17| )\n  18| \n  19| // TranscriptLine is an alias to the shared transcript.Line type.\n  20| type TranscriptLine = tran",
+      "output_tokens": 3205,
+      "duration_ms": 0.3490447998046875,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "factoryai-droid",
+        "path_glob": "docs/**/*.md",
+        "context_before": 4,
+        "context_after": 4,
+        "max_matches_per_file": 10
+      },
+      "output": "\u2192 Read docs/architecture/agent-guide.md (only match)\ndocs/architecture/agent-guide.md\n 677: {\"matcher\": \"\", \"hooks\": [{\"type\": \"command\", \"command\": \"entire hooks factoryai-droid session-start\"}]},\n 678: {\"matcher\": \"\", \"hooks\": [{\"type\": \"command\", \"command\": \"entire hooks factoryai-droid user-prompt-submit\"}]}\n 681: {\"matcher\": \"\", \"hooks\": [{\"type\": \"command\", \"command\": \"entire hooks factoryai-droid session-end\"}]}\n 684: {\"matcher\": \"\", \"hooks\": [{\"type\": \"command\", \"command\": \"entire hooks ",
+      "output_tokens": 1133,
+      "duration_ms": 1.3072490692138672,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "CONTRIBUTING.md",
+        "start_line": 200,
+        "end_line": 280
+      },
+      "output": "CONTRIBUTING.md:200-280\n  200|    # Agent Name\n  201|    You are a **[Role]** with expertise in [domain].\n  202| \n  203|    ## Core Principles\n  204|    - Principle 1\n  205|    - Principle 2\n  206| \n  207|    ## Process\n  208|    1. Step 1\n  209|    2. Step 2\n  210| \n  211|    ## Output Format\n  212|    How to structure responses...\n  213|    ```\n  214| - **To invoke:** Create a matching command in `.claude/commands/` that spawns the agent via the Task tool.\n  215| - **Examples:**\n  216|    - `.",
+      "output_tokens": 3725,
+      "duration_ms": 0.5922317504882812,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "CLAUDE.md"
+      },
+      "output": "CLAUDE.md:1-80\n  1| # Entire - CLI\n  2| \n  3| This repo contains the CLI for Entire.\n  4| \n  5| ## Architecture\n  6| \n  7| - CLI built with github.com/spf13/cobra and github.com/charmbracelet/huh\n  8| \n  9| ## Key Directories\n  10| \n  11| ### Commands (`cmd/`)\n  12| \n  13| - `entire/`: Main CLI entry point\n  14| - `entire/cli`: CLI utilities and helpers\n  15| - `entire/cli/commands`: actual command implementations\n  16| - `entire/cli/agent`: agent implementations (Claude Code, Gemini CLI, OpenCo",
+      "output_tokens": 3847,
+      "duration_ms": 0.8559226989746094,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "factoryai.droid\\|factoryai-droid\\|Factory AI Droid",
+        "path_glob": "docs/architecture/agent-guide.md",
+        "context_before": 5,
+        "context_after": 5,
+        "max_matches_per_file": 15
+      },
+      "output": "0 matches.",
+      "output_tokens": 10,
+      "duration_ms": 5.7220458984375,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "CLAUDE.md",
+        "start_line": 80,
+        "end_line": 200
+      },
+      "output": "CLAUDE.md:80-200\n  80| \n  81| E2E tests:\n  82| \n  83| - Use the `//go:build e2e` build tag\n  84| - Located in `e2e/tests/`\n  85| - See [`e2e/README.md`](e2e/README.md) for full documentation (structure, debugging, adding agents)\n  86| - Test real agent interactions (Claude Code, Gemini CLI, OpenCode, Cursor, Factory AI Droid, Copilot CLI, or Vogon creating files, committing, etc.)\n  87| - Validate checkpoint scenarios documented in `docs/architecture/checkpoint-scenarios.md`\n  88| - Support mult",
+      "output_tokens": 5456,
+      "duration_ms": 0.4360675811767578,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "Factory AI Droid",
+        "path_glob": "docs/**/*.md",
+        "context_before": 3,
+        "context_after": 10,
+        "max_matches_per_file": 10
+      },
+      "output": "docs/architecture/agent-guide.md\n 53: \u2026er). Claude Code uses JSON `systemMessage` on stdout; Factory AI Droid uses plain text on stdout. |\n 372: \u2026gemini/settings.json`, Cursor's `.cursor/hooks.json`, Factory AI Droid's `.factory/settings.json`, or Copilot CLI's `.github/hooks/entire.json`), implement `HookSupport`:\n 426: | Event Type | Framework Actions | Claude Code Hook | Gemini CLI Hook | Cursor Hook | OpenCode Hook | Factory AI Droid Hook | Copilot CLI Hook |\n 514: - Factory AI Droid: Plain ",
+      "output_tokens": 1940,
+      "duration_ms": 0.3960132598876953,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "docs/architecture/agent-guide.md",
+        "start_line": 660,
+        "end_line": 710
+      },
+      "output": "docs/architecture/agent-guide.md:660-710\n  660|     \"stop\": [{\"command\": \"entire hooks cursor stop\"}],\n  661|     \"sessionEnd\": [{\"command\": \"entire hooks cursor session-end\"}],\n  662|     \"preCompact\": [{\"command\": \"entire hooks cursor pre-compact\"}],\n  663|     \"subagentStart\": [{\"command\": \"entire hooks cursor subagent-start\"}],\n  664|     \"subagentStop\": [{\"command\": \"entire hooks cursor subagent-stop\"}]\n  665|   }\n  666| }\n  667| ```\n  668| \n  669| Note: Cursor uses camelCase hook names in ",
+      "output_tokens": 2918,
+      "duration_ms": 0.6959438323974609,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "docs/architecture/agent-guide.md",
+        "start_line": 420,
+        "end_line": 530
+      },
+      "output": "docs/architecture/agent-guide.md:420-530\n  420| Test `ParseHookEvent` for every hook name your agent supports. See [Testing Patterns](#testing-patterns) below.\n  421| \n  422| ## Event Mapping Reference\n  423| \n  424| The framework dispatcher (`DispatchLifecycleEvent` in `lifecycle.go`) handles each event type as follows:\n  425| \n  426| | Event Type | Framework Actions | Claude Code Hook | Gemini CLI Hook | Cursor Hook | OpenCode Hook | Factory AI Droid Hook | Copilot CLI Hook |\n  427| |---------",
+      "output_tokens": 7712,
+      "duration_ms": 14.147043228149414,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "docs/architecture/agent-guide.md",
+        "start_line": 830,
+        "end_line": 920
+      },
+      "output": "docs/architecture/agent-guide.md:830-920\n  830| \n  831| ### Test file references\n  832| \n  833| - Claude Code lifecycle tests: `cmd/entire/cli/agent/claudecode/lifecycle_test.go`\n  834| - Claude Code hooks tests: `cmd/entire/cli/agent/claudecode/hooks_test.go`\n  835| - Claude Code transcript tests: `cmd/entire/cli/agent/claudecode/transcript_test.go`\n  836| - Gemini CLI lifecycle tests: `cmd/entire/cli/agent/geminicli/lifecycle_test.go`\n  837| - Gemini CLI hooks tests: `cmd/entire/cli/agent/gemi",
+      "output_tokens": 5141,
+      "duration_ms": 0.6520748138427734,
+      "turn_number": 10
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "droid\\|factoryai",
+        "path_glob": "e2e/README.md",
+        "context_before": 2,
+        "context_after": 2,
+        "max_matches_per_file": 10
+      },
+      "output": "0 matches.",
+      "output_tokens": 10,
+      "duration_ms": 1.950979232788086,
+      "turn_number": 10
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/README.md"
+      },
+      "output": "e2e/README.md:1-80\n  1| # E2E Tests\n  2| \n  3| End-to-end tests for the `entire` CLI against real agents (Claude Code, Gemini CLI, OpenCode, Codex, Cursor, Factory AI Droid, Copilot CLI).\n  4| \n  5| ## Commands\n  6| \n  7| ```bash\n  8| mise run test:e2e [filter]                          # run filtered (or omit filter for all agents)\n  9| mise run test:e2e --agent claude-code [filter]       # Claude Code only\n  10| mise run test:e2e --agent gemini-cli [filter]        # Gemini CLI only\n  11| mise r",
+      "output_tokens": 4479,
+      "duration_ms": 0.8270740509033203,
+      "turn_number": 11
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/agent/factoryaidroid/hooks_test.go",
+        "max_lines": 60
+      },
+      "output": "cmd/entire/cli/agent/factoryaidroid/hooks_test.go:1-60\n  1| package factoryaidroid\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"encoding/json\"\n  6| \t\"os\"\n  7| \t\"path/filepath\"\n  8| \t\"slices\"\n  9| \t\"testing\"\n  10| \n  11| \tagentpkg \"github.com/entireio/cli/cmd/entire/cli/agent\"\n  12| \t\"github.com/entireio/cli/cmd/entire/cli/agent/testutil\"\n  13| )\n  14| \n  15| func TestInstallHooks_FreshInstall(t *testing.T) {\n  16| \ttempDir := t.TempDir()\n  17| \tt.Chdir(tempDir)\n  18| \n  19| \tagent := &FactoryAIDro",
+      "output_tokens": 2811,
+      "duration_ms": 0.5340576171875,
+      "turn_number": 11
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/agent/factoryaidroid/lifecycle_test.go",
+        "max_lines": 100
+      },
+      "output": "cmd/entire/cli/agent/factoryaidroid/lifecycle_test.go:1-100\n  1| package factoryaidroid\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"path/filepath\"\n  6| \t\"strings\"\n  7| \t\"testing\"\n  8| \n  9| \t\"github.com/entireio/cli/cmd/entire/cli/agent\"\n  10| \t\"github.com/entireio/cli/cmd/entire/cli/paths\"\n  11| \tgit \"github.com/go-git/go-git/v6\"\n  12| \t\"github.com/stretchr/testify/require\"\n  13| )\n  14| \n  15| func TestParseHookEvent_SessionStart(t *testing.T) {\n  16| \tt.Parallel()\n  17| \n  18| \tag := &FactoryA",
+      "output_tokens": 3885,
+      "duration_ms": 0.3256797790527344,
+      "turn_number": 12
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/agent/factoryaidroid/tool_use_fallback.go"
+      },
+      "output": "cmd/entire/cli/agent/factoryaidroid/tool_use_fallback.go:1-80\n  1| package factoryaidroid\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"crypto/rand\"\n  6| \t\"encoding/hex\"\n  7| \t\"encoding/json\"\n  8| \t\"errors\"\n  9| \t\"fmt\"\n  10| \t\"os\"\n  11| \t\"path/filepath\"\n  12| \n  13| \t\"github.com/entireio/cli/cmd/entire/cli/paths\"\n  14| )\n  15| \n  16| const fallbackToolUseStatePrefix = \"factory-task-tool-use-\"\n  17| \n  18| type fallbackToolUseState struct {\n  19| \tEntries []fallbackToolUseEntry `json:\"entries\"`\n  20",
+      "output_tokens": 2241,
+      "duration_ms": 0.1239776611328125,
+      "turn_number": 12
+    }
+  ],
+  "total_tool_calls": 26,
+  "total_turns": 12,
+  "wall_clock_ms": 41262.87817955017,
+  "input_tokens": 239237,
+  "output_tokens": 2114,
+  "tool_output_tokens": 98472,
+  "total_cost_usd": 0.749421,
+  "first_call_tool": "list_dir",
+  "first_call_produced_file": true,
+  "retry_count": 0,
+  "error": "",
+  "total_tool_duration_ms": 36.870479583740234,
+  "tool_execution_share": 0.000893550843043547,
+  "search_call_count": 6,
+  "avg_search_code_duration_ms": 2.26136048634847,
+  "median_search_code_duration_ms": 1.8008947372436523,
+  "avg_read_code_duration_ms": 1.2075238757663302,
+  "median_read_code_duration_ms": 0.39255619049072266
+}

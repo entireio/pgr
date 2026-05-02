@@ -1,0 +1,48 @@
+{
+  "repeat": 0,
+  "task_id": "ea384d108347",
+  "repo": "entireio-cli",
+  "task_type": "code_understanding",
+  "condition": "rg_ranked",
+  "prompt": "What does the nolint:ireturn linter rule refer to?",
+  "answer": "The `//nolint:ireturn` directive is used in **two specific scenarios** in this codebase to suppress the [`ireturn`](https://github.com/butuzov/ireturn) linter, which flags functions that return interface types instead of concrete types. Here's what each usage refers to:\n\n---\n\n### 1. Type-Assertion Helpers \u2014 `cmd/entire/cli/agent/capabilities.go`\n\n```go\nfunc AsHookSupport(ag Agent) (HookSupport, bool) { //nolint:ireturn // type-assertion helper must return interface\nfunc AsTranscriptAnalyzer(ag Agent) (TranscriptAnalyzer, bool) { //nolint:ireturn // type-assertion helper must return interface\nfunc AsTranscriptPreparer(ag Agent) (TranscriptPreparer, bool) { //nolint:ireturn // type-assertion helper must return interface\n```\n\nThese functions are **type-assertion helpers** \u2014 they check whether a given `Agent` implements a specific capability interface (e.g., `HookSupport`, `TranscriptAnalyzer`, `TranscriptPreparer`) and return that interface if so. Returning the **interface** is intentional and necessary here, since the whole point is to expose the narrowed interface type to the caller. The `ireturn` lint rule is suppressed because returning an interface is the correct design choice for this pattern.\n\n---\n\n### 2. Bubbletea TUI Pattern \u2014 `cmd/entire/cli/search_tui.go`\n\n```go\nfunc (m searchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ireturn,cyclop // bubbletea interface\nfunc (m searchModel) updateSearchMode(msg tea.KeyMsg) (tea.Model, tea.Cmd) { //nolint:ireturn // bubbletea pattern\nfunc (m searchModel) updateBrowseMode(msg tea.KeyMsg) (tea.Model, tea.Cmd) { //nolint:ireturn // bubbletea pattern\n```\n\nThese are **[Bubbletea](https://github.com/charmbracelet/bubbletea) TUI** methods. The `Update` method is **required by the `tea.Model` interface** to return `(tea.Model, tea.Cmd)`, and the helper methods follow the same signature to compose nicely. Returning the `tea.Model` interface is **mandated by the framework's design**, not a choice \u2014 so `ireturn` is suppressed here as well.\n\n---\n\n### Summary\n\n| Location | Reason for suppression |\n|---|---|\n| `capabilities.go` | Type-assertion helper functions that **must** return an interface by design |\n| `search_tui.go` | Bubbletea framework **requires** returning `tea.Model` (an interface) |\n\nIn both cases, the `ireturn` linter is technically correct that an interface is being returned, but the suppression is **justified** because the pattern is either dictated by an external framework or is an intentional, idiomatic Go design choice.",
+  "tool_calls": [
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "nolint:ireturn"
+      },
+      "output": "cmd/entire/cli/agent/capabilities.go\n  30-30:\n    30| func AsHookSupport(ag Agent) (HookSupport, bool) { //nolint:ireturn // type-assertion helper must return interface\n  46-46:\n    46| func AsTranscriptAnalyzer(ag Agent) (TranscriptAnalyzer, bool) { //nolint:ireturn // type-assertion helper must return interface\n  62-62:\n    62| func AsTranscriptPreparer(ag Agent) (TranscriptPreparer, bool) { //nolint:ireturn // type-assertion helper must return interface\n\ncmd/entire/cli/search_tui.go\n  169-169",
+      "output_tokens": 891,
+      "duration_ms": 19.798994064331055,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "ireturn"
+      },
+      "output": "cmd/entire/cli/agent/capabilities.go\n  30-30:\n    30| func AsHookSupport(ag Agent) (HookSupport, bool) { //nolint:ireturn // type-assertion helper must return interface\n  46-46:\n    46| func AsTranscriptAnalyzer(ag Agent) (TranscriptAnalyzer, bool) { //nolint:ireturn // type-assertion helper must return interface\n  62-62:\n    62| func AsTranscriptPreparer(ag Agent) (TranscriptPreparer, bool) { //nolint:ireturn // type-assertion helper must return interface\n\ncmd/entire/cli/search_tui.go\n  169-169",
+      "output_tokens": 891,
+      "duration_ms": 16.353845596313477,
+      "turn_number": 1
+    }
+  ],
+  "total_tool_calls": 2,
+  "total_turns": 2,
+  "wall_clock_ms": 14096.23122215271,
+  "input_tokens": 3573,
+  "output_tokens": 859,
+  "tool_output_tokens": 1782,
+  "total_cost_usd": 0.023604,
+  "first_call_tool": "search_code",
+  "first_call_produced_file": true,
+  "retry_count": 0,
+  "error": "",
+  "total_tool_duration_ms": 36.15283966064453,
+  "tool_execution_share": 0.0025647167027048412,
+  "search_call_count": 2,
+  "read_call_count": 0,
+  "avg_search_code_duration_ms": 18.076419830322266,
+  "median_search_code_duration_ms": 18.076419830322266
+}

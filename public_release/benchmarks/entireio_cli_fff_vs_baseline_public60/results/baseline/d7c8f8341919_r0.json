@@ -1,0 +1,287 @@
+{
+  "repeat": 0,
+  "task_id": "d7c8f8341919",
+  "repo": "entireio-cli",
+  "task_type": "code_understanding",
+  "condition": "baseline",
+  "prompt": "can you do me a summary for the cases when we show the \"you have another active session\" warning?",
+  "answer": "",
+  "tool_calls": [
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "another active session",
+        "context_before": 5,
+        "context_after": 5
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 20.051240921020508,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "active session",
+        "context_before": 5,
+        "context_after": 5
+      },
+      "output": "./e2e/testutil/artifacts.go\n  59-68:\n    59| \t\t\tgitOutputSafe(s.Dir, \"ls-tree\", \"-r\", \"entire/checkpoints/v1\"))\n    60| \n    61| \t// console.log is written incrementally to disk via s.ConsoleLog (*os.File),\n    62| \t// so it already exists in the artifact dir and survives global timeouts.\n    63| \n    64| \t// Capture final pane content from interactive sessions, then close.\n    65| \t// Must happen here (not in a separate t.Cleanup) because cleanup\n    66| \t// functions run LIFO \u2014 closing first w",
+      "output_tokens": 6050,
+      "duration_ms": 20.222902297973633,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "another.*session",
+        "context_before": 5,
+        "context_after": 5
+      },
+      "output": "./README.md\n  196-196:\n    196| \n  198-204:\n    198| \n    199| ### Concurrent Sessions\n    200| \n    201| Multiple AI sessions can run on the same commit. If you start a second session while another has uncommitted work, Entire warns you and tracks them separately. Both sessions' checkpoints are preserved and can be rewound independently.\n    202| \n    203| ## Local Device Auth Testing\n    204| \n  206-206:\n    206| \n\n./docs/architecture/claude-hooks-integration.md\n  57-57:\n    57|     - Queries ",
+      "output_tokens": 149401,
+      "duration_ms": 19.79207992553711,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "session.*warning",
+        "context_before": 5,
+        "context_after": 5
+      },
+      "output": "./CLAUDE.md\n  570-572:\n    570| \n    571| #### Multi-Session Behavior\n    572| \n  574-578:\n    574| \n    575| - When a second session starts in the same directory while another has uncommitted checkpoints, a warning is shown\n    576| - Both sessions can proceed - their checkpoints interleave on the same shadow branch\n    577| - Each session's `RewindPoint` includes `SessionID` and `SessionPrompt` to help identify which checkpoint belongs to which session\n    578| - On commit, all sessions are co",
+      "output_tokens": 41575,
+      "duration_ms": 15.299081802368164,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/strategy/manual_commit_session.go",
+        "start_line": 276,
+        "max_lines": 80
+      },
+      "output": "cmd/entire/cli/strategy/manual_commit_session.go:276-343\n  276| // initializeSession creates a new session state or updates a partial one.\n  277| // A partial state may exist if the concurrent session warning was shown.\n  278| // agentType is the human-readable name of the agent (e.g., \"Claude Code\").\n  279| // transcriptPath is the path to the live transcript file (for mid-session commit detection).\n  280| // userPrompt is the user's prompt text (stored truncated as LastPrompt for display).\n  2",
+      "output_tokens": 3168,
+      "duration_ms": 0.5750656127929688,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/integration_test/manual_commit_workflow_test.go",
+        "start_line": 404,
+        "max_lines": 120
+      },
+      "output": "cmd/entire/cli/integration_test/manual_commit_workflow_test.go:404-523\n  404| // TestShadow_MultipleConcurrentSessions tests that starting a second Claude session\n  405| // while another session has uncommitted checkpoints triggers a warning.\n  406| // The first prompt is blocked with continue:false, subsequent prompts proceed.\n  407| func TestShadow_MultipleConcurrentSessions(t *testing.T) {\n  408| \tt.Parallel()\n  409| \tenv := NewTestEnv(t)\n  410| \tdefer env.Cleanup()\n  411| \n  412| \tenv.InitRe",
+      "output_tokens": 5405,
+      "duration_ms": 0.9088516235351562,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "ConcurrentWarningShown",
+        "context_before": 3,
+        "context_after": 5,
+        "max_files": 5
+      },
+      "output": "./docs/architecture/claude-hooks-integration.md\n  60-60:\n    60|     - Sets `ConcurrentWarningShown` flag in session state so the user can continue on the next prompt.\n\n./cmd/entire/cli/integration_test/manual_commit_workflow_test.go\n  454-456:\n    454| \t}\n    455| \n    456| \t// Verify session2 state file was created with ConcurrentWarningShown flag\n  458-459:\n    458| \tentries, err = os.ReadDir(sessionStateDir)\n    459| \tif err != nil {\n  461-461:\n    461| \t}",
+      "output_tokens": 464,
+      "duration_ms": 31.452178955078125,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "uncommitted checkpoints",
+        "context_before": 3,
+        "context_after": 8,
+        "max_files": 5
+      },
+      "output": "./CLAUDE.md\n  572-572:\n    572| \n  574-578:\n    574| \n    575| - When a second session starts in the same directory while another has uncommitted checkpoints, a warning is shown\n    576| - Both sessions can proceed - their checkpoints interleave on the same shadow branch\n    577| - Each session's `RewindPoint` includes `SessionID` and `SessionPrompt` to help identify which checkpoint belongs to which session\n    578| - On commit, all sessions are condensed together with archived sessions in numb",
+      "output_tokens": 1942,
+      "duration_ms": 14.313936233520508,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/integration_test/session_conflict_test.go",
+        "max_lines": 120
+      },
+      "output": "cmd/entire/cli/integration_test/session_conflict_test.go:1-120\n  1| //go:build integration\n  2| \n  3| package integration\n  4| \n  5| import (\n  6| \t\"encoding/json\"\n  7| \t\"os\"\n  8| \t\"path/filepath\"\n  9| \t\"strings\"\n  10| \t\"testing\"\n  11| \t\"time\"\n  12| \n  13| \t\"github.com/go-git/go-git/v6\"\n  14| \t\"github.com/go-git/go-git/v6/plumbing\"\n  15| \t\"github.com/go-git/go-git/v6/plumbing/object\"\n  16| )\n  17| \n  18| // TestSessionIDConflict_OrphanedBranchIsReset tests that starting a new session\n  19| // re",
+      "output_tokens": 4759,
+      "duration_ms": 0.6110668182373047,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "ConcurrentWarningShown",
+        "file_type": "go",
+        "path_glob": "**/strategy/**\"",
+        "context_before": 4,
+        "context_after": 8
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 13.271093368530273,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "ConcurrentWarningShown",
+        "file_type": "go",
+        "context_before": 4,
+        "context_after": 8,
+        "max_files": 10
+      },
+      "output": "./cmd/entire/cli/integration_test/manual_commit_workflow_test.go\n  452-452:\n    452| \tif err != nil {\n  454-456:\n    454| \t}\n    455| \n    456| \t// Verify session2 state file was created with ConcurrentWarningShown flag\n  458-459:\n    458| \tentries, err = os.ReadDir(sessionStateDir)\n    459| \tif err != nil {",
+      "output_tokens": 309,
+      "duration_ms": 18.984079360961914,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "ConcurrentWarning",
+        "file_type": "go",
+        "context_before": 3,
+        "context_after": 6,
+        "max_files": 10
+      },
+      "output": "./cmd/entire/cli/integration_test/manual_commit_workflow_test.go\n  454-456:\n    454| \t}\n    455| \n    456| \t// Verify session2 state file was created with ConcurrentWarningShown flag\n  458-459:\n    458| \tentries, err = os.ReadDir(sessionStateDir)\n    459| \tif err != nil {\n  461-462:\n    461| \t}\n    462| \tif len(entries) != 2 {",
+      "output_tokens": 328,
+      "duration_ms": 17.2879695892334,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "concurrent_warning\\|ConcurrentWarning\\|concurrent.*warn\\|warn.*concurrent\"",
+        "file_type": "go",
+        "context_before": 3,
+        "context_after": 6,
+        "max_files": 10
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 19.363880157470703,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "continue.*false",
+        "file_type": "go",
+        "context_before": 5,
+        "context_after": 8,
+        "max_files": 10
+      },
+      "output": "./cmd/entire/cli/integration_test/manual_commit_workflow_test.go\n  401-408:\n    401| \t}\n    402| }\n    403| \n    404| // TestShadow_MultipleConcurrentSessions tests that starting a second Claude session\n    405| // while another session has uncommitted checkpoints triggers a warning.\n    406| // The first prompt is blocked with continue:false, subsequent prompts proceed.\n    407| func TestShadow_MultipleConcurrentSessions(t *testing.T) {\n    408| \tt.Parallel()\n  410-414:\n    410| \tdefer env.Clea",
+      "output_tokens": 716,
+      "duration_ms": 15.649795532226562,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "CheckConcurrent\\|checkConcurrent\\|concurrentSession\\|HasUncommitted\\|hasUncommitted\\|warningShown\"",
+        "file_type": "go",
+        "context_before": 3,
+        "context_after": 5,
+        "max_files": 10
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 20.117998123168945,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "UserPromptSubmit",
+        "file_type": "go",
+        "path_glob": "**/strategy/**\"",
+        "context_before": 2,
+        "context_after": 5,
+        "max_files": 5
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 8.523941040039062,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "pattern": "manual_commit_session",
+        "file_type": "go"
+      },
+      "output": "./cmd/entire/cli/strategy/manual_commit_session.go",
+      "output_tokens": 50,
+      "duration_ms": 12.674093246459961,
+      "turn_number": 10
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "UserPromptSubmit",
+        "file_type": "go",
+        "context_before": 2,
+        "context_after": 5,
+        "max_files": 5
+      },
+      "output": "./cmd/entire/cli/integration_test/old_session_basecommit_test.go\n  44-44:\n    44| \n  46-52:\n    46| \tif err := env.SimulateUserPromptSubmit(session1.ID); err != nil {\n    47| \t\tt.Fatalf(\"SimulateUserPromptSubmit for session1 failed: %v\", err)\n    48| \t}\n    49| \n    50| \t// Create a file and checkpoint\n    51| \tenv.WriteFile(\"file1.txt\", \"content from session 1\")\n    52| \tsession1.CreateTranscript(\n  89-89:\n    89| \n\n./cmd/entire/cli/session/state.go\n  170-173:\n    170| \n    171| \t// LastPrompt ",
+      "output_tokens": 2632,
+      "duration_ms": 18.014907836914062,
+      "turn_number": 10
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "func.*UserPromptSubmit\\|func.*BeforeSubmitPrompt",
+        "file_type": "go",
+        "context_before": 2,
+        "context_after": 8,
+        "max_files": 5
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 18.90420913696289,
+      "turn_number": 11
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "pattern": "manual_commit_hooks",
+        "file_type": "go"
+      },
+      "output": "./cmd/entire/cli/strategy/manual_commit_hooks.go",
+      "output_tokens": 48,
+      "duration_ms": 14.092683792114258,
+      "turn_number": 12
+    }
+  ],
+  "total_tool_calls": 20,
+  "total_turns": 12,
+  "wall_clock_ms": 44178.64203453064,
+  "input_tokens": 798780,
+  "output_tokens": 2302,
+  "tool_output_tokens": 216949,
+  "total_cost_usd": 2.43087,
+  "first_call_tool": "search_code",
+  "first_call_produced_file": false,
+  "retry_count": 0,
+  "error": "",
+  "total_tool_duration_ms": 300.1110553741455,
+  "tool_execution_share": 0.006793125400721339,
+  "search_call_count": 15,
+  "avg_search_code_duration_ms": 18.08328628540039,
+  "median_search_code_duration_ms": 18.90420913696289,
+  "avg_read_code_duration_ms": 0.6983280181884766,
+  "median_read_code_duration_ms": 0.6110668182373047
+}

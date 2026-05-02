@@ -1,0 +1,253 @@
+{
+  "repeat": 0,
+  "task_id": "61de2c90668f",
+  "repo": "entireio-cli",
+  "task_type": "debug_or_validation",
+  "condition": "rg_ranked",
+  "prompt": "I think it's better to use `env.InitRepo()` instead of `git.PlainInit()` in tests.",
+  "answer": "Now I have a comprehensive understanding of the codebase. Here is a detailed analysis:\n\n---\n\n## Analysis: Replace `git.PlainInit()` with `testutil.InitRepo()` / `env.InitRepo()` in Tests\n\n### The Problem\n\n`git.PlainInit()` is called directly in **many test files** instead of going through the purpose-built `testutil.InitRepo(t, dir)` (or `env.InitRepo()` for integration tests). The two wrappers do significantly more than a bare `PlainInit`:\n\n| Step | `git.PlainInit()` | `testutil.InitRepo()` | `env.InitRepo()` |\n|---|---|---|---|\n| Initialize the repo | \u2705 | \u2705 | \u2705 |\n| Set `user.name` / `user.email` | \u274c | \u2705 `\"Test User\"` / `\"test@example.com\"` | \u2705 same |\n| Disable GPG signing (`commit.gpgsign=false`) | \u274c | \u2705 | \u2705 |\n| Set `core.autoCRLF=true` | \u274c | \u2705 | \u274c |\n| Override `core.hooksPath` to repo-local hooks | \u274c | \u274c | \u2705 |\n| Snapshot `.git/config` & guard against unexpected mutation | \u274c | \u274c | \u2705 (via `setGitConfigBaseline`) |\n| Fatal via `t.Fatalf` (no error return to ignore) | \u274c | \u2705 | \u2705 |\n\nCalling `git.PlainInit()` raw in tests means:\n1. **Commits can fail or silently misbehave** if the test runner has no global `user.name`/`user.email` configured.\n2. **GPG-signed commits break CI** if the developer's global git config has `commit.gpgsign=true`.\n3. **Global `core.hooksPath` bleeds in**, allowing system-level git hooks to interfere with test results (only a concern for `env.InitRepo()`).\n4. **Error handling is inconsistent** \u2014 some call sites properly `t.Fatalf`, but others (e.g. `_, err := git.PlainInit(...)`) discard the returned repo or check errors inline rather than fataling.\n5. **No `.git/config` guard** \u2014 integration tests can accidentally mutate repo config without detection.\n\n---\n\n### All Affected Files\n\nThese are all test (and test-helper) files that call `PlainInit` directly, **excluding** the two definition sites (`testutil/testutil.go:37` and `integration_test/testenv.go:222`) which are the canonical implementations:\n\n#### Unit / package tests \u2014 use `testutil.InitRepo(t, dir)`\n\n| File | Lines | Notes |\n|---|---|---|\n| `checkpoint/backwards_compat_test.go` | 28 | needs user config for commit |\n| `checkpoint/checkpoint_test.go` | 49, 109, 300, 424, 687, 834, 1581, 1718, 1811, 1908 | extensively uses commits |\n| `checkpoint/committed_update_test.go` | 25, 449, 547, 570 | commits throughout |\n| `checkpoint/tree_surgery_equiv_test.go` | 187 (`gogit.PlainInit`) | non-bare, makes commits |\n| `clean_test.go` | 37 | |\n| `explain_test.go` | 277, 297, 350, 418, 474, 996, 2168, 2282, 2299, 2402 | |\n| `git_operations_test.go` | 33, 85, 128, 201, 239, 494, 531, 555, 585 | |\n| `phase_wiring_test.go` | 137 | |\n| `reset_test.go` | 26 | |\n| `resume_test.go` | 73 | |\n| `session/state_test.go` | 496, 561, 568 | |\n| `state_test.go` | 474, 536, 617, 673, 806 | |\n| `status_test.go` | 27, 51 | |\n| `strategy/clean_test.go` | 67, 141, 183, 247, 290, 321, 385 | |\n| `strategy/common_test.go` | 29, 352, 408, 451, 494, 536, 571, 620, 679, 726 | |\n| `strategy/content_overlap_test.go` | 949 | |\n| `strategy/hard_reset_test.go` | 24 | |\n| `strategy/manual_commit_staging_test.go` | 32, 186, 286, 432 | |\n| `strategy/manual_commit_test.go` | 35, 62, 110, 130, 193, 300, 386, 433, 471, 489 | |\n| `strategy/metadata_reconcile_test.go` | 639, 842, 1016 | |\n| `strategy/phase_postcommit_test.go` | 954 | |\n| `strategy/phase_wiring_test.go` | 180 | |\n| `agent/factoryaidroid/lifecycle_test.go` | 220 | only uses repo for path detection, no commits \u2014 but still benefits from consistency |\n\n#### Integration tests \u2014 use `env.InitRepo()`\n\n| File | Lines | Notes |\n|---|---|---|\n| `integration_test/git_author_test.go` | 297 | already in the `integration` package; should use `env.InitRepo()` |\n\n#### Bare-repo initialisations \u2014 **legitimately keep `PlainInit(\u2026, true)`**\n\nThese create **bare** repos (`isBare = true`), which `testutil.InitRepo` does not support. They should be left as-is (or a separate `testutil.InitBareRepo` helper could be introduced):\n\n| File | Line | Reason |\n|---|---|---|\n| `checkpoint/parse_tree_test.go` | 39 | `mustInitBareRepo` \u2014 explicitly bare |\n| `benchutil/parse_tree_bench_test.go` | 21 | `benchInitBareRepo` \u2014 explicitly bare, bench helper |\n\n#### Bench helper \u2014 `benchutil/benchutil.go`\n\n| File | Line | Notes |\n|---|---|---|\n| `benchutil/benchutil.go` | 108 | This is a `*testing.B` context; `testutil.InitRepo` only accepts `*testing.T`. A parallel `testutil.InitRepoBench(b, dir)` helper (or an interface-based helper) would be needed, **or** the existing boilerplate can remain since bench helpers are less sensitive to GPG/user config issues. |\n\n---\n\n### Recommended Changes\n\n**1. Straightforward replacement (non-bare, `*testing.T` context):**\n\n```go\n// Before\nrepo, err := git.PlainInit(tempDir, false)\nif err != nil {\n    t.Fatalf(\"failed to init git repo: %v\", err)\n}\n\n// After\ntestutil.InitRepo(t, tempDir)\nrepo, err := git.PlainOpen(tempDir)\nif err != nil {\n    t.Fatalf(\"failed to open git repo: %v\", err)\n}\n```\n\nFor sites that never use the returned `*git.Repository` (e.g. `_, err := git.PlainInit(...)`), it simplifies to a single line:\n```go\ntestutil.InitRepo(t, tempDir)\n```\n\n**2. Integration test in `integration_test/` package:**\n\n```go\n// Before (in git_author_test.go)\nrepo, err := git.PlainInit(tmpDir, false)\nif err != nil { ... }\n\n// After \u2014 construct a local env or reuse the existing env variable\nenv := integration.NewTestEnv(t)\nenv.RepoDir = tmpDir  // if tmpDir was separately created\nenv.InitRepo()\n```\n\n**3. Bare repos \u2014 introduce `testutil.InitBareRepo`** (optional but clean):\n\n```go\n// testutil/testutil.go\nfunc InitBareRepo(t *testing.T, dir string) *git.Repository {\n    t.Helper()\n    repo, err := git.PlainInit(dir, true)\n    if err != nil {\n        t.Fatalf(\"failed to init bare git repo: %v\", err)\n    }\n    return repo\n}\n```\n\nThis centralises even the bare-repo boilerplate and gives a fatal-on-error contract.\n\n**4. Bench helper \u2014 introduce `testutil.InitRepoBench`** (optional):\n\n```go\nfunc InitRepoBench(b *testing.B, repoDir string) {\n    b.Helper()\n    repo, err := git.PlainInit(repoDir, false)\n    if err != nil {\n        b.Fatalf(\"failed to init git repo: %v\", err)\n    }\n    // same config setup as InitRepo...\n}\n```\n\n---\n\n### Summary\n\nThe core issue is that **`git.PlainInit()` is a low-level library call that leaks environment-dependent behaviour** (global user config, GPG keys, hook paths) into tests. `testutil.InitRepo` / `env.InitRepo` exist precisely to create a **hermetic, reproducible git environment**. The ~80+ direct `PlainInit` call sites in test files should be migrated to those wrappers, with the two legitimate exceptions being the bare-repo helpers that warrant either a new `testutil.InitBareRepo` helper or a deliberate comment explaining why the low-level call is intentional.",
+  "tool_calls": [
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "git.PlainInit(",
+        "file_type": "go"
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 6.814002990722656,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "env.InitRepo(",
+        "file_type": "go"
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 5.701780319213867,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "PlainInit",
+        "file_type": "go"
+      },
+      "output": "cmd/entire/cli/benchutil/benchutil.go\n  108-108:\n    108| \trepo, err := git.PlainInit(dir, false)\n\ncmd/entire/cli/integration_test/testenv.go\n  222-222:\n    222| \trepo, err := git.PlainInit(env.RepoDir, false)\n\ncmd/entire/cli/testutil/testutil.go\n  37-37:\n    37| \trepo, err := git.PlainInit(repoDir, false)\n\ncmd/entire/cli/agent/factoryaidroid/lifecycle_test.go\n  220-220:\n    220| \tif _, err := git.PlainInit(repoDir, false); err != nil {\n\ncmd/entire/cli/benchutil/parse_tree_bench_test.go\n  21-21:",
+      "output_tokens": 1395,
+      "duration_ms": 18.98813247680664,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "InitRepo",
+        "file_type": "go"
+      },
+      "output": "cmd/entire/cli/integration_test/testenv.go\n  189-189:\n    189| \tenv.InitRepo()\n  218-218:\n    218| // InitRepo initializes a git repository in the test environment.\n  219-219:\n    219| func (env *TestEnv) InitRepo() {\n\ncmd/entire/cli/testutil/testutil.go\n  33-33:\n    33| // InitRepo initializes a git repository in the given directory with test user config.\n  34-34:\n    34| func InitRepo(t *testing.T, repoDir string) {\n\ncmd/entire/cli/integration_test/testenv_test.go\n  37-37:\n    37| func TestTes",
+      "output_tokens": 1647,
+      "duration_ms": 15.83099365234375,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/testutil/testutil.go"
+      },
+      "output": "cmd/entire/cli/testutil/testutil.go:1-80\n  1| // Package testutil provides shared test utilities for both integration and e2e tests.\n  2| // This package has no build tags, making it usable by all test packages.\n  3| package testutil\n  4| \n  5| import (\n  6| \t\"errors\"\n  7| \t\"os\"\n  8| \t\"os/exec\"\n  9| \t\"path/filepath\"\n  10| \t\"strings\"\n  11| \t\"sync\"\n  12| \t\"testing\"\n  13| \t\"time\"\n  14| \n  15| \t\"github.com/go-git/go-git/v6\"\n  16| \t\"github.com/go-git/go-git/v6/plumbing\"\n  17| \t\"github.com/go-git/go-g",
+      "output_tokens": 2852,
+      "duration_ms": 0.37384033203125,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/integration_test/testenv.go",
+        "start_line": 185,
+        "end_line": 250
+      },
+      "output": "cmd/entire/cli/integration_test/testenv.go:185-250\n  185| // This is a convenience factory for tests that need a basic repo setup.\n  186| func NewRepoEnv(t *testing.T) *TestEnv {\n  187| \tt.Helper()\n  188| \tenv := NewTestEnv(t)\n  189| \tenv.InitRepo()\n  190| \tenv.InitEntire()\n  191| \treturn env\n  192| }\n  193| \n  194| // NewRepoWithCommit creates a TestEnv with a git repo, Entire, and an initial commit.\n  195| // The initial commit contains a README.md and .gitignore (excluding .entire/).\n  196| f",
+      "output_tokens": 2552,
+      "duration_ms": 0.4436969757080078,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "git.PlainInit(",
+        "file_type": "go",
+        "max_files": 30,
+        "max_matches_per_file": 10
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 8.912086486816406,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "gogit.PlainInit(",
+        "file_type": "go",
+        "max_files": 30,
+        "max_matches_per_file": 10
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 5.112171173095703,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "PlainInit",
+        "file_type": "go",
+        "max_files": 30,
+        "max_matches_per_file": 10
+      },
+      "output": "cmd/entire/cli/benchutil/benchutil.go\n  108-108:\n    108| \trepo, err := git.PlainInit(dir, false)\n\ncmd/entire/cli/integration_test/testenv.go\n  222-222:\n    222| \trepo, err := git.PlainInit(env.RepoDir, false)\n\ncmd/entire/cli/testutil/testutil.go\n  37-37:\n    37| \trepo, err := git.PlainInit(repoDir, false)\n\ncmd/entire/cli/agent/factoryaidroid/lifecycle_test.go\n  220-220:\n    220| \tif _, err := git.PlainInit(repoDir, false); err != nil {\n\ncmd/entire/cli/benchutil/parse_tree_bench_test.go\n  21-21:",
+      "output_tokens": 7195,
+      "duration_ms": 21.027088165283203,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/integration_test/testenv.go",
+        "start_line": 1,
+        "end_line": 50
+      },
+      "output": "cmd/entire/cli/integration_test/testenv.go:1-50\n  1| //go:build integration\n  2| \n  3| package integration\n  4| \n  5| import (\n  6| \t\"crypto/sha256\"\n  7| \t\"encoding/hex\"\n  8| \t\"encoding/json\"\n  9| \t\"errors\"\n  10| \t\"fmt\"\n  11| \t\"os\"\n  12| \t\"os/exec\"\n  13| \t\"path/filepath\"\n  14| \t\"regexp\"\n  15| \t\"runtime\"\n  16| \t\"strings\"\n  17| \t\"testing\"\n  18| \t\"time\"\n  19| \n  20| \t\"github.com/entireio/cli/cmd/entire/cli/agent/types\"\n  21| \t\"github.com/entireio/cli/cmd/entire/cli/checkpoint\"\n  22| \t\"github.com/en",
+      "output_tokens": 1692,
+      "duration_ms": 1.5633106231689453,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/checkpoint/checkpoint_test.go",
+        "start_line": 40,
+        "end_line": 75
+      },
+      "output": "cmd/entire/cli/checkpoint/checkpoint_test.go:40-75\n  40| \t\tt.Errorf(\"expected zero value of Type to be Temporary, got %d\", defaultType)\n  41| \t}\n  42| }\n  43| \n  44| func TestCopyMetadataDir_SkipsSymlinks(t *testing.T) {\n  45| \t// Create a temp directory for the test\n  46| \ttempDir := t.TempDir()\n  47| \n  48| \t// Initialize a git repository\n  49| \trepo, err := git.PlainInit(tempDir, false)\n  50| \tif err != nil {\n  51| \t\tt.Fatalf(\"failed to init git repo: %v\", err)\n  52| \t}\n  53| \n  54| \t// Creat",
+      "output_tokens": 1595,
+      "duration_ms": 2.099275588989258,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/checkpoint/backwards_compat_test.go",
+        "start_line": 1,
+        "end_line": 60
+      },
+      "output": "cmd/entire/cli/checkpoint/backwards_compat_test.go:1-60\n  1| package checkpoint\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"os\"\n  6| \t\"path/filepath\"\n  7| \t\"testing\"\n  8| \n  9| \t\"github.com/entireio/cli/cmd/entire/cli/agent\"\n  10| \t\"github.com/entireio/cli/cmd/entire/cli/checkpoint/id\"\n  11| \t\"github.com/entireio/cli/redact\"\n  12| \n  13| \t\"github.com/go-git/go-git/v6\"\n  14| \t\"github.com/go-git/go-git/v6/plumbing/object\"\n  15| )\n  16| \n  17| // TestReadCommitted_MissingTokenUsage verifies that rea",
+      "output_tokens": 2378,
+      "duration_ms": 0.3790855407714844,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/benchutil/parse_tree_bench_test.go",
+        "start_line": 1,
+        "end_line": 40
+      },
+      "output": "cmd/entire/cli/benchutil/parse_tree_bench_test.go:1-40\n  1| package benchutil\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"fmt\"\n  6| \t\"testing\"\n  7| \n  8| \t\"github.com/entireio/cli/cmd/entire/cli/checkpoint\"\n  9| \n  10| \tgogit \"github.com/go-git/go-git/v6\"\n  11| \t\"github.com/go-git/go-git/v6/plumbing\"\n  12| \t\"github.com/go-git/go-git/v6/plumbing/filemode\"\n  13| \t\"github.com/go-git/go-git/v6/plumbing/object\"\n  14| )\n  15| \n  16| // --- Helpers ---\n  17| \n  18| // benchInitBareRepo creates a bare gi",
+      "output_tokens": 1389,
+      "duration_ms": 0.43511390686035156,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/checkpoint/parse_tree_test.go",
+        "start_line": 30,
+        "end_line": 60
+      },
+      "output": "cmd/entire/cli/checkpoint/parse_tree_test.go:30-60\n  30| \tif err != nil {\n  31| \t\tt.Fatalf(\"failed to store blob: %v\", err)\n  32| \t}\n  33| \treturn hash\n  34| }\n  35| \n  36| // mustInitBareRepo creates a bare git repo for testing.\n  37| func mustInitBareRepo(t *testing.T) *git.Repository {\n  38| \tt.Helper()\n  39| \trepo, err := git.PlainInit(t.TempDir(), true)\n  40| \tif err != nil {\n  41| \t\tt.Fatalf(\"failed to init bare repo: %v\", err)\n  42| \t}\n  43| \treturn repo\n  44| }\n  45| \n  46| // mustStoreT",
+      "output_tokens": 1084,
+      "duration_ms": 0.32591819763183594,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/checkpoint/tree_surgery_equiv_test.go",
+        "start_line": 180,
+        "end_line": 210
+      },
+      "output": "cmd/entire/cli/checkpoint/tree_surgery_equiv_test.go:180-210\n  180| \tt.Helper()\n  181| \n  182| \tdir := t.TempDir()\n  183| \tif resolved, err := filepath.EvalSymlinks(dir); err == nil {\n  184| \t\tdir = resolved\n  185| \t}\n  186| \n  187| \trepo, err := gogit.PlainInit(dir, false)\n  188| \tif err != nil {\n  189| \t\tt.Fatalf(\"git init: %v\", err)\n  190| \t}\n  191| \n  192| \twt, err := repo.Worktree()\n  193| \tif err != nil {\n  194| \t\tt.Fatalf(\"worktree: %v\", err)\n  195| \t}\n  196| \n  197| \t// Create initial fi",
+      "output_tokens": 1031,
+      "duration_ms": 0.1609325408935547,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/integration_test/testenv.go",
+        "start_line": 250,
+        "end_line": 300
+      },
+      "output": "cmd/entire/cli/integration_test/testenv.go:250-300\n  250| \n  251| func (env *TestEnv) setGitConfigBaseline() {\n  252| \tenv.T.Helper()\n  253| \n  254| \tconfigPath := env.gitConfigPath()\n  255| \tdata, err := os.ReadFile(configPath)\n  256| \tif err != nil {\n  257| \t\tenv.T.Fatalf(\"failed to read %s: %v\", configPath, err)\n  258| \t}\n  259| \n  260| \tenv.gitConfigSnapshot = string(data)\n  261| \tif env.gitConfigGuardSet {\n  262| \t\treturn\n  263| \t}\n  264| \n  265| \tenv.gitConfigGuardSet = true\n  266| \tenv.T.",
+      "output_tokens": 1817,
+      "duration_ms": 0.6229877471923828,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/checkpoint/checkpoint_test.go",
+        "start_line": 1,
+        "end_line": 40
+      },
+      "output": "cmd/entire/cli/checkpoint/checkpoint_test.go:1-40\n  1| package checkpoint\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"encoding/json\"\n  6| \t\"errors\"\n  7| \t\"fmt\"\n  8| \t\"os\"\n  9| \t\"os/exec\"\n  10| \t\"path/filepath\"\n  11| \t\"strconv\"\n  12| \t\"strings\"\n  13| \t\"testing\"\n  14| \t\"time\"\n  15| \n  16| \t\"github.com/entireio/cli/cmd/entire/cli/agent\"\n  17| \t\"github.com/entireio/cli/cmd/entire/cli/checkpoint/id\"\n  18| \t\"github.com/entireio/cli/cmd/entire/cli/paths\"\n  19| \t\"github.com/entireio/cli/cmd/entire/cli/te",
+      "output_tokens": 1367,
+      "duration_ms": 0.7421970367431641,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/benchutil/benchutil.go",
+        "start_line": 100,
+        "end_line": 130
+      },
+      "output": "cmd/entire/cli/benchutil/benchutil.go:100-130\n  100| \n  101| \tdir := b.TempDir()\n  102| \t// Resolve symlinks (macOS /var -> /private/var)\n  103| \tif resolved, err := filepath.EvalSymlinks(dir); err == nil {\n  104| \t\tdir = resolved\n  105| \t}\n  106| \n  107| \t// Init repo\n  108| \trepo, err := git.PlainInit(dir, false)\n  109| \tif err != nil {\n  110| \t\tb.Fatalf(\"git init: %v\", err)\n  111| \t}\n  112| \n  113| \t// Create .gitignore and .entire settings\n  114| \twriteFile(b, dir, \".gitignore\", \".entire/\\n\"",
+      "output_tokens": 1034,
+      "duration_ms": 0.8950233459472656,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/agent/factoryaidroid/lifecycle_test.go",
+        "start_line": 210,
+        "end_line": 240
+      },
+      "output": "cmd/entire/cli/agent/factoryaidroid/lifecycle_test.go:210-240\n  210| \tif event.SubagentID != \"agent-789\" {\n  211| \t\tt.Errorf(\"expected SubagentID 'agent-789', got %q\", event.SubagentID)\n  212| \t}\n  213| \tif event.ToolUseID == \"\" {\n  214| \t\tt.Fatal(\"expected fallback tool_use_id, got empty string\")\n  215| \t}\n  216| }\n  217| \n  218| func TestParseHookEvent_MissingToolUseID_RepeatedInputsStayUniqueAndCorrelate(t *testing.T) {\n  219| \trepoDir := t.TempDir()\n  220| \tif _, err := git.PlainInit(repoDir",
+      "output_tokens": 1473,
+      "duration_ms": 0.3879070281982422,
+      "turn_number": 9
+    }
+  ],
+  "total_tool_calls": 19,
+  "total_turns": 10,
+  "wall_clock_ms": 76541.50295257568,
+  "input_tokens": 83028,
+  "output_tokens": 4367,
+  "tool_output_tokens": 30569,
+  "total_cost_usd": 0.314589,
+  "first_call_tool": "search_code",
+  "first_call_produced_file": false,
+  "retry_count": 0,
+  "error": "",
+  "total_tool_duration_ms": 90.81554412841797,
+  "tool_execution_share": 0.0011864875998670464,
+  "search_call_count": 7,
+  "read_call_count": 12,
+  "avg_search_code_duration_ms": 11.769465037754603,
+  "median_search_code_duration_ms": 8.912086486816406
+}

@@ -1,0 +1,261 @@
+{
+  "repeat": 0,
+  "task_id": "2084a83cf3a3",
+  "repo": "entireio-cli",
+  "task_type": "repo_task",
+  "condition": "baseline",
+  "prompt": "can you check if commits into the shadow branch ignore .gitignore?",
+  "answer": "",
+  "tool_calls": [
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "shadow branch",
+        "context_before": 3,
+        "context_after": 3
+      },
+      "output": "./CLAUDE.md\n  117-121:\n    117| \n    118| **Tests that touch git state must use an isolated temp repo \u2014 never the real repo CWD.**\n    119| \n    120| Many handlers (lifecycle, strategy, hooks) resolve the git repo from CWD via `OpenRepository`, `GetGitCommonDir`, `DetectFileChanges`, etc. Without isolation, tests can create session state files, shadow branches, or other artifacts in the real `.git/` directory.\n    121| \n  123-123:\n    123| \n  357-357:\n    357| \n\n./CHANGELOG.md\n  55-55:\n    55| -",
+      "output_tokens": 5218,
+      "duration_ms": 34.13105010986328,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "gitignore",
+        "context_before": 3,
+        "context_after": 3
+      },
+      "output": "./CLAUDE.md\n  271-272:\n    271| ### Logging vs User Output\n    272| \n  274-274:\n    274| - **Enabling debug/perf logs locally**: Prefer adding `\"log_level\": \"DEBUG\"` to `.entire/settings.local.json` when you need detailed hook/perf logs. This file is gitignored, so it is a low-risk local-only change. `ENTIRE_LOG_LEVEL=debug` also works and takes precedence.\n  276-277:\n    276| \n    277| Don't use `fmt.Print*` for operational messages (checkpoint saves, hook invocations, strategy decisions) - tho",
+      "output_tokens": 3577,
+      "duration_ms": 16.38031005859375,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "shadow branch tree write",
+        "context_before": 3,
+        "context_after": 3
+      },
+      "output": "./CHANGELOG.md\n  55-55:\n    55| - Gitignore now respected for shadow branch tree writes ([#890](https://github.com/entireio/cli/pull/890))",
+      "output_tokens": 138,
+      "duration_ms": 16.77393913269043,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "gitignore shadow",
+        "context_before": 3,
+        "context_after": 3
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 15.705108642578125,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "WriteTree",
+        "context_before": 3,
+        "context_after": 5
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 17.963886260986328,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "IsIgnored\\|CheckIgnore\\|isIgnored",
+        "context_before": 3,
+        "context_after": 3
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 15.227794647216797,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "write-tree\\|write_tree\\|hash-object",
+        "context_before": 3,
+        "context_after": 5
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 25.18773078918457,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "ShadowBranch\\|shadowBranch\\|shadow_branch",
+        "context_before": 2,
+        "context_after": 4,
+        "max_files": 15
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 14.698028564453125,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "glob": "**/*.go",
+        "pattern": "shadow"
+      },
+      "output": "No files found.",
+      "output_tokens": 15,
+      "duration_ms": 12.892007827758789,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "entire/",
+        "file_type": "go",
+        "context_before": 2,
+        "context_after": 2,
+        "max_files": 5
+      },
+      "output": "./perf/span.go\n  7-11:\n    7| \t\"time\"\n    8| \n    9| \t\"github.com/entireio/cli/cmd/entire/cli/logging\"\n    10| )\n    11| \n\n./e2e/testutil/artifacts.go\n  56-61:\n    56| \twriteArtifact(t, dir, \"git-tree.txt\",\n    57| \t\tgitOutputSafe(s.Dir, \"ls-tree\", \"-r\", \"HEAD\")+\n    58| \t\t\t\"\\n--- entire/checkpoints/v1 ---\\n\"+\n    59| \t\t\tgitOutputSafe(s.Dir, \"ls-tree\", \"-r\", \"entire/checkpoints/v1\"))\n    60| \n    61| \t// console.log is written incrementally to disk via s.ConsoleLog (*os.File),\n\n./e2e/testutil/re",
+      "output_tokens": 2151,
+      "duration_ms": 26.291847229003906,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": "cmd/entire/cli"
+      },
+      "output": "agent/\napi/\napi_client.go\nattach.go\nattach_test.go\nattach_transcript.go\nauth/\nbench_enable_test.go\nbench_test.go\nbenchutil/\ncheckpoint/\nclean.go\nclean_test.go\ncommit_message.go\ncommit_message_test.go\nconfig.go\nconfig_test.go\nconstants.go\ndoctor.go\ndoctor_test.go\nerrors.go\nexplain.go\nexplain_test.go\nfetch_no_config_pollution_test.go\ngit_operations.go\ngit_operations_test.go\ngitops/\nglobal_test.go\nhelp.go\nhook_registry.go\nhook_registry_test.go\nhooks.go\nhooks_claudecode_posttodo.go\nhooks_cmd.go\nhook",
+      "output_tokens": 1356,
+      "duration_ms": 1.1148452758789062,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": "cmd/entire/cli/checkpoint"
+      },
+      "output": "backwards_compat_test.go\nblob_resolver.go\nblob_resolver_test.go\ncheckpoint.go\ncheckpoint_test.go\ncommitted.go\ncommitted_reader_resolve.go\ncommitted_reader_resolve_test.go\ncommitted_update_test.go\nfetching_tree.go\nglobal_test.go\nid/\nparse_tree.go\nparse_tree_test.go\nprompts.go\nprompts_test.go\nstore.go\ntemporary.go\ntemporary_test.go\ntree_surgery_equiv_test.go\nv2_committed.go\nv2_generation.go\nv2_generation_test.go\nv2_read.go\nv2_read_test.go\nv2_resolve.go\nv2_resolve_test.go\nv2_store.go\nv2_store_test.",
+      "output_tokens": 502,
+      "duration_ms": 0.5550384521484375,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": "cmd/entire/cli/gitops"
+      },
+      "output": "diff.go\ndiff_test.go",
+      "output_tokens": 20,
+      "duration_ms": 0.13327598571777344,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/checkpoint/temporary.go"
+      },
+      "output": "cmd/entire/cli/checkpoint/temporary.go:1-80\n  1| package checkpoint\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"crypto/sha256\"\n  6| \t\"encoding/hex\"\n  7| \t\"encoding/json\"\n  8| \t\"errors\"\n  9| \t\"fmt\"\n  10| \t\"log/slog\"\n  11| \t\"os\"\n  12| \t\"os/exec\"\n  13| \t\"path/filepath\"\n  14| \t\"sort\"\n  15| \t\"strings\"\n  16| \t\"time\"\n  17| \n  18| \t\"github.com/entireio/cli/cmd/entire/cli/agent\"\n  19| \t\"github.com/entireio/cli/cmd/entire/cli/agent/types\"\n  20| \t\"github.com/entireio/cli/cmd/entire/cli/jsonutil\"\n  21| \t\"git",
+      "output_tokens": 3355,
+      "duration_ms": 0.6151199340820312,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/checkpoint/temporary.go",
+        "start_line": 80,
+        "max_lines": 120
+      },
+      "output": "cmd/entire/cli/checkpoint/temporary.go:80-199\n  80| \t\tif lastCommit, err := s.repo.CommitObject(parentHash); err == nil {\n  81| \t\t\tlastTreeHash = lastCommit.TreeHash\n  82| \t\t}\n  83| \t}\n  84| \n  85| \t// Collect all files to include\n  86| \tvar allFiles []string\n  87| \tvar allDeletedFiles []string\n  88| \tif opts.IsFirstCheckpoint {\n  89| \t\t// For the first checkpoint, capture all changed files (modified tracked + untracked)\n  90| \t\t// using `git status --porcelain -z` which respects both repo and g",
+      "output_tokens": 5553,
+      "duration_ms": 0.6008148193359375,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "func filterGitIgnoredFiles",
+        "context_after": 30
+      },
+      "output": "./cmd/entire/cli/checkpoint/temporary.go\n  1128-1134:\n    1128| // commits when agents report them as modified/new in their transcripts.\n    1129| // On failure, fails closed (returns nil) to avoid leaking secrets.\n    1130| func filterGitIgnoredFiles(ctx context.Context, repo *git.Repository, files []string) []string {\n    1131| \tif len(files) == 0 {\n    1132| \t\treturn files\n    1133| \t}\n    1134| \n  1136-1141:\n    1136| \tif err != nil {\n    1137| \t\tlogging.Warn(logging.WithComponent(ctx, \"chec",
+      "output_tokens": 793,
+      "duration_ms": 28.87582778930664,
+      "turn_number": 10
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "func collectChangedFiles",
+        "context_after": 40
+      },
+      "output": "./cmd/entire/cli/checkpoint/temporary.go\n  1203-1206:\n    1203| //\n    1204| // Uses `git status --porcelain -z` for reliable parsing of filenames with special characters.\n    1205| func collectChangedFiles(ctx context.Context, repo *git.Repository) (changedFilesResult, error) {\n    1206| \t// Get worktree root directory for running git command\n  1208-1208:\n    1208| \tif err != nil {\n  1210-1210:\n    1210| \t}",
+      "output_tokens": 411,
+      "duration_ms": 15.366792678833008,
+      "turn_number": 10
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/checkpoint/temporary.go",
+        "start_line": 1120,
+        "max_lines": 120
+      },
+      "output": "cmd/entire/cli/checkpoint/temporary.go:1120-1239\n  1120| // changedFilesResult contains both changed and deleted files from git status.\n  1121| type changedFilesResult struct {\n  1122| \tChanged []string // Files to include (modified, added, untracked, renamed, etc.)\n  1123| \tDeleted []string // Files that were deleted (need to be excluded from checkpoint tree)\n  1124| }\n  1125| \n  1126| // filterGitIgnoredFiles removes gitignored files from the list using `git check-ignore`.\n  1127| // This prev",
+      "output_tokens": 5474,
+      "duration_ms": 0.6079673767089844,
+      "turn_number": 11
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/checkpoint/temporary.go",
+        "start_line": 1203,
+        "max_lines": 80
+      },
+      "output": "cmd/entire/cli/checkpoint/temporary.go:1203-1282\n  1203| //\n  1204| // Uses `git status --porcelain -z` for reliable parsing of filenames with special characters.\n  1205| func collectChangedFiles(ctx context.Context, repo *git.Repository) (changedFilesResult, error) {\n  1206| \t// Get worktree root directory for running git command\n  1207| \twt, err := repo.Worktree()\n  1208| \tif err != nil {\n  1209| \t\treturn changedFilesResult{}, fmt.Errorf(\"failed to get worktree: %w\", err)\n  1210| \t}\n  1211| \tr",
+      "output_tokens": 3455,
+      "duration_ms": 0.4260540008544922,
+      "turn_number": 11
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/checkpoint/temporary.go",
+        "start_line": 1282,
+        "max_lines": 30
+      },
+      "output": "cmd/entire/cli/checkpoint/temporary.go:1282-1307\n  1282| \t\tcase staging == 'A' || staging == 'M':\n  1283| \t\t\t// Staged add or modify\n  1284| \t\t\tchangedSeen[filename] = struct{}{}\n  1285| \n  1286| \t\tcase staging == 'T' || wtStatus == 'T':\n  1287| \t\t\t// Type change (e.g., file to symlink)\n  1288| \t\t\tchangedSeen[filename] = struct{}{}\n  1289| \n  1290| \t\tcase staging == 'U' || wtStatus == 'U':\n  1291| \t\t\t// Unmerged (conflict) - include current file state\n  1292| \t\t\tchangedSeen[filename] = struct{}{",
+      "output_tokens": 937,
+      "duration_ms": 0.5078315734863281,
+      "turn_number": 12
+    }
+  ],
+  "total_tool_calls": 20,
+  "total_turns": 12,
+  "wall_clock_ms": 32791.11075401306,
+  "input_tokens": 86670,
+  "output_tokens": 1741,
+  "tool_output_tokens": 33040,
+  "total_cost_usd": 0.286125,
+  "first_call_tool": "search_code",
+  "first_call_produced_file": true,
+  "retry_count": 0,
+  "error": "",
+  "total_tool_duration_ms": 244.05527114868164,
+  "tool_execution_share": 0.007442726566339737,
+  "search_call_count": 11,
+  "avg_search_code_duration_ms": 20.600210536609996,
+  "median_search_code_duration_ms": 16.77393913269043,
+  "avg_read_code_duration_ms": 0.5515575408935547,
+  "median_read_code_duration_ms": 0.6008148193359375
+}

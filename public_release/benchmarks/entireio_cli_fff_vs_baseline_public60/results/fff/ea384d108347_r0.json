@@ -1,0 +1,94 @@
+{
+  "repeat": 0,
+  "task_id": "ea384d108347",
+  "repo": "entireio-cli",
+  "task_type": "code_understanding",
+  "condition": "fff",
+  "prompt": "What does the nolint:ireturn linter rule refer to?",
+  "answer": "Here is a full breakdown of the `ireturn` linter rule and how it is used in this codebase:\n\n---\n\n## What is `ireturn`?\n\n`ireturn` is a **Go static analysis linter** that flags functions which **return an interface type** instead of a concrete type. The philosophy behind it is that, in Go, interfaces should generally be *accepted* as parameters (for flexibility) rather than *returned* (which hides the concrete implementation from the caller and makes types harder to work with, mock, and reason about). Returning interfaces can also lead to subtle bugs (e.g., non-nil interfaces wrapping nil pointers).\n\n---\n\n## How it's configured in this codebase (`.golangci.yaml`, lines 102\u2013117)\n\nThe linter is enabled globally, but an **allowlist** is defined for cases where returning an interface is unavoidable or intentional:\n\n```yaml\nireturn:\n  allow:\n    - anon        # anonymous/unnamed interfaces\n    - error       # the built-in error interface\n    - empty       # interface{} / any\n    - stdlib      # interfaces from the Go standard library\n    - grpc.DialOption\n    - github.com/entireio/cli/cmd/entire/cli/agent.Agent\n    - github.com/entireio/cli/cmd/entire/cli/checkpoint.CommittedReader\n    - github.com/entireio/cli/cmd/entire/cli/strategy.Strategy\n    - github.com/go-git/go-git/v6/plumbing/storer.ReferenceIter\n    - github.com/go-git/go-git/v6/plumbing.EncodedObject\n    - github.com/go-git/go-git/v6/storage.Storer\n    - github.com/go-git/go-git/v6/plumbing/storer.EncodedObjectIter\n    - github.com/entireio/cli/e2e/agents.Session\n    - github.com/go-git/go-billy/v6.Filesystem\n```\n\nAny interface *not* on this list, when returned from a function, will trigger a linter error.\n\n---\n\n## Where `//nolint:ireturn` is used and why\n\nWhen a function *must* return an interface not on the allowlist, the `//nolint:ireturn` directive suppresses the warning. Two distinct patterns appear in the codebase:\n\n### 1. Type-assertion helpers (`capabilities.go`)\n```go\nfunc AsHookSupport(ag Agent) (HookSupport, bool) { //nolint:ireturn // type-assertion helper must return interface\n```\nThese `As*` functions perform a runtime type assertion to check whether an `Agent` implements an optional capability interface. They *must* return the interface type (e.g., `HookSupport`, `TranscriptAnalyzer`, etc.) because the concrete type is unknown at compile time \u2014 it's only discovered at runtime via the type assertion `ag.(HookSupport)`.\n\n### 2. Bubbletea TUI pattern (`search_tui.go`)\n```go\nfunc (m searchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ireturn,cyclop // bubbletea interface\n```\nThe [Bubbletea](https://github.com/charmbracelet/bubbletea) TUI framework requires that `Update()` returns `tea.Model`, which is an interface. This is a framework contract that cannot be changed, so the suppression is necessary.\n\n---\n\n## Summary\n\n| Aspect | Detail |\n|---|---|\n| **What it enforces** | Functions should not return interface types (prefer concrete types) |\n| **Why** | Returning interfaces hides implementations, can cause nil-interface bugs, and reduces type clarity |\n| **Suppressed with** | `//nolint:ireturn // <reason>` (explanation required by `nolintlint`) |\n| **Legitimate exceptions** | Type-assertion helpers (runtime dispatch) and third-party framework contracts (Bubbletea) |",
+  "tool_calls": [
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "nolint:ireturn"
+      },
+      "output": "\u2192 Read cmd/entire/cli/agent/capabilities.go [def]\ncmd/entire/cli/agent/capabilities.go\n 30: func AsHookSupport(ag Agent) (HookSupport, bool) { //nolint:ireturn // type-assertion helper must return interface\n  31| if ag == nil {\n  32| return nil, false\n  33| }\n  34| hs, ok := ag.(HookSupport)\n  35| if !ok {\n  36| return nil, false\n  37| }\n  38| if cd, ok := ag.(CapabilityDeclarer); ok {\n 46: func AsTranscriptAnalyzer(ag Agent) (TranscriptAnalyzer, bool) { //nolint:ireturn // type-assertion helper",
+      "output_tokens": 2113,
+      "duration_ms": 0.8020401000976562,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "ireturn"
+      },
+      "output": "\u2192 Read cmd/entire/cli/agent/capabilities.go [def]\ncmd/entire/cli/agent/capabilities.go\n 30: func AsHookSupport(ag Agent) (HookSupport, bool) { //nolint:ireturn // type-assertion helper must return interface\n  31| if ag == nil {\n  32| return nil, false\n  33| }\n  34| hs, ok := ag.(HookSupport)\n  35| if !ok {\n  36| return nil, false\n  37| }\n  38| if cd, ok := ag.(CapabilityDeclarer); ok {\n 46: func AsTranscriptAnalyzer(ag Agent) (TranscriptAnalyzer, bool) { //nolint:ireturn // type-assertion helper",
+      "output_tokens": 2158,
+      "duration_ms": 1.905202865600586,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "ireturn",
+        "path_glob": "*.golangci.yaml",
+        "context_before": 5,
+        "context_after": 10
+      },
+      "output": "0 matches.",
+      "output_tokens": 10,
+      "duration_ms": 0.18787384033203125,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "pattern": ".golangci.yaml"
+      },
+      "output": "\u2192 Read .golangci.yaml (exact match!)\n.golangci.yaml git:clean",
+      "output_tokens": 61,
+      "duration_ms": 0.8771419525146484,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": ".golangci.yaml"
+      },
+      "output": ".golangci.yaml:1-80\n  1| version: \"2\"\n  2| issues:\n  3|   max-issues-per-linter: 0\n  4|   max-same-issues: 0\n  5| linters:\n  6|   default: standard\n  7|   enable:\n  8|     - asciicheck\n  9|     - bidichk\n  10|     - bodyclose\n  11|     - canonicalheader\n  12|     - copyloopvar\n  13|     - decorder\n  14|     - durationcheck\n  15|     - embeddedstructfieldcheck\n  16|     - errchkjson\n  17|     - errname\n  18|     - errorlint\n  19|     - exhaustive\n  20|     - exptostd\n  21|     - forbidigo\n  22|  ",
+      "output_tokens": 2129,
+      "duration_ms": 0.2460479736328125,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": ".golangci.yaml",
+        "start_line": 80,
+        "end_line": 155
+      },
+      "output": ".golangci.yaml:80-155\n  80|       # Default is 150. We use 75 for lint (blocks CI), `mise run dup` uses 50 (advisory)\n  81|       threshold: 75\n  82|     errcheck:\n  83|       check-type-assertions: true\n  84|       check-blank: true\n  85|     forbidigo:\n  86|       analyze-types: true\n  87|       forbid:\n  88|         - pattern: '^os\\.Getwd$'\n  89|           msg: \"os.Getwd() breaks when running from subdirectories - use paths.RepoRoot() for git-relative paths\"\n  90|           pkg: '^os$'\n  91| ",
+      "output_tokens": 2869,
+      "duration_ms": 0.2961158752441406,
+      "turn_number": 5
+    }
+  ],
+  "total_tool_calls": 6,
+  "total_turns": 6,
+  "wall_clock_ms": 29806.60605430603,
+  "input_tokens": 20194,
+  "output_tokens": 1423,
+  "tool_output_tokens": 9340,
+  "total_cost_usd": 0.081927,
+  "first_call_tool": "search_code",
+  "first_call_produced_file": true,
+  "retry_count": 0,
+  "error": "",
+  "total_tool_duration_ms": 4.314422607421875,
+  "tool_execution_share": 0.0001447471946172345,
+  "search_call_count": 3,
+  "avg_search_code_duration_ms": 0.9650389353434244,
+  "median_search_code_duration_ms": 0.8020401000976562,
+  "avg_read_code_duration_ms": 0.27108192443847656,
+  "median_read_code_duration_ms": 0.27108192443847656
+}

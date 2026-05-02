@@ -1,0 +1,298 @@
+{
+  "repeat": 0,
+  "task_id": "6dcf16e1b2ba",
+  "repo": "entireio-cli",
+  "task_type": "code_understanding",
+  "condition": "fff",
+  "prompt": "what's the coverage for e2e and integration tests in regards to git push / git pull (everything remote related)",
+  "answer": "",
+  "tool_calls": [
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": "."
+      },
+      "output": ".allowed-licenses\n.claude/\n.codex/\n.devcontainer/\n.entire/\n.ferrata/\n.gemini/\n.git/\n.github/\n.gitignore\n.golangci.yaml\n.goreleaser.yaml\n.opencode/\n.vscode/\nAGENTS.md\nCHANGELOG.md\nCLAUDE.md\nCODE_OF_CONDUCT.md\nCONTRIBUTING.md\nLICENSE\nREADME.md\nSECURITY.md\nWINDOWS.md\ncmd/\ndocs/\ne2e/\ngo.mod\ngo.sum\nmise-tasks/\nmise.toml\nperf/\nredact/\nscripts/",
+      "output_tokens": 339,
+      "duration_ms": 0.8456707000732422,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "git push",
+        "file_type": "go"
+      },
+      "output": "cmd/entire/cli/integration_test/remote_operations_test.go\n 52: // Run PrePush (simulates what happens during git push)\ncmd/entire/cli/integration_test/testenv.go\n 2023: env.T.Fatalf(\"git push %s %s failed: %v\\n%s\", remote, refSpec, err, output)\ncmd/entire/cli/setup.go\n 518: cmd.Flags().BoolVar(&opts.SkipPushSessions, flagSkipPushSessions, false, \"Disable automatic pushing of session logs on git push\")\n 628: cmd.Flags().BoolVar(&opts.SkipPushSessions, flagSkipPushSessions, false, \"Disable automat",
+      "output_tokens": 928,
+      "duration_ms": 0.759124755859375,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": "e2e"
+      },
+      "output": "README.md\nagents/\nbootstrap/\ncmd/\nentire/\nexploratory/\ntests/\ntestutil/\nvogon/",
+      "output_tokens": 78,
+      "duration_ms": 0.2391338348388672,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": "cmd/entire/cli/integration_test"
+      },
+      "output": "agent_strategy_test.go\nagent_test.go\nattach_test.go\nattribution_test.go\ncarry_forward_overlap_test.go\ncopilot_vscode_hooks_test.go\ndefault_branch_test.go\ndeferred_finalization_test.go\nexplain_test.go\nfully_condensed_test.go\ngit_author_test.go\nhook_bench_test.go\nhook_logging_test.go\nhook_overwrite_test.go\nhooks.go\nhooks_test.go\ninteractive.go\nlast_checkpoint_id_test.go\nlast_interaction_test.go\nlogin_test.go\nlogs_only_rewind_test.go\nmanual_commit_untracked_files_test.go\nmanual_commit_workflow_test",
+      "output_tokens": 1189,
+      "duration_ms": 0.5397796630859375,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": "e2e/tests"
+      },
+      "output": "attribution_test.go\ncheckpoint_metadata_test.go\ncodex_resume_test.go\ndeleted_files_test.go\ndisable_test.go\nedge_cases_test.go\nexisting_files_test.go\nexternal_agent_test.go\nfactory_hooks_test.go\ninteractive_test.go\nmain_test.go\nmid_turn_commit_test.go\nmulti_session_test.go\nresume_remote_test.go\nresume_test.go\nrewind_test.go\nsession_lifecycle_test.go\nsingle_session_test.go\nsplit_commits_test.go\nstash_workflows_test.go\nsubagent_commit_flow_test.go",
+      "output_tokens": 448,
+      "duration_ms": 0.3631114959716797,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/integration_test/remote_operations_test.go"
+      },
+      "output": "cmd/entire/cli/integration_test/remote_operations_test.go:1-80\n  1| //go:build integration\n  2| \n  3| package integration\n  4| \n  5| import (\n  6| \t\"os/exec\"\n  7| \t\"strings\"\n  8| \t\"testing\"\n  9| \n  10| \t\"github.com/entireio/cli/cmd/entire/cli/paths\"\n  11| \t\"github.com/entireio/cli/cmd/entire/cli/testutil\"\n  12| )\n  13| \n  14| // =============================================================================\n  15| // P0 -- PrePush Basic Flow\n  16| // ================================================",
+      "output_tokens": 3143,
+      "duration_ms": 0.27489662170410156,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/integration_test/remote_operations_test.go",
+        "start_line": 80,
+        "end_line": 300
+      },
+      "output": "cmd/entire/cli/integration_test/remote_operations_test.go:80-300\n  80| \tenv.RunPrePush(\"origin\")\n  81| \n  82| \t// No checkpoint branches should exist on remote\n  83| \tif env.BranchExistsOnRemote(bareDir, paths.MetadataBranchName) {\n  84| \t\tt.Error(\"entire/checkpoints/v1 should NOT exist on remote when no checkpoints were created\")\n  85| \t}\n  86| }\n  87| \n  88| // TestPrePush_IdempotentWhenAlreadyPushed verifies that pushing twice\n  89| // with no new checkpoints is a no-op (idempotent).\n  90| fu",
+      "output_tokens": 10352,
+      "duration_ms": 0.4620552062988281,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "glob": "e2e/**/*push*"
+      },
+      "output": "0 results (602 indexed)",
+      "output_tokens": 23,
+      "duration_ms": 0.2999305725097656,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/integration_test/remote_operations_test.go",
+        "start_line": 300,
+        "end_line": 695
+      },
+      "output": "cmd/entire/cli/integration_test/remote_operations_test.go:300-695\n  300| \tenv.GitAdd(fileName)\n  301| \n  302| \tif err := env.SimulateStop(session.ID, transcriptPath); err != nil {\n  303| \t\tt.Fatalf(\"SimulateStop failed: %v\", err)\n  304| \t}\n  305| \n  306| \tenv.GitCommitWithShadowHooks(commitMsg, fileName)\n  307| \n  308| \treturn env.GetLatestCheckpointID()\n  309| }\n  310| \n  311| // TestCloneAndResume_FetchesCheckpointMetadata verifies that after pushing\n  312| // checkpoints to a remote, cloning ",
+      "output_tokens": 17608,
+      "duration_ms": 0.5049705505371094,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "glob": "e2e/**/*remote*"
+      },
+      "output": "\u2192 Read e2e/tests/resume_remote_test.go (best match \u2014 Read this file directly)\ne2e/tests/resume_remote_test.go git:clean",
+      "output_tokens": 119,
+      "duration_ms": 0.2651214599609375,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/tests/resume_remote_test.go"
+      },
+      "output": "e2e/tests/resume_remote_test.go:1-80\n  1| //go:build e2e\n  2| \n  3| package tests\n  4| \n  5| import (\n  6| \t\"context\"\n  7| \t\"os\"\n  8| \t\"path/filepath\"\n  9| \t\"testing\"\n  10| \t\"time\"\n  11| \n  12| \t\"github.com/entireio/cli/e2e/entire\"\n  13| \t\"github.com/entireio/cli/e2e/testutil\"\n  14| \t\"github.com/stretchr/testify/assert\"\n  15| \t\"github.com/stretchr/testify/require\"\n  16| )\n  17| \n  18| // TestResumeFromClonedRepo: agent creates a file on a feature branch and user\n  19| // commits, then the repo i",
+      "output_tokens": 3732,
+      "duration_ms": 1.4672279357910156,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/integration_test/v2_push_test.go"
+      },
+      "output": "cmd/entire/cli/integration_test/v2_push_test.go:1-80\n  1| //go:build integration\n  2| \n  3| package integration\n  4| \n  5| import (\n  6| \t\"os/exec\"\n  7| \t\"strings\"\n  8| \t\"testing\"\n  9| \n  10| \t\"github.com/entireio/cli/cmd/entire/cli/paths\"\n  11| \t\"github.com/entireio/cli/cmd/entire/cli/testutil\"\n  12| \t\"github.com/stretchr/testify/assert\"\n  13| \t\"github.com/stretchr/testify/require\"\n  14| )\n  15| \n  16| // bareRefExists checks if a ref exists in a bare repo by running git ls-remote.\n  17| func b",
+      "output_tokens": 2845,
+      "duration_ms": 0.5388259887695312,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/integration_test/v2_push_test.go",
+        "start_line": 79,
+        "end_line": 200
+      },
+      "output": "cmd/entire/cli/integration_test/v2_push_test.go:79-125\n  79| func TestV2Push_Disabled_NoV2Refs(t *testing.T) {\n  80| \tt.Parallel()\n  81| \tenv := NewTestEnv(t)\n  82| \tdefer env.Cleanup()\n  83| \n  84| \tenv.InitRepo()\n  85| \tenv.WriteFile(\"README.md\", \"# Test\")\n  86| \tenv.WriteFile(\".gitignore\", \".entire/\\n\")\n  87| \tenv.GitAdd(\"README.md\")\n  88| \tenv.GitAdd(\".gitignore\")\n  89| \tenv.GitCommit(\"Initial commit\")\n  90| \tenv.GitCheckoutNewBranch(\"feature/v2-push-disabled\")\n  91| \n  92| \t// Enable checkp",
+      "output_tokens": 1870,
+      "duration_ms": 0.2281665802001953,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/tests/resume_remote_test.go",
+        "start_line": 80,
+        "end_line": 124
+      },
+      "output": "e2e/tests/resume_remote_test.go:80-124\n  80| \t\tassert.Equal(t, \"feature\", current, \"should be on feature branch after resume\")\n  81| \t\tassert.Contains(t, out, \"To continue\", \"resume output should show resume instructions\")\n  82| \n  83| \t\t// Verify the metadata branch now exists locally.\n  84| \t\t_, err = testutil.GitOutputErr(cloneDir, \"rev-parse\", \"--verify\", \"refs/heads/entire/checkpoints/v1\")\n  85| \t\tassert.NoError(t, err, \"metadata branch should exist locally after resume\")\n  86| \t})\n  87| }\n",
+      "output_tokens": 2247,
+      "duration_ms": 0.14281272888183594,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "git pull\\|FetchMetadataBranch\\|git fetch\\|RunPrePush\\|GitPush\\|SetupBareRemote",
+        "file_type": "go",
+        "path_glob": "**/integration_test/**\"",
+        "max_files": 20
+      },
+      "output": "0 matches.",
+      "output_tokens": 10,
+      "duration_ms": 0.7879734039306641,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "SetupBareRemote\\|RunPrePush\\|FetchMetadataBranch\\|GitPush\\|git push\\|git pull\\|git fetch",
+        "file_type": "go",
+        "path_glob": "e2e/**/*.go",
+        "max_files": 20
+      },
+      "output": "0 matches.",
+      "output_tokens": 10,
+      "duration_ms": 1.898050308227539,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "SetupBareRemote",
+        "file_type": "go",
+        "max_files": 20
+      },
+      "output": "cmd/entire/cli/integration_test/testenv.go\n 1856: func (env *TestEnv) SetupBareRemote() string {\n  1857| env.T.Helper()\n  1858| return env.SetupNamedBareRemote(\"origin\")\n  1859| }\ne2e/testutil/repo.go\n 680: func SetupBareRemote(t *testing.T, s *RepoState) string {\n  681| t.Helper()\ncmd/entire/cli/integration_test/remote_operations_test.go\n 25: bareDir := env.SetupBareRemote()\n 77: bareDir := env.SetupBareRemote()\n 94: bareDir := env.SetupBareRemote()\n 145: bareDir := env.SetupBareRemote()\n 192: ",
+      "output_tokens": 1170,
+      "duration_ms": 0.6918907165527344,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "RunPrePush",
+        "file_type": "go",
+        "max_files": 20
+      },
+      "output": "\u2192 Read cmd/entire/cli/integration_test/remote_operations_test.go (best match)\ncmd/entire/cli/integration_test/testenv.go\n 2029: func (env *TestEnv) RunPrePush(remote string) {\n  2030| env.T.Helper()\n  2031| if err := env.RunPrePushWithError(remote); err != nil {\n  2032| env.T.Fatalf(\"PrePush failed: %v\", err)\n  2033| }\n  2034| }\n 2037: func (env *TestEnv) RunPrePushWithError(remote string) error {\ncmd/entire/cli/integration_test/remote_operations_test.go\n 53: env.RunPrePush(\"origin\")\n 80: env.Ru",
+      "output_tokens": 1160,
+      "duration_ms": 0.5331039428710938,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "FetchMetadataBranch\\|GitPush\\|CloneFrom",
+        "file_type": "go",
+        "max_files": 20
+      },
+      "output": "0 matches.",
+      "output_tokens": 10,
+      "duration_ms": 5.342006683349609,
+      "turn_number": 10
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "git fetch\\|git pull\\|git clone",
+        "file_type": "go",
+        "path_glob": "e2e/**/*.go",
+        "max_files": 20
+      },
+      "output": "0 matches.",
+      "output_tokens": 10,
+      "duration_ms": 1.4829635620117188,
+      "turn_number": 10
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "FetchMetadataBranch",
+        "file_type": "go"
+      },
+      "output": "\u2192 Read cmd/entire/cli/strategy/checkpoint_remote_test.go [def]\ncmd/entire/cli/git_operations.go\n 399: func FetchMetadataBranch(ctx context.Context) error {\n  400| branchName := paths.MetadataBranchName\ncmd/entire/cli/integration_test/testenv.go\n 2055: func (env *TestEnv) FetchMetadataBranch(remoteURL string) {\n  2056| env.T.Helper()\ncmd/entire/cli/strategy/checkpoint_remote_test.go\n 719: func TestFetchMetadataBranch_UpdatesExistingLocalBranch(t *testing.T) {\n  720| ctx := context.Background()\ncm",
+      "output_tokens": 2506,
+      "duration_ms": 0.7507801055908203,
+      "turn_number": 11
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "CloneFrom",
+        "file_type": "go"
+      },
+      "output": "\u2192 Read cmd/entire/cli/integration_test/remote_operations_test.go (best match)\ncmd/entire/cli/integration_test/testenv.go\n 1906: func (env *TestEnv) CloneFrom(bareDir string) *TestEnv {\n  1907| env.T.Helper()\ncmd/entire/cli/integration_test/remote_operations_test.go\n 336: cloneEnv := env.CloneFrom(bareDir)\n 369: cloneEnv := env.CloneFrom(bareDir)\n 408: cloneEnv := env.CloneFrom(bareDir)\n 445: cloneEnv := env.CloneFrom(bareDir)\n 482: cloneA := env.CloneFrom(bareDir)\n 486: cloneB := env.CloneFrom(b",
+      "output_tokens": 687,
+      "duration_ms": 0.6291866302490234,
+      "turn_number": 11
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "TestFetchBranchIfMissing\\|TestFetchMetadataBranch\\|TestDoPushBranch\\|TestPushBranchIfNeeded",
+        "file_type": "go",
+        "max_files": 10
+      },
+      "output": "0 matches.",
+      "output_tokens": 10,
+      "duration_ms": 4.853010177612305,
+      "turn_number": 12
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "skip_push_sessions\\|SkipPushSessions\\|push_sessions",
+        "file_type": "go",
+        "path_glob": "**/integration_test/**/*.go"
+      },
+      "output": "0 matches.",
+      "output_tokens": 10,
+      "duration_ms": 2.0580291748046875,
+      "turn_number": 12
+    }
+  ],
+  "total_tool_calls": 24,
+  "total_turns": 12,
+  "wall_clock_ms": 35588.825702667236,
+  "input_tokens": 154347,
+  "output_tokens": 1984,
+  "tool_output_tokens": 50504,
+  "total_cost_usd": 0.492801,
+  "first_call_tool": "list_dir",
+  "first_call_produced_file": true,
+  "retry_count": 0,
+  "error": "",
+  "total_tool_duration_ms": 25.957822799682617,
+  "tool_execution_share": 0.0007293812674953528,
+  "search_call_count": 11,
+  "read_call_count": 7,
+  "avg_search_code_duration_ms": 1.7987381328235974,
+  "median_search_code_duration_ms": 0.7879734039306641
+}

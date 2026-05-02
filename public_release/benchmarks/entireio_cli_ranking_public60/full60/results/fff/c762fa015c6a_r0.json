@@ -1,0 +1,250 @@
+{
+  "repeat": 0,
+  "task_id": "c762fa015c6a",
+  "repo": "entireio-cli",
+  "task_type": "debug_or_validation",
+  "condition": "fff",
+  "prompt": "There's a bug in this repo. I use the \"entire\" cli version 0.5.5 (the latest) and when I try to look at a checkpoint from a PR that was created by someone else I get this:",
+  "answer": "",
+  "tool_calls": [
+    {
+      "tool_name": "list_dir",
+      "tool_input": {},
+      "output": ".allowed-licenses\n.claude/\n.codex/\n.devcontainer/\n.entire/\n.ferrata/\n.gemini/\n.git/\n.github/\n.gitignore\n.golangci.yaml\n.goreleaser.yaml\n.opencode/\n.vscode/\nAGENTS.md\nCHANGELOG.md\nCLAUDE.md\nCODE_OF_CONDUCT.md\nCONTRIBUTING.md\nLICENSE\nREADME.md\nSECURITY.md\nWINDOWS.md\ncmd/\ndocs/\ne2e/\ngo.mod\ngo.sum\nmise-tasks/\nmise.toml\nperf/\nredact/\nscripts/",
+      "output_tokens": 339,
+      "duration_ms": 1.3217926025390625,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "entire",
+        "path_glob": "**/package.json",
+        "context_after": 2
+      },
+      "output": "0 matches.",
+      "output_tokens": 10,
+      "duration_ms": 0.8029937744140625,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": "cmd"
+      },
+      "output": "entire/",
+      "output_tokens": 7,
+      "duration_ms": 0.3390312194824219,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "glob": "**/*.go",
+        "pattern": "checkpoint"
+      },
+      "output": "cmd/entire/cli/integration_test/last_checkpoint_id_test.go git:clean\ncmd/entire/cli/integration_test/subagent_checkpoints_test.go git:clean\ncmd/entire/cli/settings/settings_checkpoint_remote_test.go git:clean\ncmd/entire/cli/strategy/checkpoint_remote.go git:clean\ncmd/entire/cli/strategy/checkpoint_remote_test.go git:clean\ncmd/entire/cli/strategy/checkpoint_token.go git:clean\ncmd/entire/cli/strategy/checkpoint_token_test.go git:clean\ne2e/tests/checkpoint_metadata_test.go git:clean\ncmd/entire/cli/",
+      "output_tokens": 2450,
+      "duration_ms": 1.600027084350586,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/checkpoint/checkpoint.go"
+      },
+      "output": "cmd/entire/cli/checkpoint/checkpoint.go:1-80\n  1| // Package checkpoint provides types and interfaces for checkpoint storage.\n  2| //\n  3| // A Checkpoint captures a point-in-time within a session, containing either\n  4| // full state (Temporary) or metadata with a commit reference (Committed).\n  5| //\n  6| // See docs/architecture/sessions-and-checkpoints.md for the full domain model.\n  7| package checkpoint\n  8| \n  9| import (\n  10| \t\"context\"\n  11| \t\"encoding/json\"\n  12| \t\"errors\"\n  13| \t\"tim",
+      "output_tokens": 3585,
+      "duration_ms": 0.8909702301025391,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/strategy/checkpoint_remote.go"
+      },
+      "output": "cmd/entire/cli/strategy/checkpoint_remote.go:1-80\n  1| package strategy\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"fmt\"\n  6| \t\"log/slog\"\n  7| \t\"net/url\"\n  8| \t\"os\"\n  9| \t\"os/exec\"\n  10| \t\"strings\"\n  11| \t\"time\"\n  12| \n  13| \t\"github.com/entireio/cli/cmd/entire/cli/logging\"\n  14| \t\"github.com/entireio/cli/cmd/entire/cli/paths\"\n  15| \t\"github.com/entireio/cli/cmd/entire/cli/settings\"\n  16| \n  17| \t\"github.com/go-git/go-git/v6/plumbing\"\n  18| )\n  19| \n  20| // checkpointRemoteFetchTimeout is the ti",
+      "output_tokens": 3130,
+      "duration_ms": 0.4458427429199219,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/strategy/checkpoint_remote.go",
+        "start_line": 80,
+        "end_line": 250
+      },
+      "output": "cmd/entire/cli/strategy/checkpoint_remote.go:80-250\n  80| \tpushRemoteURL, err := getRemoteURL(ctx, pushRemoteName)\n  81| \tif err != nil {\n  82| \t\tlogging.Debug(ctx, \"checkpoint-remote: could not get push remote URL, skipping\",\n  83| \t\t\tslog.String(\"remote\", pushRemoteName),\n  84| \t\t\tslog.String(\"error\", err.Error()),\n  85| \t\t)\n  86| \t\treturn ps\n  87| \t}\n  88| \n  89| \tpushInfo, err := parseGitRemoteURL(pushRemoteURL)\n  90| \tif err != nil {\n  91| \t\tlogging.Warn(ctx, \"checkpoint-remote: could not p",
+      "output_tokens": 6983,
+      "duration_ms": 0.45800209045410156,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "glob": "**/*.go",
+        "pattern": "pr"
+      },
+      "output": "50/448 matches\ncmd/entire/cli/checkpoint/prompts.go git:clean\ncmd/entire/cli/checkpoint/prompts_test.go git:clean\ncmd/entire/cli/integration_test/procattr_unix.go git:clean\ncmd/entire/cli/integration_test/procattr_windows.go git:clean\ncmd/entire/cli/pr_binary_size_test.go git:clean\ncmd/entire/cli/strategy/phase_prepare_commit_msg_test.go git:clean\ncmd/entire/cli/strategy/preparecommitmsg_bench_test.go git:clean\ne2e/agents/procattr_unix.go git:clean\ne2e/agents/procattr_windows.go git:clean\nperf/s",
+      "output_tokens": 2500,
+      "duration_ms": 0.9539127349853516,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "glob": "**/*.go",
+        "pattern": "view"
+      },
+      "output": "50/398 matches\ncmd/entire/cli/strategy/manual_commit_rewind.go git:clean\ncmd/entire/cli/rewind.go git:clean\ncmd/entire/cli/integration_test/hook_overwrite_test.go git:clean\ncmd/entire/cli/phase_wiring_test.go git:clean\ncmd/entire/cli/integration_test/logs_only_rewind_test.go git:clean\ncmd/entire/cli/strategy/phase_wiring_test.go git:clean\ncmd/entire/cli/integration_test/rewind_test.go git:clean\ncmd/entire/cli/integration_test/worktree_test.go git:clean\ncmd/entire/cli/strategy/rewind_test.go git:",
+      "output_tokens": 2706,
+      "duration_ms": 1.2660026550292969,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/strategy/checkpoint_token.go"
+      },
+      "output": "cmd/entire/cli/strategy/checkpoint_token.go:1-80\n  1| package strategy\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"encoding/base64\"\n  6| \t\"fmt\"\n  7| \t\"os\"\n  8| \t\"os/exec\"\n  9| \t\"strings\"\n  10| \t\"sync\"\n  11| \n  12| \t\"github.com/entireio/cli/cmd/entire/cli/settings\"\n  13| )\n  14| \n  15| // CheckpointTokenEnvVar is the environment variable for providing an access token\n  16| // used to authenticate git push/fetch operations for checkpoint branches.\n  17| // The token is injected as an HTTP Basic Aut",
+      "output_tokens": 3740,
+      "duration_ms": 1.1639595031738281,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "glob": "cmd/entire/**/*.go",
+        "pattern": "read_only"
+      },
+      "output": "cmd/entire/cli/integration_test/read_only_session_test.go git:clean\ncmd/entire/cli/integration_test/logs_only_rewind_test.go git:clean\ncmd/entire/cli/checkpoint/committed_reader_resolve.go git:clean\ncmd/entire/cli/checkpoint/committed_reader_resolve_test.go git:clean\ncmd/entire/cli/strategy/metadata_reconcile.go git:clean\ncmd/entire/cli/strategy/metadata_reconcile_test.go git:clean\ncmd/entire/cli/agent/opencode/lifecycle.go git:clean\ncmd/entire/cli/agent/opencode/lifecycle_test.go git:clean\ncmd/",
+      "output_tokens": 600,
+      "duration_ms": 1.5728473663330078,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "glob": "cmd/entire/**/*.go",
+        "pattern": "review"
+      },
+      "output": "50/309 matches\ncmd/entire/cli/phase_wiring_test.go git:clean\ncmd/entire/cli/rewind.go git:clean\ncmd/entire/cli/strategy/resolve_transcript_test.go git:clean\ncmd/entire/cli/checkpoint/blob_resolver.go git:clean\ncmd/entire/cli/checkpoint/blob_resolver_test.go git:clean\ncmd/entire/cli/checkpoint/committed_reader_resolve.go git:clean\ncmd/entire/cli/checkpoint/committed_reader_resolve_test.go git:clean\ncmd/entire/cli/checkpoint/v2_resolve.go git:clean\ncmd/entire/cli/checkpoint/v2_resolve_test.go git:",
+      "output_tokens": 2952,
+      "duration_ms": 0.9539127349853516,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/integration_test/read_only_session_test.go"
+      },
+      "output": "cmd/entire/cli/integration_test/read_only_session_test.go:1-80\n  1| //go:build integration\n  2| \n  3| package integration\n  4| \n  5| import (\n  6| \t\"encoding/json\"\n  7| \t\"testing\"\n  8| \n  9| \t\"github.com/entireio/cli/cmd/entire/cli/checkpoint\"\n  10| \t\"github.com/entireio/cli/cmd/entire/cli/paths\"\n  11| \t\"github.com/entireio/cli/cmd/entire/cli/session\"\n  12| )\n  13| \n  14| // TestReadOnlySession_NotCondensed verifies that a session which never touched\n  15| // any files is NOT condensed into a ch",
+      "output_tokens": 3742,
+      "duration_ms": 0.7219314575195312,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/checkpoint/committed_reader_resolve.go"
+      },
+      "output": "cmd/entire/cli/checkpoint/committed_reader_resolve.go:1-80\n  1| package checkpoint\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"errors\"\n  6| \t\"log/slog\"\n  7| \n  8| \t\"github.com/entireio/cli/cmd/entire/cli/checkpoint/id\"\n  9| \t\"github.com/entireio/cli/cmd/entire/cli/logging\"\n  10| )\n  11| \n  12| // CommittedReader provides read access to committed checkpoint data.\n  13| // Both GitStore (v1) and V2GitStore (v2) implement this interface.\n  14| type CommittedReader interface {\n  15| \tReadCommitted(ct",
+      "output_tokens": 3114,
+      "duration_ms": 1.046895980834961,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": "cmd/entire",
+        "recursive": true,
+        "max_results": 30
+      },
+      "output": "main.go\ncli/api_client.go\ncli/attach.go\ncli/attach_test.go\ncli/attach_transcript.go\ncli/bench_enable_test.go\ncli/bench_test.go\ncli/clean.go\ncli/clean_test.go\ncli/commit_message.go\ncli/commit_message_test.go\ncli/config.go\ncli/config_test.go\ncli/constants.go\ncli/doctor.go\ncli/doctor_test.go\ncli/errors.go\ncli/explain.go\ncli/explain_test.go\ncli/fetch_no_config_pollution_test.go\ncli/git_operations.go\ncli/git_operations_test.go\ncli/global_test.go\ncli/help.go\ncli/hook_registry.go\ncli/hook_registry_test",
+      "output_tokens": 587,
+      "duration_ms": 0.7717609405517578,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "checkpoint.*pr\\|pr.*checkpoint\\|pull.request\\|PullRequest",
+        "file_type": "go"
+      },
+      "output": "0 matches.",
+      "output_tokens": 10,
+      "duration_ms": 4.480123519897461,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": "cmd/entire",
+        "recursive": true,
+        "max_results": 100
+      },
+      "output": "main.go\ncli/api_client.go\ncli/attach.go\ncli/attach_test.go\ncli/attach_transcript.go\ncli/bench_enable_test.go\ncli/bench_test.go\ncli/clean.go\ncli/clean_test.go\ncli/commit_message.go\ncli/commit_message_test.go\ncli/config.go\ncli/config_test.go\ncli/constants.go\ncli/doctor.go\ncli/doctor_test.go\ncli/errors.go\ncli/explain.go\ncli/explain_test.go\ncli/fetch_no_config_pollution_test.go\ncli/git_operations.go\ncli/git_operations_test.go\ncli/global_test.go\ncli/help.go\ncli/hook_registry.go\ncli/hook_registry_test",
+      "output_tokens": 2395,
+      "duration_ms": 1.1630058288574219,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/trail_cmd.go"
+      },
+      "output": "cmd/entire/cli/trail_cmd.go:1-80\n  1| package cli\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"encoding/json\"\n  6| \t\"errors\"\n  7| \t\"fmt\"\n  8| \t\"io\"\n  9| \t\"net/http\"\n  10| \t\"os/exec\"\n  11| \t\"sort\"\n  12| \t\"strings\"\n  13| \t\"time\"\n  14| \n  15| \t\"github.com/entireio/cli/cmd/entire/cli/api\"\n  16| \t\"github.com/entireio/cli/cmd/entire/cli/strategy\"\n  17| \t\"github.com/entireio/cli/cmd/entire/cli/stringutil\"\n  18| \t\"github.com/entireio/cli/cmd/entire/cli/trail\"\n  19| \n  20| \t\"github.com/charmbracelet/huh\"\n ",
+      "output_tokens": 2935,
+      "duration_ms": 0.39196014404296875,
+      "turn_number": 10
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/resume.go"
+      },
+      "output": "cmd/entire/cli/resume.go:1-80\n  1| package cli\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"errors\"\n  6| \t\"fmt\"\n  7| \t\"io\"\n  8| \t\"log/slog\"\n  9| \t\"os\"\n  10| \t\"path/filepath\"\n  11| \t\"sort\"\n  12| \n  13| \t\"github.com/entireio/cli/cmd/entire/cli/agent\"\n  14| \t\"github.com/entireio/cli/cmd/entire/cli/agent/external\"\n  15| \t\"github.com/entireio/cli/cmd/entire/cli/checkpoint\"\n  16| \t\"github.com/entireio/cli/cmd/entire/cli/checkpoint/id\"\n  17| \t\"github.com/entireio/cli/cmd/entire/cli/logging\"\n  18| \t\"githu",
+      "output_tokens": 3005,
+      "duration_ms": 0.3161430358886719,
+      "turn_number": 10
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/trace_cmd.go"
+      },
+      "output": "cmd/entire/cli/trace_cmd.go:1-57\n  1| package cli\n  2| \n  3| import (\n  4| \t\"fmt\"\n  5| \t\"path/filepath\"\n  6| \n  7| \t\"github.com/entireio/cli/cmd/entire/cli/logging\"\n  8| \t\"github.com/entireio/cli/cmd/entire/cli/paths\"\n  9| \t\"github.com/spf13/cobra\"\n  10| )\n  11| \n  12| func newTraceCmd() *cobra.Command {\n  13| \tvar last int\n  14| \tvar hookFilter string\n  15| \n  16| \tcmd := &cobra.Command{\n  17| \t\tUse:   \"trace\",\n  18| \t\tShort: \"Show hook performance traces\",\n  19| \t\tLong: `Show timing informatio",
+      "output_tokens": 2060,
+      "duration_ms": 0.5140304565429688,
+      "turn_number": 11
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/search_cmd.go"
+      },
+      "output": "cmd/entire/cli/search_cmd.go:1-80\n  1| package cli\n  2| \n  3| import (\n  4| \t\"errors\"\n  5| \t\"fmt\"\n  6| \t\"io\"\n  7| \t\"os\"\n  8| \t\"strings\"\n  9| \n  10| \ttea \"github.com/charmbracelet/bubbletea\"\n  11| \t\"github.com/entireio/cli/cmd/entire/cli/auth\"\n  12| \t\"github.com/entireio/cli/cmd/entire/cli/jsonutil\"\n  13| \t\"github.com/entireio/cli/cmd/entire/cli/search\"\n  14| \t\"github.com/entireio/cli/cmd/entire/cli/strategy\"\n  15| \t\"github.com/spf13/cobra\"\n  16| )\n  17| \n  18| func newSearchCmd() *cobra.Command ",
+      "output_tokens": 2897,
+      "duration_ms": 0.4851818084716797,
+      "turn_number": 12
+    }
+  ],
+  "total_tool_calls": 21,
+  "total_turns": 12,
+  "wall_clock_ms": 35394.74320411682,
+  "input_tokens": 133454,
+  "output_tokens": 1588,
+  "tool_output_tokens": 49747,
+  "total_cost_usd": 0.424182,
+  "first_call_tool": "list_dir",
+  "first_call_produced_file": true,
+  "retry_count": 0,
+  "error": "",
+  "total_tool_duration_ms": 21.660327911376953,
+  "tool_execution_share": 0.0006119645447479219,
+  "search_call_count": 2,
+  "read_call_count": 10,
+  "avg_search_code_duration_ms": 2.6415586471557617,
+  "median_search_code_duration_ms": 2.6415586471557617
+}

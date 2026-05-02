@@ -1,0 +1,245 @@
+{
+  "repeat": 0,
+  "task_id": "77072abe499b",
+  "repo": "entireio-cli",
+  "task_type": "debug_or_validation",
+  "condition": "pgr_v4",
+  "prompt": "generate a `claude_expected.jsonl` testdata fixture file from cmd/entire/cli/transcript/compact/testdata/claude_full.jsonl",
+  "answer": "",
+  "tool_calls": [
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "glob": "**/testdata/claude_full.jsonl"
+      },
+      "output": "./cmd/entire/cli/transcript/compact/testdata/claude_full.jsonl",
+      "output_tokens": 62,
+      "duration_ms": 9.404897689819336,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": "cmd/entire/cli/transcript/compact"
+      },
+      "output": "codex.go\ncodex_test.go\ncompact.go\ncompact_test.go\ncopilot.go\ncopilot_test.go\ndroid.go\ndroid_test.go\ngemini.go\ngemini_test.go\nopencode.go\nopencode_test.go\nparse.go\nparse_test.go\ntestdata/",
+      "output_tokens": 186,
+      "duration_ms": 0.1399517059326172,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": "cmd/entire/cli/transcript/compact/testdata"
+      },
+      "output": "claude_expected.jsonl\nclaude_expected2.jsonl\nclaude_full.jsonl\nclaude_full2.jsonl\ncodex_expected.jsonl\ncodex_full.jsonl\ncopilot_expected.jsonl\ncopilot_full.jsonl\ndroid_expected.jsonl\ndroid_full.jsonl\ngemini_expected.jsonl\ngemini_full.jsonl\nopencode_expected.jsonl\nopencode_full.jsonl",
+      "output_tokens": 283,
+      "duration_ms": 5.429983139038086,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/transcript/compact/testdata/claude_full.jsonl"
+      },
+      "output": "cmd/entire/cli/transcript/compact/testdata/claude_full.jsonl:1-24\n  1| {\"parentUuid\":null,\"isSidechain\":false,\"type\":\"progress\",\"data\":{\"type\":\"hook_progress\",\"hookEvent\":\"SessionStart\",\"hookName\":\"SessionStart:startup\",\"command\":\"entire hooks claude-code session-start\"},\"parentToolUseID\":\"a3e21bf9-a4d5-4d00-9ca2-4380dd91bf33\",\"toolUseID\":\"a3e21bf9-a4d5-4d00-9ca2-4380dd91bf33\",\"timestamp\":\"2026-03-18T00:03:07.230Z\",\"uuid\":\"1c5d401f-b573-4e44-8e81-bc7a3cdf423d\",\"userType\":\"external\",\"entrypoint\":",
+      "output_tokens": 17105,
+      "duration_ms": 1.0781288146972656,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/transcript/compact/testdata/claude_expected.jsonl"
+      },
+      "output": "cmd/entire/cli/transcript/compact/testdata/claude_expected.jsonl:1-10\n  1| {\"v\":1,\"agent\":\"claude-code\",\"cli_version\":\"0.5.1\",\"type\":\"user\",\"ts\":\"2026-03-18T00:03:14.992Z\",\"content\":[{\"id\":\"1a789a48-ac83-46b6-a746-90ff5bb455ad\",\"text\":\"I need to revert a change to my last commit message\"}]}\n  2| {\"v\":1,\"agent\":\"claude-code\",\"cli_version\":\"0.5.1\",\"type\":\"assistant\",\"ts\":\"2026-03-18T00:03:19.789Z\",\"id\":\"msg_01A8w8vJNhp54SKt6N4Pdg6W\",\"input_tokens\":3,\"output_tokens\":102,\"content\":[{\"text\":\"What wou",
+      "output_tokens": 3789,
+      "duration_ms": 0.392913818359375,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/transcript/compact/compact.go"
+      },
+      "output": "cmd/entire/cli/transcript/compact/compact.go:1-80\n  1| // Package compact converts full.jsonl transcripts into a normalized,\n  2| // compact transcript.jsonl format. Only shared formatting is contained here.\n  3| package compact\n  4| \n  5| import (\n  6| \t\"bufio\"\n  7| \t\"bytes\"\n  8| \t\"encoding/json\"\n  9| \t\"fmt\"\n 10| \t\"io\"\n 11| \t\"strings\"\n 12| \n 13| \t\"github.com/entireio/cli/cmd/entire/cli/textutil\"\n 14| \t\"github.com/entireio/cli/cmd/entire/cli/transcript\"\n 15| \t\"github.com/entireio/cli/redact\"\n 16",
+      "output_tokens": 3512,
+      "duration_ms": 0.2732276916503906,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/transcript/compact/compact.go",
+        "start_line": 80,
+        "max_lines": 150
+      },
+      "output": "cmd/entire/cli/transcript/compact/compact.go:80-229\n 80| //\t{\"v\":1,\"agent\":\"claude-code\",\"cli_version\":\"0.42.0\",\"type\":\"assistant\",\"ts\":\"...\",\"id\":\"msg_xxx\",\"content\":[{\"type\":\"text\",\"text\":\"...\"},{\"type\":\"tool_use\",\"id\":\"...\",\"name\":\"...\",\"input\":{...},\"result\":{\"output\":\"...\",\"status\":\"...\"}}]}\n 81| func Compact(redacted redact.RedactedBytes, opts MetadataFields) ([]byte, error) {\n 82| \tcontent := redacted.Bytes()\n 83| \n 84| \t// Formats that need detection on raw content before line truncation",
+      "output_tokens": 6001,
+      "duration_ms": 0.4699230194091797,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/transcript/compact/compact_test.go"
+      },
+      "output": "cmd/entire/cli/transcript/compact/compact_test.go:1-80\n  1| package compact\n  2| \n  3| import (\n  4| \t\"encoding/json\"\n  5| \t\"os\"\n  6| \t\"reflect\"\n  7| \t\"strings\"\n  8| \t\"testing\"\n  9| \n 10| \t\"github.com/entireio/cli/redact\"\n 11| )\n 12| \n 13| var defaultOpts = MetadataFields{\n 14| \tAgent:      \"claude-code\",\n 15| \tCLIVersion: \"0.5.1\",\n 16| \tStartLine:  0,\n 17| }\n 18| \n 19| func agentOpts(agent string) MetadataFields {\n 20| \treturn MetadataFields{\n 21| \t\tAgent:      agent,\n 22| \t\tCLIVersion: \"0.5.1\"",
+      "output_tokens": 3411,
+      "duration_ms": 0.2620220184326172,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/transcript/compact/compact.go",
+        "start_line": 229,
+        "max_lines": 150
+      },
+      "output": "cmd/entire/cli/transcript/compact/compact.go:229-378\n229| \t\t\temitUser(&result, base, e)\n230| \t\t}\n231| \t}\n232| \n233| \treturn result, nil\n234| }\n235| \n236| func emitAssistant(result *[]byte, base transcriptLine, e parsedEntry) {\n237| \tline := base\n238| \tline.Type = transcript.TypeAssistant\n239| \tline.TS = e.ts\n240| \tline.ID = e.id\n241| \tline.InputTokens = e.inputTokens\n242| \tline.OutputTokens = e.outputTokens\n243| \tline.Content = e.content\n244| \tappendLine(result, line)\n245| }\n246| \n247| func emit",
+      "output_tokens": 4482,
+      "duration_ms": 0.40721893310546875,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/transcript/compact/parse.go"
+      },
+      "output": "cmd/entire/cli/transcript/compact/parse.go:1-80\n  1| package compact\n  2| \n  3| import (\n  4| \t\"encoding/json\"\n  5| \t\"errors\"\n  6| \t\"fmt\"\n  7| \t\"strings\"\n  8| )\n  9| \n 10| type CondensedEntry struct {\n 11| \tType       string\n 12| \tContent    string\n 13| \tToolName   string\n 14| \tToolDetail string\n 15| }\n 16| \n 17| func parseLines(content []byte) ([]transcriptLine, error) {\n 18| \ttrimmed := strings.TrimSpace(string(content))\n 19| \tif trimmed == \"\" {\n 20| \t\treturn nil, nil\n 21| \t}\n 22| \n 23| \trawLi",
+      "output_tokens": 2255,
+      "duration_ms": 0.24199485778808594,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "claude_full.jsonl",
+        "path_glob": "**/*.go"
+      },
+      "output": "  summary:\n    query: claude_full.jsonl\n    scope: glob=**/*.go\n    files: 1 total, 1 shown\n    buckets: 0 source, 1 test, 0 low-priority\n    definition_candidates: 0\n    best_next_step: read cmd/entire/cli/transcript/compact/compact_test.go around line 181\n\ncmd/entire/cli/transcript/compact/compact_test.go\n  why: reference, test\n  181-181:\n    181| \tassertFixtureTransform(t, defaultOpts, \"testdata/claude_full.jsonl\", \"testdata/claude_expected.jsonl\")\n",
+      "output_tokens": 456,
+      "duration_ms": 16.92485809326172,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/transcript/compact/testdata/claude_full2.jsonl"
+      },
+      "output": "cmd/entire/cli/transcript/compact/testdata/claude_full2.jsonl:1-80\n  1| {\"type\":\"file-history-snapshot\",\"messageId\":\"e9facc2c-dbd4-46cc-a7fc-bc71ceed427b\",\"snapshot\":{\"messageId\":\"e9facc2c-dbd4-46cc-a7fc-bc71ceed427b\",\"trackedFileBackups\":{},\"timestamp\":\"2026-03-27T08:00:19.373Z\"},\"isSnapshotUpdate\":false}\n  2| {\"parentUuid\":null,\"isSidechain\":false,\"promptId\":\"298dfe1a-fcfd-445d-a715-990622c86af9\",\"type\":\"user\",\"message\":{\"role\":\"user\",\"content\":\"can you take a look at the attribution logic, ca",
+      "output_tokens": 162589,
+      "duration_ms": 1.8248558044433594,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/transcript/compact/testdata/claude_expected2.jsonl"
+      },
+      "output": "cmd/entire/cli/transcript/compact/testdata/claude_expected2.jsonl:1-80\n  1| {\"v\":1,\"agent\":\"claude-code\",\"cli_version\":\"0.5.1\",\"type\":\"user\",\"ts\":\"2026-03-27T08:00:16.991Z\",\"content\":[{\"id\":\"298dfe1a-fcfd-445d-a715-990622c86af9\",\"text\":\"can you take a look at the attribution logic, can you explain me again why we don't track deleted lines\"}]}\n  2| {\"v\":1,\"agent\":\"claude-code\",\"cli_version\":\"0.5.1\",\"type\":\"user\",\"ts\":\"2026-03-27T08:02:17.715Z\",\"content\":[{\"id\":\"298dfe1a-fcfd-445d-a715-990622c86af",
+      "output_tokens": 202377,
+      "duration_ms": 2.1178722381591797,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/transcript/compact/compact.go",
+        "start_line": 378,
+        "max_lines": 200
+      },
+      "output": "cmd/entire/cli/transcript/compact/compact.go:378-577\n378| \n379| \tvar aBlocks, bBlocks []json.RawMessage\n380| \t_ = json.Unmarshal(a.content, &aBlocks) //nolint:errcheck // best-effort merge\n381| \t_ = json.Unmarshal(b.content, &bBlocks) //nolint:errcheck // best-effort merge\n382| \tall := append(aBlocks, bBlocks...)      //nolint:gocritic // intentional append to new slice\n383| \tif data, err := json.Marshal(all); err == nil {\n384| \t\tmerged.content = data\n385| \t}\n386| \n387| \treturn merged\n388| }\n389",
+      "output_tokens": 7215,
+      "duration_ms": 0.2090930938720703,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/transcript/compact/compact.go",
+        "start_line": 577,
+        "max_lines": 99
+      },
+      "output": "cmd/entire/cli/transcript/compact/compact.go:577-675\n577| \tvar str string\n578| \tif json.Unmarshal(contentRaw, &str) == nil {\n579| \t\treturn userContent{text: textutil.StripIDEContextTags(str)}\n580| \t}\n581| \n582| \tvar blocks []json.RawMessage\n583| \tif json.Unmarshal(contentRaw, &blocks) != nil {\n584| \t\treturn userContent{}\n585| \t}\n586| \n587| \tvar uc userContent\n588| \n589| \tfor _, blockRaw := range blocks {\n590| \t\tvar block map[string]json.RawMessage\n591| \t\tif json.Unmarshal(blockRaw, &block) != ni",
+      "output_tokens": 2939,
+      "duration_ms": 0.36787986755371094,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "toolUseResult.*string\\|toolUseResult.*plain\\|toolUseResult.*scalar",
+        "path_glob": "**/compact.go"
+      },
+      "output": "No matches found.\n  query: toolUseResult.*string\\|toolUseResult.*plain\\|toolUseResult.*scalar\n  scope: glob=**/compact.go\n  hint: broaden the query, remove path_glob/file_type filters, or try a simpler symbol name.",
+      "output_tokens": 214,
+      "duration_ms": 12.066125869750977,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/transcript/compact/compact_test.go",
+        "start_line": 80,
+        "max_lines": 100
+      },
+      "output": "cmd/entire/cli/transcript/compact/compact_test.go:80-179\n 80| func TestCompact_UserWithToolResult(t *testing.T) {\n 81| \tt.Parallel()\n 82| \n 83| \t// Assistant with tool_use followed by user with tool_result: the result\n 84| \t// is inlined into the assistant's tool_use block and the user tool_result\n 85| \t// line is dropped. Rich metadata from toolUseResult (file) is preserved.\n 86| \tinput := []byte(`{\"type\":\"assistant\",\"timestamp\":\"2026-01-01T00:00:59Z\",\"requestId\":\"req-1\",\"message\":{\"id\":\"msg-1\"",
+      "output_tokens": 5841,
+      "duration_ms": 0.3719329833984375,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "toolUseResult",
+        "path_glob": "**/compact.go"
+      },
+      "output": "  summary:\n    query: toolUseResult\n    scope: glob=**/compact.go\n    files: 1 total, 1 shown\n    buckets: 1 source, 0 test, 0 low-priority\n    definition_candidates: 0\n    best_next_step: read cmd/entire/cli/transcript/compact/compact.go around line 354\n\ncmd/entire/cli/transcript/compact/compact.go\n  why: reference, source\n  354-354:\n    354| \t\t// Enrich tool results with metadata from toolUseResult.\n  355-355:\n    355| \t\tif turRaw, ok := raw[\"toolUseResult\"]; ok {\n  479-479:\n    479| \t// Rich ",
+      "output_tokens": 550,
+      "duration_ms": 11.462926864624023,
+      "turn_number": 10
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/transcript/compact/compact.go",
+        "start_line": 354,
+        "max_lines": 15
+      },
+      "output": "cmd/entire/cli/transcript/compact/compact.go:354-368\n354| \t\t// Enrich tool results with metadata from toolUseResult.\n355| \t\tif turRaw, ok := raw[\"toolUseResult\"]; ok {\n356| \t\t\tvar tur map[string]json.RawMessage\n357| \t\t\tif json.Unmarshal(turRaw, &tur) == nil {\n358| \t\t\t\te.toolResults = enrichToolResults(e.toolResults, tur)\n359| \t\t\t}\n360| \t\t}\n361| \t}\n362| \n363| \treturn e, true\n364| }\n365| \n366| // mergeAssistantEntries combines two assistant entries with the same message ID.\n367| // Content arrays ",
+      "output_tokens": 664,
+      "duration_ms": 0.36406517028808594,
+      "turn_number": 11
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/transcript/compact/compact_test.go",
+        "start_line": 178,
+        "max_lines": 50
+      },
+      "output": "cmd/entire/cli/transcript/compact/compact_test.go:178-227\n178| func TestCompact_ClaudeFixture(t *testing.T) {\n179| \tt.Parallel()\n180| \n181| \tassertFixtureTransform(t, defaultOpts, \"testdata/claude_full.jsonl\", \"testdata/claude_expected.jsonl\")\n182| }\n183| \n184| func TestCompact_ClaudeFixture2(t *testing.T) {\n185| \tt.Parallel()\n186| \n187| \tassertFixtureTransform(t, defaultOpts, \"testdata/claude_full2.jsonl\", \"testdata/claude_expected2.jsonl\")\n188| }\n189| \n190| // --- Token usage tests ---\n191| \n1",
+      "output_tokens": 2408,
+      "duration_ms": 0.33783912658691406,
+      "turn_number": 12
+    }
+  ],
+  "total_tool_calls": 20,
+  "total_turns": 12,
+  "wall_clock_ms": 51679.327964782715,
+  "input_tokens": 988447,
+  "output_tokens": 2028,
+  "tool_output_tokens": 426339,
+  "total_cost_usd": 2.995761,
+  "first_call_tool": "find_files",
+  "first_call_produced_file": true,
+  "retry_count": 0,
+  "error": "",
+  "total_tool_duration_ms": 64.1477108001709,
+  "tool_execution_share": 0.0012412644151232938,
+  "search_call_count": 3,
+  "read_call_count": 14,
+  "avg_search_code_duration_ms": 13.484636942545572,
+  "median_search_code_duration_ms": 12.066125869750977
+}

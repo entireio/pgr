@@ -1,0 +1,469 @@
+{
+  "source_full60_results": "public_release/benchmarks/entireio_cli_ranking_public60/full60/results",
+  "result_dir_by_condition": {
+    "baseline": "baseline",
+    "fff": "fff",
+    "rg_ranked": "rg_ranked",
+    "pgr_v4": "pgr_v4"
+  },
+  "source_offline_first_search": "public_release/benchmarks/entireio_cli_offline_ir_public60/first_search/results.json",
+  "target_total": 40,
+  "condition_order": [
+    "baseline",
+    "fff",
+    "rg_ranked",
+    "pgr_v4"
+  ],
+  "cohort_definition": {
+    "recovery": "baseline first search was a no-match and consecutive_searches_before_first_read >= 2",
+    "decision": "baseline first search had weak relevance signal (MRR > 0) and consecutive_searches_before_first_read >= 2",
+    "neutral": "remaining tasks filled by search pressure score"
+  },
+  "cohort_counts": {
+    "recovery": 7,
+    "decision": 13,
+    "neutral": 20
+  },
+  "selected_tasks": [
+    {
+      "task_id": "c0dbb5d73ef9",
+      "task_type": "debug_or_validation",
+      "prompt": "I still saw slow unit test performance after applying the fixes:",
+      "cohort": "recovery",
+      "score": 36,
+      "baseline_total_searches": 16,
+      "baseline_consecutive_searches_before_first_read": 15,
+      "baseline_first_search_mrr": 0.0,
+      "baseline_first_search_no_match": true
+    },
+    {
+      "task_id": "9d54ae3daa05",
+      "task_type": "repo_task",
+      "prompt": "Can you confirm things are working correctly for \"entire status --detailed\"?",
+      "cohort": "recovery",
+      "score": 20,
+      "baseline_total_searches": 10,
+      "baseline_consecutive_searches_before_first_read": 5,
+      "baseline_first_search_mrr": 0.0,
+      "baseline_first_search_no_match": true
+    },
+    {
+      "task_id": "61de2c90668f",
+      "task_type": "debug_or_validation",
+      "prompt": "I think it's better to use `env.InitRepo()` instead of `git.PlainInit()` in tests.",
+      "cohort": "recovery",
+      "score": 18,
+      "baseline_total_searches": 8,
+      "baseline_consecutive_searches_before_first_read": 5,
+      "baseline_first_search_mrr": 0.0,
+      "baseline_first_search_no_match": true
+    },
+    {
+      "task_id": "7d66f047ac98",
+      "task_type": "repo_task",
+      "prompt": "on which data does \"entire session list\" operates?",
+      "cohort": "recovery",
+      "score": 21,
+      "baseline_total_searches": 12,
+      "baseline_consecutive_searches_before_first_read": 4,
+      "baseline_first_search_mrr": 0.0,
+      "baseline_first_search_no_match": true
+    },
+    {
+      "task_id": "d7c8f8341919",
+      "task_type": "code_understanding",
+      "prompt": "can you do me a summary for the cases when we show the \"you have another active session\" warning?",
+      "cohort": "recovery",
+      "score": 14,
+      "baseline_total_searches": 5,
+      "baseline_consecutive_searches_before_first_read": 4,
+      "baseline_first_search_mrr": 0.0,
+      "baseline_first_search_no_match": true
+    },
+    {
+      "task_id": "6dcf16e1b2ba",
+      "task_type": "code_understanding",
+      "prompt": "what's the coverage for e2e and integration tests in regards to git push / git pull (everything remote related)",
+      "cohort": "recovery",
+      "score": 20,
+      "baseline_total_searches": 12,
+      "baseline_consecutive_searches_before_first_read": 3,
+      "baseline_first_search_mrr": 0.0,
+      "baseline_first_search_no_match": true
+    },
+    {
+      "task_id": "8a01af2a474f",
+      "task_type": "implementation",
+      "prompt": "in common.go we have a GetWorkTreePath function that i think shoudl be able to be acached like RepoRoot and GetCommonDir functions. Look at thos and update the GetworktreePath function:",
+      "cohort": "recovery",
+      "score": 18,
+      "baseline_total_searches": 10,
+      "baseline_consecutive_searches_before_first_read": 3,
+      "baseline_first_search_mrr": 0.0,
+      "baseline_first_search_no_match": true
+    },
+    {
+      "task_id": "85df9ac94bc7",
+      "task_type": "debug_or_validation",
+      "prompt": "when you added no lint error for complexity, shoudl we readdress that?",
+      "cohort": "decision",
+      "score": 11,
+      "baseline_total_searches": 5,
+      "baseline_consecutive_searches_before_first_read": 5,
+      "baseline_first_search_mrr": 1.0,
+      "baseline_first_search_no_match": false
+    },
+    {
+      "task_id": "02d49af5bfe0",
+      "task_type": "debug_or_validation",
+      "prompt": "can you look through the tests, we should have one that validates commits during a session (made by claude) are getting checkpoint trailers and condension works, or? should be integration tests?",
+      "cohort": "decision",
+      "score": 16,
+      "baseline_total_searches": 11,
+      "baseline_consecutive_searches_before_first_read": 4,
+      "baseline_first_search_mrr": 0.1111111111111111,
+      "baseline_first_search_no_match": false
+    },
+    {
+      "task_id": "c08972f3adb1",
+      "task_type": "repo_task",
+      "prompt": "Can we look at `entire sessions lists` in combination with `entire resume`:",
+      "cohort": "decision",
+      "score": 9,
+      "baseline_total_searches": 5,
+      "baseline_consecutive_searches_before_first_read": 3,
+      "baseline_first_search_mrr": 1.0,
+      "baseline_first_search_no_match": false
+    },
+    {
+      "task_id": "b6c45b0e881f",
+      "task_type": "repo_task",
+      "prompt": "I never get paginated results even when I just search for \"a\" seems like there should be more than one page",
+      "cohort": "decision",
+      "score": 7,
+      "baseline_total_searches": 4,
+      "baseline_consecutive_searches_before_first_read": 2,
+      "baseline_first_search_mrr": 1.0,
+      "baseline_first_search_no_match": false
+    },
+    {
+      "task_id": "aa5afbf6c998",
+      "task_type": "code_understanding",
+      "prompt": "logInvalidGitTreePath logs via slog.Warn, which bypasses the repo\u2019s cli/logging package (and can end up on stderr rather than in .entire/logs/). Consider routing this through logging.Warn (e.g., with context.Background() or by threading a ctx into callers) to keep operational logs consistent with the rest of the codebase (see cmd/entire/cli/checkpoint/committed.go where warnings go through logging.Warn).",
+      "cohort": "decision",
+      "score": 8,
+      "baseline_total_searches": 5,
+      "baseline_consecutive_searches_before_first_read": 2,
+      "baseline_first_search_mrr": 1.0,
+      "baseline_first_search_no_match": false
+    },
+    {
+      "task_id": "97c75100bbac",
+      "task_type": "code_understanding",
+      "prompt": "why was `TruncateTranscriptAtUUID` the function changed? and same with `writeTranscript`? was changing transcript -> lines necessary?",
+      "cohort": "decision",
+      "score": 8,
+      "baseline_total_searches": 5,
+      "baseline_consecutive_searches_before_first_read": 2,
+      "baseline_first_search_mrr": 1.0,
+      "baseline_first_search_no_match": false
+    },
+    {
+      "task_id": "3afc9eb5cf12",
+      "task_type": "debug_or_validation",
+      "prompt": "2026/03/20 20:39:18 WARN transcript flush sentinel not found within timeout, proceeding component=agent.claudecode timeout=3s",
+      "cohort": "decision",
+      "score": 6,
+      "baseline_total_searches": 3,
+      "baseline_consecutive_searches_before_first_read": 2,
+      "baseline_first_search_mrr": 1.0,
+      "baseline_first_search_no_match": false
+    },
+    {
+      "task_id": "e30f791a2d4d",
+      "task_type": "code_understanding",
+      "prompt": "I'd like you to go over the session logic especially the one that figures out if a session has ended and see if we can do improvements there. Basically we need a better / more reliable way a session ended. The main issue here is a user doing splitted commits after the session and the need to keep shadow branches around to continue to be able to do association. Maybe there is a better way",
+      "cohort": "decision",
+      "score": 10,
+      "baseline_total_searches": 7,
+      "baseline_consecutive_searches_before_first_read": 2,
+      "baseline_first_search_mrr": 0.5,
+      "baseline_first_search_no_match": false
+    },
+    {
+      "task_id": "1d44b085fc12",
+      "task_type": "implementation",
+      "prompt": "find parts which are talking to the entire API via HTTP - add a global request handler to use the bearer token obtained via the cli login flow",
+      "cohort": "decision",
+      "score": 9,
+      "baseline_total_searches": 6,
+      "baseline_consecutive_searches_before_first_read": 2,
+      "baseline_first_search_mrr": 0.5,
+      "baseline_first_search_no_match": false
+    },
+    {
+      "task_id": "c07dfe9d6805",
+      "task_type": "code_understanding",
+      "prompt": "if i run ./entire search then I see this error Error: parsing response: invalid character '<' looking for beginning of value but if I run ENTIRE_API_BASE_URL=http://localhost:8787 ENTIRE_SEARCH_URL=http://localhost:8686 ./entire search then no errors. whats going on",
+      "cohort": "decision",
+      "score": 17,
+      "baseline_total_searches": 14,
+      "baseline_consecutive_searches_before_first_read": 2,
+      "baseline_first_search_mrr": 0.3333333333333333,
+      "baseline_first_search_no_match": false
+    },
+    {
+      "task_id": "4108db521b5d",
+      "task_type": "code_understanding",
+      "prompt": "While using the ENTIRE_CHECKPOINT_TOKEN, users notice that it is starting a checkpoint branch from scratch, although there was one already in place with some checkpoints. Investigate why the use of ENTIRE_CHECKPOINT_TOKEN could be leading to this.",
+      "cohort": "decision",
+      "score": 14,
+      "baseline_total_searches": 11,
+      "baseline_consecutive_searches_before_first_read": 2,
+      "baseline_first_search_mrr": 0.3333333333333333,
+      "baseline_first_search_no_match": false
+    },
+    {
+      "task_id": "f64fee85be5f",
+      "task_type": "repo_task",
+      "prompt": "ReadCheckpointMetadata loads into memory a metadata json file and then unmarshal it. It goes on to then do the same for its sessions, which can be many and large files. Overall this approach has a huge impact on memory churn.",
+      "cohort": "decision",
+      "score": 16,
+      "baseline_total_searches": 13,
+      "baseline_consecutive_searches_before_first_read": 2,
+      "baseline_first_search_mrr": 0.2,
+      "baseline_first_search_no_match": false
+    },
+    {
+      "task_id": "eb5cdbdef570",
+      "task_type": "code_understanding",
+      "prompt": "what's wrong with `entire explain`?",
+      "cohort": "decision",
+      "score": 7,
+      "baseline_total_searches": 4,
+      "baseline_consecutive_searches_before_first_read": 2,
+      "baseline_first_search_mrr": 0.2,
+      "baseline_first_search_no_match": false
+    },
+    {
+      "task_id": "f0c3dbdad0d8",
+      "task_type": "code_understanding",
+      "prompt": "Can you tell me again how the logic works that flags if you have an active session in claude already and blocks the prompt once.",
+      "cohort": "neutral",
+      "score": 27,
+      "baseline_total_searches": 17,
+      "baseline_consecutive_searches_before_first_read": 10,
+      "baseline_first_search_mrr": 0.0,
+      "baseline_first_search_no_match": false
+    },
+    {
+      "task_id": "d1d3bff114fe",
+      "task_type": "implementation",
+      "prompt": "let's include the agent used in `Entire-Agent:` trailer on commits in `entire/sessions` and add `agent` to the metadata.json",
+      "cohort": "neutral",
+      "score": 20,
+      "baseline_total_searches": 13,
+      "baseline_consecutive_searches_before_first_read": 7,
+      "baseline_first_search_mrr": 0.0,
+      "baseline_first_search_no_match": false
+    },
+    {
+      "task_id": "2084a83cf3a3",
+      "task_type": "repo_task",
+      "prompt": "can you check if commits into the shadow branch ignore .gitignore?",
+      "cohort": "neutral",
+      "score": 20,
+      "baseline_total_searches": 10,
+      "baseline_consecutive_searches_before_first_read": 10,
+      "baseline_first_search_mrr": 0.0,
+      "baseline_first_search_no_match": false
+    },
+    {
+      "task_id": "751884f8707a",
+      "task_type": "code_understanding",
+      "prompt": "We got a report yesterday from someone who enabled agents claude and codex using entire configure, then they manually committed, and they said reviewing with codex it seems to be an issue on the CLI on how it opens a session and if it fails it remains open and fallbacks to Claude Code which is the default value, here is their entire status, remotion-demos/public/screenshots/image.png\\",
+      "cohort": "neutral",
+      "score": 17,
+      "baseline_total_searches": 13,
+      "baseline_consecutive_searches_before_first_read": 4,
+      "baseline_first_search_mrr": 0.0,
+      "baseline_first_search_no_match": false
+    },
+    {
+      "task_id": "bea7d0b9e7b8",
+      "task_type": "code_understanding",
+      "prompt": "we're running into an issue with the gemini cli where shadow branches aren't being converted to checkpoints on commit.",
+      "cohort": "neutral",
+      "score": 16,
+      "baseline_total_searches": 11,
+      "baseline_consecutive_searches_before_first_read": 5,
+      "baseline_first_search_mrr": 0.0,
+      "baseline_first_search_no_match": false
+    },
+    {
+      "task_id": "a768042b28b1",
+      "task_type": "code_understanding",
+      "prompt": "I first want to look at GetSessionLog in manual_commit_log.go, right now this has one param called `commitHash` but in 99% of the cases we actually pass in the checkpoint id from `Entire-Checkpoint` or `Checkpoint`. The `Entire-Session` logic can go away, and the logic where it's actually a `CommitHash` I'd like to move out of this method and rather add a method doing the conversion before calling `GetSessionLog` can you show me how you would approach this?",
+      "cohort": "neutral",
+      "score": 16,
+      "baseline_total_searches": 14,
+      "baseline_consecutive_searches_before_first_read": 2,
+      "baseline_first_search_mrr": 0.0,
+      "baseline_first_search_no_match": false
+    },
+    {
+      "task_id": "87d00b47af3f",
+      "task_type": "code_understanding",
+      "prompt": "Review and improve the plugin registration within the main.go. Extract that logic into its own func.",
+      "cohort": "neutral",
+      "score": 13,
+      "baseline_total_searches": 8,
+      "baseline_consecutive_searches_before_first_read": 0,
+      "baseline_first_search_mrr": 0.0,
+      "baseline_first_search_no_match": true
+    },
+    {
+      "task_id": "8b5b4eca788e",
+      "task_type": "debug_or_validation",
+      "prompt": "I am running this test on Windows TestSingleSessionSubagentCommitInTurn. And it is failing, not always, it fails because after running the test we identify that there is a shadow branch that should not be there. I copied the entire.log on windows execution windows-broken-test.json (failing one) and the same test but this time running on macos the entire.log are inside mac-ok-test.json.",
+      "cohort": "neutral",
+      "score": 12,
+      "baseline_total_searches": 10,
+      "baseline_consecutive_searches_before_first_read": 1,
+      "baseline_first_search_mrr": 1.0,
+      "baseline_first_search_no_match": false
+    },
+    {
+      "task_id": "2a075ef186b4",
+      "task_type": "code_understanding",
+      "prompt": "Direct id.CheckpointID(string) casts skip validation logic, Add validation helper or constructor that's consistently used instead of direct type casts",
+      "cohort": "neutral",
+      "score": 12,
+      "baseline_total_searches": 11,
+      "baseline_consecutive_searches_before_first_read": 1,
+      "baseline_first_search_mrr": 0.0,
+      "baseline_first_search_no_match": false
+    },
+    {
+      "task_id": "c6491956c19f",
+      "task_type": "debug_or_validation",
+      "prompt": "Entire does not seem to be handling worktree paths correctly when used in combination with claude worktree feature - which places files under .claude/worktrees. Investigate the issue and create a test to confirm this is the case.",
+      "cohort": "neutral",
+      "score": 10,
+      "baseline_total_searches": 8,
+      "baseline_consecutive_searches_before_first_read": 2,
+      "baseline_first_search_mrr": 0.0,
+      "baseline_first_search_no_match": false
+    },
+    {
+      "task_id": "c283d360e6d5",
+      "task_type": "code_understanding",
+      "prompt": "Right now we store full.jsonl when doing a checkpoint in `entire/sessions` when keeping the session active with claude we commit the growing log in commit after commit. Can we take a look and see if we can get the last row from the current session log at the start of a prompt and then track that for the checkpoint? so we can know what was added during this checkpoint?",
+      "cohort": "neutral",
+      "score": 10,
+      "baseline_total_searches": 7,
+      "baseline_consecutive_searches_before_first_read": 3,
+      "baseline_first_search_mrr": 0.0,
+      "baseline_first_search_no_match": false
+    },
+    {
+      "task_id": "3906e953d4ef",
+      "task_type": "code_understanding",
+      "prompt": "where does `entire explain` get the checkpoints from?",
+      "cohort": "neutral",
+      "score": 10,
+      "baseline_total_searches": 8,
+      "baseline_consecutive_searches_before_first_read": 2,
+      "baseline_first_search_mrr": 0.0,
+      "baseline_first_search_no_match": false
+    },
+    {
+      "task_id": "2c5705f6152f",
+      "task_type": "code_understanding",
+      "prompt": "explain how auth and identity checks work right now for the trails command",
+      "cohort": "neutral",
+      "score": 10,
+      "baseline_total_searches": 8,
+      "baseline_consecutive_searches_before_first_read": 1,
+      "baseline_first_search_mrr": 0.16666666666666666,
+      "baseline_first_search_no_match": false
+    },
+    {
+      "task_id": "cc90f6622c5b",
+      "task_type": "code_understanding",
+      "prompt": "why is lint failing on the build?",
+      "cohort": "neutral",
+      "score": 9,
+      "baseline_total_searches": 8,
+      "baseline_consecutive_searches_before_first_read": 0,
+      "baseline_first_search_mrr": 0.25,
+      "baseline_first_search_no_match": false
+    },
+    {
+      "task_id": "9de3322f8275",
+      "task_type": "code_understanding",
+      "prompt": "let's add Read-side support (entire session list/show reading from gmeta) next",
+      "cohort": "neutral",
+      "score": 9,
+      "baseline_total_searches": 4,
+      "baseline_consecutive_searches_before_first_read": 0,
+      "baseline_first_search_mrr": 0.0,
+      "baseline_first_search_no_match": true
+    },
+    {
+      "task_id": "897eb280e769",
+      "task_type": "implementation",
+      "prompt": "Can you read docs/architecture/shadow-branch-suffixes.md, I'd like to modify this approach: I don't think we need suffixes but instead we just use one branch, is there overlap in files we continue, if there is no overlap and the new session did create local changes, then we reset the shadow branch to a clean state. Can you ultrathink about it and come up with a new plan?",
+      "cohort": "neutral",
+      "score": 9,
+      "baseline_total_searches": 9,
+      "baseline_consecutive_searches_before_first_read": 0,
+      "baseline_first_search_mrr": 0.0,
+      "baseline_first_search_no_match": false
+    },
+    {
+      "task_id": "a70d97c363c8",
+      "task_type": "implementation",
+      "prompt": "Improve the documentation so that it covers the signing of checkpoint commits. For this to work:",
+      "cohort": "neutral",
+      "score": 8,
+      "baseline_total_searches": 6,
+      "baseline_consecutive_searches_before_first_read": 2,
+      "baseline_first_search_mrr": 0.0,
+      "baseline_first_search_no_match": false
+    },
+    {
+      "task_id": "5eec47c03756",
+      "task_type": "debug_or_validation",
+      "prompt": "The handling of trees via go-git seem to not be working effectively and erroring early, as not all objects are present. This is the current error:",
+      "cohort": "neutral",
+      "score": 8,
+      "baseline_total_searches": 7,
+      "baseline_consecutive_searches_before_first_read": 1,
+      "baseline_first_search_mrr": 0.0,
+      "baseline_first_search_no_match": false
+    },
+    {
+      "task_id": "5adf55c634da",
+      "task_type": "debug_or_validation",
+      "prompt": "Please fix the failing test:",
+      "cohort": "neutral",
+      "score": 7,
+      "baseline_total_searches": 1,
+      "baseline_consecutive_searches_before_first_read": 1,
+      "baseline_first_search_mrr": 0.0,
+      "baseline_first_search_no_match": true
+    },
+    {
+      "task_id": "2baba34463b5",
+      "task_type": "debug_or_validation",
+      "prompt": "can we add e2e tests similar to those for gemini/claude (mise run test:e2e:claude)",
+      "cohort": "neutral",
+      "score": 7,
+      "baseline_total_searches": 1,
+      "baseline_consecutive_searches_before_first_read": 1,
+      "baseline_first_search_mrr": 0.0,
+      "baseline_first_search_no_match": true
+    }
+  ]
+}

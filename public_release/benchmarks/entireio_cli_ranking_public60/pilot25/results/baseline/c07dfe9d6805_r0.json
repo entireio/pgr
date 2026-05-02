@@ -1,0 +1,229 @@
+{
+  "repeat": 0,
+  "task_id": "c07dfe9d6805",
+  "repo": "entireio-cli",
+  "task_type": "code_understanding",
+  "condition": "baseline",
+  "prompt": "if i run ./entire search then I see this error Error: parsing response: invalid character '<' looking for beginning of value but if I run ENTIRE_API_BASE_URL=http://localhost:8787 ENTIRE_SEARCH_URL=http://localhost:8686 ./entire search then no errors. whats going on",
+  "answer": "",
+  "tool_calls": [
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "ENTIRE_API_BASE_URL"
+      },
+      "output": "./README.md\n  212-216:\n    212| # In this repo, point the CLI at the local API\n    213| cd ../cli\n    214| export ENTIRE_API_BASE_URL=http://localhost:8787\n    215| \n    216| # Run the smoke test\n\n./scripts/local-device-auth-smoke.sh\n  8-8:\n    8| : \"${ENTIRE_API_BASE_URL:=http://localhost:8787}\"\n  20-21:\n    20| echo \"Starting device auth login against ${ENTIRE_API_BASE_URL}\"\n    21| ENTIRE_TEST_TTY=0 ENTIRE_API_BASE_URL=\"${ENTIRE_API_BASE_URL}\" go run ./cmd/entire login --insecure-http-auth >\"",
+      "output_tokens": 1194,
+      "duration_ms": 19.73891258239746,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "ENTIRE_SEARCH_URL"
+      },
+      "output": "./cmd/entire/cli/search_cmd.go\n  105-109:\n    105| \t\t\t}\n    106| \n    107| \t\t\tserviceURL := os.Getenv(\"ENTIRE_SEARCH_URL\")\n    108| \t\t\tif serviceURL == \"\" {\n    109| \t\t\t\tserviceURL = search.DefaultServiceURL",
+      "output_tokens": 207,
+      "duration_ms": 15.028953552246094,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "./cmd/entire/cli/api/base_url.go"
+      },
+      "output": "./cmd/entire/cli/api/base_url.go:1-74\n  1| package api\n  2| \n  3| import (\n  4| \t\"errors\"\n  5| \t\"fmt\"\n  6| \t\"net/url\"\n  7| \t\"os\"\n  8| \t\"strings\"\n  9| )\n  10| \n  11| // ErrInsecureHTTP is returned when the base URL uses HTTP without an explicit opt-in.\n  12| var ErrInsecureHTTP = errors.New(\"refusing to use insecure http:// base URL for authentication (use --insecure-http-auth to override)\")\n  13| \n  14| const (\n  15| \t// DefaultBaseURL is the production Entire API origin.\n  16| \tDefaultBaseURL =",
+      "output_tokens": 2503,
+      "duration_ms": 0.4050731658935547,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "./cmd/entire/cli/search_cmd.go",
+        "start_line": 95,
+        "end_line": 130
+      },
+      "output": "./cmd/entire/cli/search_cmd.go:95-130\n  95| \t\t\t\treturn fmt.Errorf(\"could not find 'origin' remote: %w\", err)\n  96| \t\t\t}\n  97| \t\t\turls := remote.Config().URLs\n  98| \t\t\tif len(urls) == 0 {\n  99| \t\t\t\treturn errors.New(\"origin remote has no URLs configured\")\n  100| \t\t\t}\n  101| \n  102| \t\t\towner, repoName, err := search.ParseGitHubRemote(urls[0])\n  103| \t\t\tif err != nil {\n  104| \t\t\t\treturn fmt.Errorf(\"parsing remote URL: %w\", err)\n  105| \t\t\t}\n  106| \n  107| \t\t\tserviceURL := os.Getenv(\"ENTIRE_SEARCH_UR",
+      "output_tokens": 1238,
+      "duration_ms": 0.24127960205078125,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "DefaultServiceURL"
+      },
+      "output": "./cmd/entire/cli/search_cmd.go\n  108-111:\n    108| \t\t\tif serviceURL == \"\" {\n    109| \t\t\t\tserviceURL = search.DefaultServiceURL\n    110| \t\t\t}\n    111| \n\n./cmd/entire/cli/search/search.go\n  16-21:\n    16| const apiTimeout = 30 * time.Second\n    17| \n    18| // DefaultServiceURL is the production search service URL.\n    19| const DefaultServiceURL = \"https://entire.io\"\n    20| \n    21| // WildcardQuery is the query string used when only filters are provided (no search terms).\n  232-235:\n    232| \ti",
+      "output_tokens": 583,
+      "duration_ms": 17.79794692993164,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "parsing response"
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 16.08109474182129,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "invalid character"
+      },
+      "output": "./cmd/entire/cli/trailers/trailers_test.go\n  426-428:\n    426| \t\t},\n    427| \t\t{\n    428| \t\t\tname:      \"invalid characters in checkpoint ID\",\n\n./cmd/entire/cli/strategy/checkpoint_token.go\n  48-52:\n    48| \n    49| \tif !isValidToken(token) {\n    50| \t\tfmt.Fprintf(os.Stderr, \"[entire] Warning: %s contains invalid characters (CR, LF, or other control chars) \u2014 token ignored\\n\", CheckpointTokenEnvVar)\n    51| \t\treturn cmd\n    52| \t}",
+      "output_tokens": 433,
+      "duration_ms": 17.585039138793945,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "parsing response",
+        "context_before": 5,
+        "context_after": 5
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 16.872167587280273,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "json.Unmarshal\\|json.NewDecoder\\|json.Decode",
+        "path_glob": "**/search/**"
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 12.007951736450195,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "./cmd/entire/cli/search/search.go"
+      },
+      "output": "./cmd/entire/cli/search/search.go:1-80\n  1| package search\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"encoding/json\"\n  6| \t\"errors\"\n  7| \t\"fmt\"\n  8| \t\"io\"\n  9| \t\"net/http\"\n  10| \t\"net/url\"\n  11| \t\"strconv\"\n  12| \t\"strings\"\n  13| \t\"time\"\n  14| )\n  15| \n  16| const apiTimeout = 30 * time.Second\n  17| \n  18| // DefaultServiceURL is the production search service URL.\n  19| const DefaultServiceURL = \"https://entire.io\"\n  20| \n  21| // WildcardQuery is the query string used when only filters are provi",
+      "output_tokens": 2814,
+      "duration_ms": 0.3910064697265625,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "./cmd/entire/cli/search/search.go",
+        "start_line": 81,
+        "end_line": 311
+      },
+      "output": "./cmd/entire/cli/search/search.go:81-311\n  81| \n  82| // HasFilters reports whether any filter fields are set on the config.\n  83| func (c Config) HasFilters() bool {\n  84| \treturn c.Author != \"\" || c.Date != \"\" || c.Branch != \"\" || len(c.Repos) > 0\n  85| }\n  86| \n  87| // ParsedInput holds the parsed query and optional filters extracted from search input.\n  88| type ParsedInput struct {\n  89| \tQuery  string\n  90| \tAuthor string\n  91| \tDate   string\n  92| \tBranch string\n  93| \tRepos  []string\n  ",
+      "output_tokens": 7640,
+      "duration_ms": 0.5202293395996094,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "parsing response: invalid character"
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 30.999183654785156,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "fmt.Errorf.*parsing response"
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 18.885135650634766,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "parsing response",
+        "file_type": "go"
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 30.06911277770996,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "parsing response"
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 23.964881896972656,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "parse.*response\\|response.*parse",
+        "file_type": "go"
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 31.230926513671875,
+      "turn_number": 10
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "Errorf.*parse",
+        "file_type": "go",
+        "max_files": 20
+      },
+      "output": "./e2e/testutil/repo.go\n  251-251:\n    251| \tvar models []json.RawMessage\n  253-255:\n    253| \t\treturn fmt.Errorf(\"parse customModels in %s: %w\", globalSettingsPath, err)\n    254| \t}\n    255| \tif len(models) == 0 {\n  297-297:\n    297| \tvar parsed map[string]json.RawMessage\n\n./cmd/entire/cli/trace_test.go\n  79-82:\n    79| \t\tif entry != nil {\n    80| \t\t\tt.Errorf(\"parseTraceEntry returned %+v for non-perf entry, want nil\", entry)\n    81| \t\t}\n    82| \t})\n  88-91:\n    88| \t\tif entry != nil {\n    89| \t",
+      "output_tokens": 5424,
+      "duration_ms": 24.696826934814453,
+      "turn_number": 11
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "Errorf.*parsing response"
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 33.83898735046387,
+      "turn_number": 12
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "Error: parsing"
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 29.327869415283203,
+      "turn_number": 12
+    }
+  ],
+  "total_tool_calls": 19,
+  "total_turns": 12,
+  "wall_clock_ms": 25832.64994621277,
+  "input_tokens": 79418,
+  "output_tokens": 1234,
+  "tool_output_tokens": 22206,
+  "total_cost_usd": 0.256764,
+  "first_call_tool": "search_code",
+  "first_call_produced_file": true,
+  "retry_count": 0,
+  "error": "",
+  "total_tool_duration_ms": 339.68257904052734,
+  "tool_execution_share": 0.013149350908551563,
+  "search_call_count": 15,
+  "read_call_count": 4,
+  "avg_search_code_duration_ms": 22.54166603088379,
+  "median_search_code_duration_ms": 19.73891258239746
+}

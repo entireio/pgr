@@ -1,0 +1,278 @@
+{
+  "repeat": 0,
+  "task_id": "bea7d0b9e7b8",
+  "repo": "entireio-cli",
+  "task_type": "code_understanding",
+  "condition": "fff",
+  "prompt": "we're running into an issue with the gemini cli where shadow branches aren't being converted to checkpoints on commit.",
+  "answer": "",
+  "tool_calls": [
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "shadow branch",
+        "context_before": 2,
+        "context_after": 2
+      },
+      "output": "30/53 matches shown\n.claude/skills/test-repo/SKILL.md\n 96: | Shadow branch | \u2713 entire/{hash} |\n 148: - Shadow branches: `entire/<commit-hash[:7]>` created for checkpoints\n 149: - Metadata: stored on both shadow branches and `entire/checkpoints/v1` branch (condensed on user commits)\n 150: - Rewind: restores files from shadow branch commit tree (no git reset)\n 195: # Verify shadow branch still exists\n.claude/skills/test-repo/test-harness.sh\n 127: echo \"==> Verifying shadow branch...\"\n 131: echo \"\u2713",
+      "output_tokens": 3236,
+      "duration_ms": 1.9078254699707031,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "checkpoint",
+        "context_before": 2,
+        "context_after": 2,
+        "max_files": 10
+      },
+      "output": "30/58 matches shown\n.claude/agents/entire-search.md\n 3: description: Search Entire checkpoint history and transcripts with `entire search --json`. Use proactively when the user asks about previous work, comm\u2026\n 12: \u2026 the task is asking for historical search across Entire checkpoints and transcripts.\n.claude/agents/reviewer.md\n 22: **Why branch-scoped?** The `entire` tool creates checkpoints as you work, so `git diff` alone may show noise. Comparing against the base branch shows the actual feature",
+      "output_tokens": 3475,
+      "duration_ms": 2.259969711303711,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "shadow branch to checkpoint",
+        "context_before": 3,
+        "context_after": 3
+      },
+      "output": "0 exact matches. 30 approximate:\ncmd/entire/cli/checkpoint/checkpoint.go\n 83: \t// ListTemporary lists all shadow branches with their checkpoint info.\ncmd/entire/cli/checkpoint/temporary.go\n 182: // ListTemporary lists all shadow branches with their checkpoint info.\n 545: \t// Iterate through each shadow branch and collect checkpoints",
+      "output_tokens": 334,
+      "duration_ms": 4.185914993286133,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "WriteTemporary\\|ReadTemporary\\|ListTemporary",
+        "context_before": 2,
+        "context_after": 2
+      },
+      "output": "0 matches.",
+      "output_tokens": 10,
+      "duration_ms": 2.538919448852539,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "glob": "cmd/entire/cli/checkpoint/*.go"
+      },
+      "output": "cmd/entire/cli/checkpoint/backwards_compat_test.go git:clean\ncmd/entire/cli/checkpoint/blob_resolver.go git:clean\ncmd/entire/cli/checkpoint/blob_resolver_test.go git:clean\ncmd/entire/cli/checkpoint/checkpoint.go git:clean\ncmd/entire/cli/checkpoint/checkpoint_test.go git:clean\ncmd/entire/cli/checkpoint/committed.go git:clean\ncmd/entire/cli/checkpoint/committed_reader_resolve.go git:clean\ncmd/entire/cli/checkpoint/committed_reader_resolve_test.go git:clean\ncmd/entire/cli/checkpoint/committed_updat",
+      "output_tokens": 1601,
+      "duration_ms": 0.3390312194824219,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "WriteTemporary\\|ReadTemporary\\|ListTemporary",
+        "context_before": 2,
+        "context_after": 2,
+        "file_type": "go"
+      },
+      "output": "0 matches.",
+      "output_tokens": 10,
+      "duration_ms": 3.7648677825927734,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/checkpoint/temporary.go"
+      },
+      "output": "cmd/entire/cli/checkpoint/temporary.go:1-80\n  1| package checkpoint\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"crypto/sha256\"\n  6| \t\"encoding/hex\"\n  7| \t\"encoding/json\"\n  8| \t\"errors\"\n  9| \t\"fmt\"\n  10| \t\"log/slog\"\n  11| \t\"os\"\n  12| \t\"os/exec\"\n  13| \t\"path/filepath\"\n  14| \t\"sort\"\n  15| \t\"strings\"\n  16| \t\"time\"\n  17| \n  18| \t\"github.com/entireio/cli/cmd/entire/cli/agent\"\n  19| \t\"github.com/entireio/cli/cmd/entire/cli/agent/types\"\n  20| \t\"github.com/entireio/cli/cmd/entire/cli/jsonutil\"\n  21| \t\"git",
+      "output_tokens": 3355,
+      "duration_ms": 1.1141300201416016,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/checkpoint/checkpoint.go"
+      },
+      "output": "cmd/entire/cli/checkpoint/checkpoint.go:1-80\n  1| // Package checkpoint provides types and interfaces for checkpoint storage.\n  2| //\n  3| // A Checkpoint captures a point-in-time within a session, containing either\n  4| // full state (Temporary) or metadata with a commit reference (Committed).\n  5| //\n  6| // See docs/architecture/sessions-and-checkpoints.md for the full domain model.\n  7| package checkpoint\n  8| \n  9| import (\n  10| \t\"context\"\n  11| \t\"encoding/json\"\n  12| \t\"errors\"\n  13| \t\"tim",
+      "output_tokens": 3585,
+      "duration_ms": 1.4491081237792969,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/checkpoint/checkpoint.go",
+        "start_line": 80,
+        "end_line": 200
+      },
+      "output": "cmd/entire/cli/checkpoint/checkpoint.go:80-200\n  80| \t// Returns nil, nil if the shadow branch doesn't exist.\n  81| \tReadTemporary(ctx context.Context, baseCommit, worktreeID string) (*ReadTemporaryResult, error)\n  82| \n  83| \t// ListTemporary lists all shadow branches with their checkpoint info.\n  84| \tListTemporary(ctx context.Context) ([]TemporaryInfo, error)\n  85| \n  86| \t// WriteCommitted writes a committed checkpoint to the entire/checkpoints/v1 branch.\n  87| \t// Checkpoints are stored at ",
+      "output_tokens": 5476,
+      "duration_ms": 0.23412704467773438,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/checkpoint/committed.go"
+      },
+      "output": "cmd/entire/cli/checkpoint/committed.go:1-80\n  1| package checkpoint\n  2| \n  3| import (\n  4| \t\"bytes\"\n  5| \t\"context\"\n  6| \t\"crypto/sha256\"\n  7| \t\"encoding/json\"\n  8| \t\"errors\"\n  9| \t\"fmt\"\n  10| \t\"log/slog\"\n  11| \t\"os\"\n  12| \t\"path/filepath\"\n  13| \t\"sort\"\n  14| \t\"strconv\"\n  15| \t\"strings\"\n  16| \t\"time\"\n  17| \n  18| \t\"github.com/entireio/cli/cmd/entire/cli/agent\"\n  19| \t\"github.com/entireio/cli/cmd/entire/cli/agent/codex\"\n  20| \t\"github.com/entireio/cli/cmd/entire/cli/agent/types\"\n  21| \t\"github.",
+      "output_tokens": 3333,
+      "duration_ms": 0.23508071899414062,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "on commit\\|OnCommit\\|commit.*checkpoint\\|checkpoint.*commit",
+        "context_before": 2,
+        "context_after": 2,
+        "file_type": "go",
+        "max_files": 10
+      },
+      "output": "0 matches.",
+      "output_tokens": 10,
+      "duration_ms": 4.034757614135742,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "glob": "cmd/entire/cli/**/*commit*.go"
+      },
+      "output": "cmd/entire/cli/checkpoint/committed.go git:clean\ncmd/entire/cli/checkpoint/committed_reader_resolve.go git:clean\ncmd/entire/cli/checkpoint/committed_reader_resolve_test.go git:clean\ncmd/entire/cli/checkpoint/committed_update_test.go git:clean\ncmd/entire/cli/checkpoint/v2_committed.go git:clean\ncmd/entire/cli/commit_message.go git:clean\ncmd/entire/cli/commit_message_test.go git:clean\ncmd/entire/cli/integration_test/manual_commit_untracked_files_test.go git:clean\ncmd/entire/cli/integration_test/ma",
+      "output_tokens": 1998,
+      "duration_ms": 0.18262863159179688,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/strategy/manual_commit.go"
+      },
+      "output": "cmd/entire/cli/strategy/manual_commit.go:1-80\n  1| package strategy\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"fmt\"\n  6| \t\"sync\"\n  7| \n  8| \t\"github.com/entireio/cli/cmd/entire/cli/checkpoint\"\n  9| \t\"github.com/entireio/cli/cmd/entire/cli/session\"\n  10| )\n  11| \n  12| // ManualCommitStrategy implements the manual-commit strategy for session management.\n  13| // It stores checkpoints on shadow branches and condenses session logs to a\n  14| // permanent sessions branch when the user commits.\n  15|",
+      "output_tokens": 3502,
+      "duration_ms": 0.2739429473876953,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/strategy/manual_commit_condensation.go"
+      },
+      "output": "cmd/entire/cli/strategy/manual_commit_condensation.go:1-80\n  1| package strategy\n  2| \n  3| import (\n  4| \t\"bytes\"\n  5| \t\"context\"\n  6| \t\"encoding/json\"\n  7| \t\"errors\"\n  8| \t\"fmt\"\n  9| \t\"log/slog\"\n  10| \t\"os\"\n  11| \t\"path/filepath\"\n  12| \t\"slices\"\n  13| \t\"strings\"\n  14| \t\"time\"\n  15| \n  16| \t\"github.com/entireio/cli/cmd/entire/cli/agent\"\n  17| \t\"github.com/entireio/cli/cmd/entire/cli/agent/factoryaidroid\"\n  18| \t\"github.com/entireio/cli/cmd/entire/cli/agent/geminicli\"\n  19| \t\"github.com/entireio",
+      "output_tokens": 3240,
+      "duration_ms": 2.3331642150878906,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/strategy/manual_commit_condensation.go",
+        "start_line": 80,
+        "end_line": 250
+      },
+      "output": "cmd/entire/cli/strategy/manual_commit_condensation.go:80-250\n  80| \n  81| \tcontent, err := store.ReadLatestSessionContent(ctx, checkpointID)\n  82| \tif err != nil {\n  83| \t\treturn nil, fmt.Errorf(\"failed to read checkpoint: %w\", err)\n  84| \t}\n  85| \tif content == nil {\n  86| \t\treturn nil, fmt.Errorf(\"checkpoint not found: %s\", checkpointID)\n  87| \t}\n  88| \tif len(content.Transcript) == 0 {\n  89| \t\treturn nil, fmt.Errorf(\"no transcript found for checkpoint: %s\", checkpointID)\n  90| \t}\n  91| \n  92|",
+      "output_tokens": 9050,
+      "duration_ms": 0.9939670562744141,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/strategy/manual_commit_hooks.go"
+      },
+      "output": "cmd/entire/cli/strategy/manual_commit_hooks.go:1-80\n  1| package strategy\n  2| \n  3| import (\n  4| \t\"bufio\"\n  5| \t\"bytes\"\n  6| \t\"context\"\n  7| \t\"encoding/json\"\n  8| \t\"fmt\"\n  9| \t\"io\"\n  10| \t\"log/slog\"\n  11| \t\"os\"\n  12| \t\"os/exec\"\n  13| \t\"path/filepath\"\n  14| \t\"strings\"\n  15| \t\"time\"\n  16| \n  17| \t\"github.com/entireio/cli/cmd/entire/cli/agent\"\n  18| \t\"github.com/entireio/cli/cmd/entire/cli/agent/claudecode\"\n  19| \t\"github.com/entireio/cli/cmd/entire/cli/agent/types\"\n  20| \n  21| \t\"github.com/enti",
+      "output_tokens": 3143,
+      "duration_ms": 0.3991127014160156,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/strategy/manual_commit_hooks.go",
+        "start_line": 80,
+        "end_line": 300
+      },
+      "output": "cmd/entire/cli/strategy/manual_commit_hooks.go:80-300\n  80| \ttty, err := os.OpenFile(\"/dev/tty\", os.O_RDWR, 0)\n  81| \tif err != nil {\n  82| \t\treturn false\n  83| \t}\n  84| \t_ = tty.Close()\n  85| \treturn true\n  86| }\n  87| \n  88| // ttyResult represents the outcome of a TTY confirmation prompt.\n  89| type ttyResult int\n  90| \n  91| const (\n  92| \tttyResultLink       ttyResult = iota // Link: add the checkpoint trailer\n  93| \tttyResultSkip                        // Skip: don't add the trailer\n  94| ",
+      "output_tokens": 8915,
+      "duration_ms": 1.3997554779052734,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "PostCommit\\|post.commit\\|post_commit",
+        "context_before": 2,
+        "context_after": 4,
+        "file_type": "go",
+        "max_files": 10
+      },
+      "output": "0 matches.",
+      "output_tokens": 10,
+      "duration_ms": 2.8710365295410156,
+      "turn_number": 10
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "PrepareCommitMsg\\|prepare.commit.msg\\|prepare_commit_msg",
+        "context_before": 2,
+        "context_after": 4,
+        "file_type": "go",
+        "max_files": 10
+      },
+      "output": "0 matches.",
+      "output_tokens": 10,
+      "duration_ms": 1.8460750579833984,
+      "turn_number": 10
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "PostCommit\\|PrepareCommitMsg",
+        "context_before": 2,
+        "context_after": 4,
+        "file_type": "go",
+        "max_files": 10
+      },
+      "output": "0 matches.",
+      "output_tokens": 10,
+      "duration_ms": 4.44793701171875,
+      "turn_number": 11
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "func.*Post\\|func.*Commit\\|func.*Hook",
+        "context_before": 1,
+        "context_after": 2,
+        "file_type": "go",
+        "path_glob": "cmd/entire/cli/strategy/*.go",
+        "max_files": 10
+      },
+      "output": "0 matches.",
+      "output_tokens": 10,
+      "duration_ms": 2.306222915649414,
+      "turn_number": 12
+    }
+  ],
+  "total_tool_calls": 21,
+  "total_turns": 12,
+  "wall_clock_ms": 37838.857889175415,
+  "input_tokens": 144189,
+  "output_tokens": 1956,
+  "tool_output_tokens": 54313,
+  "total_cost_usd": 0.46190699999999996,
+  "first_call_tool": "search_code",
+  "first_call_produced_file": true,
+  "retry_count": 0,
+  "error": "",
+  "total_tool_duration_ms": 39.11757469177246,
+  "tool_execution_share": 0.0010337937473256255,
+  "search_call_count": 10,
+  "avg_search_code_duration_ms": 3.016352653503418,
+  "median_search_code_duration_ms": 2.7049779891967773,
+  "avg_read_code_duration_ms": 0.9369320339626737,
+  "median_read_code_duration_ms": 0.9939670562744141
+}

@@ -1,0 +1,284 @@
+{
+  "repeat": 0,
+  "task_id": "37f449ec7d97",
+  "repo": "entireio-cli",
+  "task_type": "code_understanding",
+  "condition": "fff",
+  "prompt": "how does auth work for codex with e2e",
+  "answer": "Now I have a thorough picture of the entire auth flow. Here's a comprehensive explanation:\n\n---\n\n## How Auth Works for Codex in E2E\n\nThere are **two separate auth concerns** in the E2E setup: auth for the **Codex CLI itself** (OpenAI API key), and auth for the **`entire` CLI** (the tool under test). Here's how each works:\n\n---\n\n### 1. Codex CLI Authentication (OpenAI API Key)\n\nThis is handled inside `e2e/agents/codex.go` via the `seedCodexHome()` function. Every test run gets a **fresh isolated `CODEX_HOME`** directory (a temp dir like `codex-home-*`), and auth credentials are injected into it before Codex is launched.\n\nThere are **two auth paths**, tried in priority order:\n\n#### Path A \u2014 `OPENAI_API_KEY` environment variable (preferred, CI)\n```go\n// e2e/agents/codex.go:235-237\nif apiKey := os.Getenv(\"OPENAI_API_KEY\"); apiKey != \"\" {\n    return writeCodexAPIKeyAuth(home, apiKey)\n}\n```\nIf the env var is set, `writeCodexAPIKeyAuth()` writes an `auth.json` into the isolated `CODEX_HOME`:\n```go\n// e2e/agents/codex.go:250-269\nauth := struct {\n    AuthMode     string `json:\"auth_mode\"`\n    OpenAIAPIKey string `json:\"OPENAI_API_KEY\"`\n}{\n    AuthMode:     \"apikey\",\n    OpenAIAPIKey: apiKey,\n}\n// \u2192 written to <home>/auth.json\n```\nThis is what CI always uses \u2014 the `OPENAI_API_KEY` secret is passed to both the **Bootstrap** and **Run E2E Tests** steps via GitHub Actions env vars (`.github/workflows/e2e.yml:95,105`).\n\n#### Path B \u2014 Symlinked `~/.codex/auth.json` (local dev fallback)\n```go\n// e2e/agents/codex.go:239-245\nif realHome, err := os.UserHomeDir(); err == nil {\n    src := filepath.Join(realHome, \".codex\", \"auth.json\")\n    if _, err := os.Stat(src); err == nil {\n        _ = os.Symlink(src, filepath.Join(home, \"auth.json\"))\n    }\n}\n```\nIf `OPENAI_API_KEY` is **not** set (e.g., a developer running tests locally who has already authenticated Codex normally), it symlinks the real `~/.codex/auth.json` into the temp `CODEX_HOME`. The comment in `codexHome()` explicitly documents this: *\"Auth still works via `OPENAI_API_KEY` env var or symlinked auth.json.\"*\n\n#### Bootstrap Preflight Check\n```go\n// e2e/agents/codex.go:40-45\nfunc (c *Codex) Bootstrap() error {\n    if os.Getenv(\"CI\") != \"\" && os.Getenv(\"OPENAI_API_KEY\") == \"\" {\n        return errors.New(\"OPENAI_API_KEY must be set on CI for Codex E2E tests\")\n    }\n    return nil\n}\n```\nThe `e2e/bootstrap/main.go` runs `Bootstrap()` before any tests. On CI it fails fast if `OPENAI_API_KEY` is missing; locally it's a no-op (it's fine to rely on the symlink fallback).\n\n---\n\n### 2. Launching Codex With the Isolated Home\n\nWhen `RunPrompt` or `StartSession` is called, the isolated `CODEX_HOME` is injected as an environment variable:\n```go\n// e2e/agents/codex.go:106-108 (RunPrompt)\nenv := append(filterEnv(os.Environ(), \"ENTIRE_TEST_TTY\", \"CODEX_HOME\"),\n    \"CODEX_HOME=\"+home,\n)\n```\n```go\n// e2e/agents/codex.go:214 (tmux sessions)\ntmuxArgs := append([]string{\"CODEX_HOME=\" + home, \"HOME=\" + os.Getenv(\"HOME\"), ...}, args...)\n```\nThe `filterEnv` call **strips** any existing `CODEX_HOME` from the environment before re-adding the test-specific one, ensuring complete isolation per test.\n\n---\n\n### 3. `entire` CLI Authentication (the tool under test)\n\nThis is a separate auth system (not Codex-specific). `entire login` uses an **OAuth Device Flow**:\n\n1. **`StartDeviceAuth`** \u2192 `POST /oauth/device/code` with `client_id=entire-cli` and `scope=cli` \u2014 returns a device code + user-facing URL.\n2. **`PollDeviceAuth`** \u2192 `POST /oauth/token` with `grant_type=urn:ietf:params:oauth:grant-type:device_code` \u2014 polls until the user completes the browser flow.\n3. The resulting **access token** is stored in the **OS keyring** (`keyring.Set(\"entire-cli\", baseURL, token)`).\n\nAt runtime, `NewAuthenticatedAPIClient()` retrieves the token from the keyring (`auth.LookupCurrentToken()`) and injects it as a `Bearer` token on every HTTP request via a custom `bearerTransport` `RoundTripper`.\n\n---\n\n### Summary Table\n\n| Concern | Mechanism | CI source | Local dev source |\n|---|---|---|---|\n| Codex \u2194 OpenAI | `auth.json` in isolated `CODEX_HOME` | `OPENAI_API_KEY` secret \u2192 written to `auth.json` | Symlink from `~/.codex/auth.json` |\n| `entire` \u2194 Entire API | OS keyring + Bearer token | Keyring pre-populated (or not needed in tests) | `entire login` OAuth device flow |",
+  "tool_calls": [
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "glob": "**/*e2e*",
+        "max_results": 50
+      },
+      "output": "scripts/download-e2e-artifacts.sh git:clean\nscripts/test-attribution-e2e.sh git:clean",
+      "output_tokens": 85,
+      "duration_ms": 0.5230903625488281,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "auth",
+        "path_glob": "**/*e2e*",
+        "context_before": 2,
+        "context_after": 2
+      },
+      "output": "\u2192 Read scripts/download-e2e-artifacts.sh (only match)\nscripts/download-e2e-artifacts.sh\n 21: gh auth status >/dev/null 2>&1 || die \"'gh' is not authenticated. Run 'gh auth login' first.\"",
+      "output_tokens": 186,
+      "duration_ms": 1.081705093383789,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": ".",
+        "recursive": false
+      },
+      "output": ".allowed-licenses\n.claude/\n.codex/\n.devcontainer/\n.entire/\n.ferrata/\n.gemini/\n.git/\n.github/\n.gitignore\n.golangci.yaml\n.goreleaser.yaml\n.opencode/\n.vscode/\nAGENTS.md\nCHANGELOG.md\nCLAUDE.md\nCODE_OF_CONDUCT.md\nCONTRIBUTING.md\nLICENSE\nREADME.md\nSECURITY.md\nWINDOWS.md\ncmd/\ndocs/\ne2e/\ngo.mod\ngo.sum\nmise-tasks/\nmise.toml\nperf/\nredact/\nscripts/",
+      "output_tokens": 339,
+      "duration_ms": 0.67901611328125,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "auth",
+        "file_type": "go",
+        "context_before": 2,
+        "context_after": 2,
+        "max_files": 20
+      },
+      "output": "\u2192 Read cmd/entire/cli/api/client_test.go [def]\ncmd/entire/cli/auth/client.go\n 85: func (c *Client) PollDeviceAuth(ctx context.Context, deviceCode string) (*DeviceAuthPoll, error) {\n  86| body := url.Values{}\n  87| body.Set(\"grant_type\", \"urn:ietf:params:oauth:grant-type:device_code\")\n  88| body.Set(\"client_id\", clientID)\n  89| body.Set(\"device_code\", deviceCode)\ncmd/entire/cli/api/client_test.go\n 12: func TestBearerTransport_InjectsAuthHeader(t *testing.T) {\n  13| t.Parallel()\ncmd/entire/cli/api",
+      "output_tokens": 2534,
+      "duration_ms": 0.9577274322509766,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": "e2e",
+        "recursive": true
+      },
+      "output": "README.md\ncmd/testreport/main.go\nbootstrap/main.go\ntests/attribution_test.go\ntests/checkpoint_metadata_test.go\ntests/codex_resume_test.go\ntests/deleted_files_test.go\ntests/disable_test.go\ntests/edge_cases_test.go\ntests/existing_files_test.go\ntests/external_agent_test.go\ntests/factory_hooks_test.go\ntests/interactive_test.go\ntests/main_test.go\ntests/mid_turn_commit_test.go\ntests/multi_session_test.go\ntests/resume_remote_test.go\ntests/resume_test.go\ntests/rewind_test.go\ntests/session_lifecycle_test",
+      "output_tokens": 1130,
+      "duration_ms": 1.1830329895019531,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": "cmd/entire/cli/auth",
+        "recursive": true
+      },
+      "output": "client.go\nclient_test.go\nstore.go\nstore_test.go",
+      "output_tokens": 47,
+      "duration_ms": 0.08606910705566406,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/agents/codex.go"
+      },
+      "output": "e2e/agents/codex.go:1-80\n  1| package agents\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"encoding/json\"\n  6| \t\"errors\"\n  7| \t\"fmt\"\n  8| \t\"os\"\n  9| \t\"os/exec\"\n  10| \t\"path/filepath\"\n  11| \t\"strings\"\n  12| \t\"time\"\n  13| )\n  14| \n  15| func init() {\n  16| \tif env := os.Getenv(\"E2E_AGENT\"); env != \"\" && env != \"codex\" {\n  17| \t\treturn\n  18| \t}\n  19| \tRegister(&Codex{})\n  20| \tRegisterGate(\"codex\", 2)\n  21| }\n  22| \n  23| // Codex implements the E2E Agent interface for OpenAI's Codex CLI.\n  24| type C",
+      "output_tokens": 2415,
+      "duration_ms": 0.3719329833984375,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/tests/main_test.go"
+      },
+      "output": "e2e/tests/main_test.go:1-78\n  1| //go:build e2e\n  2| \n  3| package tests\n  4| \n  5| import (\n  6| \t\"fmt\"\n  7| \t\"os\"\n  8| \t\"os/exec\"\n  9| \t\"path/filepath\"\n  10| \t\"runtime\"\n  11| \t\"testing\"\n  12| \n  13| \t\"github.com/entireio/cli/e2e/agents\"\n  14| \t\"github.com/entireio/cli/e2e/entire\"\n  15| \t\"github.com/entireio/cli/e2e/testutil\"\n  16| )\n  17| \n  18| func TestMain(m *testing.M) {\n  19| \trunDir := os.Getenv(\"E2E_ARTIFACT_DIR\")\n  20| \tif runDir == \"\" {\n  21| \t\t_, file, _, _ := runtime.Caller(0)\n  22|",
+      "output_tokens": 3057,
+      "duration_ms": 0.19884109497070312,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/auth/client.go"
+      },
+      "output": "cmd/entire/cli/auth/client.go:1-80\n  1| package auth\n  2| \n  3| import (\n  4| \t\"bytes\"\n  5| \t\"context\"\n  6| \t\"encoding/json\"\n  7| \t\"fmt\"\n  8| \t\"io\"\n  9| \t\"net/http\"\n  10| \t\"net/url\"\n  11| \t\"strings\"\n  12| \n  13| \t\"github.com/entireio/cli/cmd/entire/cli/api\"\n  14| )\n  15| \n  16| const (\n  17| \tmaxResponseBytes = 1 << 20\n  18| \tclientID         = \"entire-cli\"\n  19| )\n  20| \n  21| type Client struct {\n  22| \thttpClient *http.Client\n  23| \tbaseURL    string\n  24| }\n  25| \n  26| type DeviceAuthStart ",
+      "output_tokens": 2346,
+      "duration_ms": 0.5240440368652344,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/agents/codex.go",
+        "start_line": 80,
+        "end_line": 200
+      },
+      "output": "e2e/agents/codex.go:80-200\n  80| \tif cfg.PromptTimeout > 0 {\n  81| \t\ttimeout = cfg.PromptTimeout\n  82| \t}\n  83| \tpromptCtx, cancel := context.WithTimeout(ctx, timeout)\n  84| \tdefer cancel()\n  85| \n  86| \thome, cleanup, err := codexHome()\n  87| \tif err != nil {\n  88| \t\treturn Output{}, fmt.Errorf(\"create codex home: %w\", err)\n  89| \t}\n  90| \tdefer cleanup()\n  91| \n  92| \tabsDir, err := filepath.Abs(dir)\n  93| \tif err != nil {\n  94| \t\tabsDir = dir\n  95| \t}\n  96| \tif err := seedCodexHome(home, absD",
+      "output_tokens": 4135,
+      "duration_ms": 0.33211708068847656,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/auth/store.go"
+      },
+      "output": "cmd/entire/cli/auth/store.go:1-74\n  1| package auth\n  2| \n  3| import (\n  4| \t\"errors\"\n  5| \t\"fmt\"\n  6| \t\"strings\"\n  7| \n  8| \t\"github.com/entireio/cli/cmd/entire/cli/api\"\n  9| \t\"github.com/zalando/go-keyring\"\n  10| )\n  11| \n  12| const keyringService = \"entire-cli\"\n  13| \n  14| // Store manages CLI authentication tokens in the OS keyring.\n  15| type Store struct {\n  16| \tservice string\n  17| }\n  18| \n  19| // NewStore returns a Store backed by the system keyring.\n  20| func NewStore() *Store {\n",
+      "output_tokens": 2283,
+      "duration_ms": 0.5259513854980469,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/agents/codex.go",
+        "start_line": 200,
+        "end_line": 270
+      },
+      "output": "e2e/agents/codex.go:200-270\n  200| \t\t\treturn nil, fmt.Errorf(\"waiting for codex resumed prompt: %w\", waitErr)\n  201| \t\t}\n  202| \t\tif !strings.Contains(content, \"press enter to confirm\") &&\n  203| \t\t\t!strings.Contains(content, \"Use \u2191/\u2193 to move\") {\n  204| \t\t\tbreak\n  205| \t\t}\n  206| \t\t_ = s.SendKeys(\"Enter\")\n  207| \t\ttime.Sleep(500 * time.Millisecond)\n  208| \t}\n  209| \n  210| \treturn &CodexSession{TmuxSession: s, home: home}, nil\n  211| }\n  212| \n  213| func (c *Codex) startTmuxSession(name, dir, h",
+      "output_tokens": 2784,
+      "duration_ms": 0.43892860412597656,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/agents/codex_test.go"
+      },
+      "output": "e2e/agents/codex_test.go:1-43\n  1| package agents\n  2| \n  3| import (\n  4| \t\"encoding/json\"\n  5| \t\"os\"\n  6| \t\"path/filepath\"\n  7| \t\"testing\"\n  8| )\n  9| \n  10| func TestSeedCodexHome_WritesAPIKeyAuth(t *testing.T) {\n  11| \thome := t.TempDir()\n  12| \tprojectDir := filepath.Join(t.TempDir(), \"repo\")\n  13| \tt.Setenv(\"OPENAI_API_KEY\", \"sk-test-key\")\n  14| \tt.Setenv(\"E2E_CODEX_MODEL\", \"gpt-5.4\")\n  15| \n  16| \tif err := os.MkdirAll(projectDir, 0o750); err != nil {\n  17| \t\tt.Fatalf(\"mkdir project dir: ",
+      "output_tokens": 1316,
+      "duration_ms": 0.19097328186035156,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/agents/codex_test.go",
+        "start_line": 43,
+        "end_line": 120
+      },
+      "output": "e2e/agents/codex_test.go:43-43\n  43| }",
+      "output_tokens": 38,
+      "duration_ms": 0.21886825561523438,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/bootstrap/main.go"
+      },
+      "output": "e2e/bootstrap/main.go:1-30\n  1| // Package main provides a pre-test bootstrap command that runs agent-specific\n  2| // setup (auth config, warmup) before E2E tests. Usage: go run ./e2e/bootstrap\n  3| package main\n  4| \n  5| import (\n  6| \t\"fmt\"\n  7| \t\"os\"\n  8| \n  9| \t\"github.com/entireio/cli/e2e/agents\"\n  10| )\n  11| \n  12| func main() {\n  13| \t// Optional: pass agent name as argument to bootstrap only that agent.\n  14| \tfilter := \"\"\n  15| \tif len(os.Args) > 1 {\n  16| \t\tfilter = os.Args[1]\n  17|",
+      "output_tokens": 923,
+      "duration_ms": 0.29087066650390625,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/auth/client.go",
+        "start_line": 80,
+        "end_line": 187
+      },
+      "output": "cmd/entire/cli/auth/client.go:80-187\n  80| \t}\n  81| \n  82| \treturn &result, nil\n  83| }\n  84| \n  85| func (c *Client) PollDeviceAuth(ctx context.Context, deviceCode string) (*DeviceAuthPoll, error) {\n  86| \tbody := url.Values{}\n  87| \tbody.Set(\"grant_type\", \"urn:ietf:params:oauth:grant-type:device_code\")\n  88| \tbody.Set(\"client_id\", clientID)\n  89| \tbody.Set(\"device_code\", deviceCode)\n  90| \n  91| \tresp, err := c.postForm(ctx, \"/oauth/token\", body)\n  92| \tif err != nil {\n  93| \t\treturn nil, fmt.",
+      "output_tokens": 3780,
+      "duration_ms": 2.002239227294922,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/api_client.go"
+      },
+      "output": "cmd/entire/cli/api_client.go:1-29\n  1| package cli\n  2| \n  3| import (\n  4| \t\"errors\"\n  5| \t\"fmt\"\n  6| \n  7| \t\"github.com/entireio/cli/cmd/entire/cli/api\"\n  8| \t\"github.com/entireio/cli/cmd/entire/cli/auth\"\n  9| )\n  10| \n  11| // NewAuthenticatedAPIClient creates an API client using the bearer token\n  12| // from the CLI login flow. Returns an error if the user is not logged in.\n  13| // Pass insecureHTTP=true to allow plain HTTP base URLs (for local development).\n  14| func NewAuthenticatedAPIC",
+      "output_tokens": 1022,
+      "duration_ms": 2.207040786743164,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/api/client.go"
+      },
+      "output": "cmd/entire/cli/api/client.go:1-80\n  1| package api\n  2| \n  3| import (\n  4| \t\"bytes\"\n  5| \t\"context\"\n  6| \t\"encoding/json\"\n  7| \t\"fmt\"\n  8| \t\"io\"\n  9| \t\"net/http\"\n  10| \t\"strings\"\n  11| )\n  12| \n  13| const (\n  14| \tmaxResponseBytes = 1 << 20\n  15| \tuserAgent        = \"entire-cli\"\n  16| )\n  17| \n  18| // Client is an authenticated HTTP client for the Entire API.\n  19| // It attaches the bearer token to all outgoing requests via the Authorization header.\n  20| type Client struct {\n  21| \thttpClie",
+      "output_tokens": 2675,
+      "duration_ms": 1.1363029479980469,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "OPENAI_API_KEY",
+        "context_before": 2,
+        "context_after": 2
+      },
+      "output": ".github/workflows/e2e-isolated.yml\n 62: OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}\n 72: OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}\n.github/workflows/e2e.yml\n 95: OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}\n 105: OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}\ncmd/entire/cli/agent/codex/AGENT.md\n 192: - Relevant env vars: `CODEX_HOME` (config dir override), `OPENAI_API_KEY` (API auth)\ne2e/README.md\n 60: | `OPENAI_API_KEY` | Required for Codex | \u2014 |\ne2e/agents/codex.go\n 41: if os.Getenv(\"CI\"",
+      "output_tokens": 1015,
+      "duration_ms": 0.5092620849609375,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/README.md"
+      },
+      "output": "e2e/README.md:1-80\n  1| # E2E Tests\n  2| \n  3| End-to-end tests for the `entire` CLI against real agents (Claude Code, Gemini CLI, OpenCode, Codex, Cursor, Factory AI Droid, Copilot CLI).\n  4| \n  5| ## Commands\n  6| \n  7| ```bash\n  8| mise run test:e2e [filter]                          # run filtered (or omit filter for all agents)\n  9| mise run test:e2e --agent claude-code [filter]       # Claude Code only\n  10| mise run test:e2e --agent gemini-cli [filter]        # Gemini CLI only\n  11| mise r",
+      "output_tokens": 4479,
+      "duration_ms": 1.0259151458740234,
+      "turn_number": 10
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "glob": ".github/workflows/e2e*.yml"
+      },
+      "output": ".github/workflows/e2e-isolated.yml git:clean\n.github/workflows/e2e-windows.yml git:clean\n.github/workflows/e2e.yml git:clean",
+      "output_tokens": 124,
+      "duration_ms": 0.2498626708984375,
+      "turn_number": 10
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": ".github/workflows/e2e.yml",
+        "start_line": 80,
+        "end_line": 130
+      },
+      "output": ".github/workflows/e2e.yml:80-130\n  80|           echo \"$HOME/.local/bin\" >> $GITHUB_PATH\n  81| \n  82|       - name: Verify roger-roger agent\n  83|         if: matrix.agent == 'roger-roger'\n  84|         run: |\n  85|           set -euo pipefail\n  86|           echo \"Verifying roger-roger binaries on PATH...\"\n  87|           command -v roger-roger\n  88|           command -v entire-agent-roger-roger\n  89| \n  90|       - name: Bootstrap agent\n  91|         if: matrix.agent != 'roger-roger'\n  92|    ",
+      "output_tokens": 2490,
+      "duration_ms": 0.8761882781982422,
+      "turn_number": 11
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": ".github/workflows/e2e-isolated.yml",
+        "start_line": 55,
+        "end_line": 90
+      },
+      "output": ".github/workflows/e2e-isolated.yml:55-89\n  55|           command -v entire-agent-roger-roger\n  56| \n  57|       - name: Bootstrap agent\n  58|         if: inputs.agent != 'roger-roger'\n  59|         env:\n  60|           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}\n  61|           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}\n  62|           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}\n  63|           CURSOR_API_KEY: ${{ secrets.CURSOR_API_KEY }}\n  64|           FACTORY_API_KEY: ${{ secret",
+      "output_tokens": 1787,
+      "duration_ms": 0.38504600524902344,
+      "turn_number": 11
+    }
+  ],
+  "total_tool_calls": 23,
+  "total_turns": 12,
+  "wall_clock_ms": 66353.05309295654,
+  "input_tokens": 120461,
+  "output_tokens": 3140,
+  "tool_output_tokens": 40990,
+  "total_cost_usd": 0.40848300000000004,
+  "first_call_tool": "find_files",
+  "first_call_produced_file": true,
+  "retry_count": 0,
+  "error": "",
+  "total_tool_duration_ms": 15.995025634765625,
+  "tool_execution_share": 0.00024105937691152777,
+  "search_call_count": 3,
+  "avg_search_code_duration_ms": 0.8495648701985677,
+  "median_search_code_duration_ms": 0.9577274322509766,
+  "avg_read_code_duration_ms": 0.7150173187255859,
+  "median_read_code_duration_ms": 0.43892860412597656
+}

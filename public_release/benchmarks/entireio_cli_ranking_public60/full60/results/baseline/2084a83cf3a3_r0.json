@@ -1,0 +1,242 @@
+{
+  "repeat": 0,
+  "task_id": "2084a83cf3a3",
+  "repo": "entireio-cli",
+  "task_type": "repo_task",
+  "condition": "baseline",
+  "prompt": "can you check if commits into the shadow branch ignore .gitignore?",
+  "answer": "",
+  "tool_calls": [
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "shadow branch",
+        "context_before": 3,
+        "context_after": 3
+      },
+      "output": "./CLAUDE.md\n  117-121:\n    117| \n    118| **Tests that touch git state must use an isolated temp repo \u2014 never the real repo CWD.**\n    119| \n    120| Many handlers (lifecycle, strategy, hooks) resolve the git repo from CWD via `OpenRepository`, `GetGitCommonDir`, `DetectFileChanges`, etc. Without isolation, tests can create session state files, shadow branches, or other artifacts in the real `.git/` directory.\n    121| \n  123-123:\n    123| \n  357-357:\n    357| \n\n./e2e/testutil/repo.go\n  96-100:\n",
+      "output_tokens": 5407,
+      "duration_ms": 33.674001693725586,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "gitignore",
+        "context_before": 3,
+        "context_after": 3
+      },
+      "output": "./CLAUDE.md\n  271-272:\n    271| ### Logging vs User Output\n    272| \n  274-274:\n    274| - **Enabling debug/perf logs locally**: Prefer adding `\"log_level\": \"DEBUG\"` to `.entire/settings.local.json` when you need detailed hook/perf logs. This file is gitignored, so it is a low-risk local-only change. `ENTIRE_LOG_LEVEL=debug` also works and takes precedence.\n  276-277:\n    276| \n    277| Don't use `fmt.Print*` for operational messages (checkpoint saves, hook invocations, strategy decisions) - tho",
+      "output_tokens": 3822,
+      "duration_ms": 16.407251358032227,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "gitignore",
+        "path_glob": "**/shadow*\"",
+        "context_before": 3,
+        "context_after": 3
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 13.833999633789062,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "gitignore",
+        "path_glob": "**/*shadow*\"",
+        "context_before": 3,
+        "context_after": 3
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 9.814023971557617,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "shadow branch tree write",
+        "context_before": 3,
+        "context_after": 3
+      },
+      "output": "./CHANGELOG.md\n  55-55:\n    55| - Gitignore now respected for shadow branch tree writes ([#890](https://github.com/entireio/cli/pull/890))",
+      "output_tokens": 138,
+      "duration_ms": 26.527881622314453,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "glob": "**/*shadow*"
+      },
+      "output": "No files found.",
+      "output_tokens": 15,
+      "duration_ms": 12.929201126098633,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "gitignore",
+        "path_glob": "**/*tree*\"",
+        "context_before": 3,
+        "context_after": 3
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 10.263919830322266,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": ".",
+        "recursive": false
+      },
+      "output": ".allowed-licenses\n.claude/\n.codex/\n.devcontainer/\n.entire/\n.ferrata/\n.gemini/\n.git/\n.github/\n.gitignore\n.golangci.yaml\n.goreleaser.yaml\n.opencode/\n.vscode/\nAGENTS.md\nCHANGELOG.md\nCLAUDE.md\nCODE_OF_CONDUCT.md\nCONTRIBUTING.md\nLICENSE\nREADME.md\nSECURITY.md\nWINDOWS.md\ncmd/\ndocs/\ne2e/\ngo.mod\ngo.sum\nmise-tasks/\nmise.toml\nperf/\nredact/\nscripts/",
+      "output_tokens": 339,
+      "duration_ms": 0.5488395690917969,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": "cmd/entire",
+        "recursive": false
+      },
+      "output": "cli/\nmain.go",
+      "output_tokens": 12,
+      "duration_ms": 0.2989768981933594,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": "cmd/entire/cli",
+        "recursive": false
+      },
+      "output": "agent/\napi/\napi_client.go\nattach.go\nattach_test.go\nattach_transcript.go\nauth/\nbench_enable_test.go\nbench_test.go\nbenchutil/\ncheckpoint/\nclean.go\nclean_test.go\ncommit_message.go\ncommit_message_test.go\nconfig.go\nconfig_test.go\nconstants.go\ndoctor.go\ndoctor_test.go\nerrors.go\nexplain.go\nexplain_test.go\nfetch_no_config_pollution_test.go\ngit_operations.go\ngit_operations_test.go\ngitops/\nglobal_test.go\nhelp.go\nhook_registry.go\nhook_registry_test.go\nhooks.go\nhooks_claudecode_posttodo.go\nhooks_cmd.go\nhook",
+      "output_tokens": 1356,
+      "duration_ms": 1.4350414276123047,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": "cmd/entire/cli/checkpoint"
+      },
+      "output": "backwards_compat_test.go\nblob_resolver.go\nblob_resolver_test.go\ncheckpoint.go\ncheckpoint_test.go\ncommitted.go\ncommitted_reader_resolve.go\ncommitted_reader_resolve_test.go\ncommitted_update_test.go\nfetching_tree.go\nglobal_test.go\nid/\nparse_tree.go\nparse_tree_test.go\nprompts.go\nprompts_test.go\nstore.go\ntemporary.go\ntemporary_test.go\ntree_surgery_equiv_test.go\nv2_committed.go\nv2_generation.go\nv2_generation_test.go\nv2_read.go\nv2_read_test.go\nv2_resolve.go\nv2_resolve_test.go\nv2_store.go\nv2_store_test.",
+      "output_tokens": 502,
+      "duration_ms": 0.492095947265625,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": "cmd/entire/cli/gitops"
+      },
+      "output": "diff.go\ndiff_test.go",
+      "output_tokens": 20,
+      "duration_ms": 0.10800361633300781,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "gitignore",
+        "path_glob": "cmd/entire/cli/checkpoint/**\"",
+        "context_before": 3,
+        "context_after": 3
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 15.066862106323242,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "gitignore",
+        "path_glob": "cmd/entire/cli/session/**\"",
+        "context_before": 3,
+        "context_after": 3
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 11.441946029663086,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "gitignore",
+        "path_glob": "cmd/**/*.go\"",
+        "context_before": 3,
+        "context_after": 3,
+        "max_files": 20
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 18.462419509887695,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "gitignore",
+        "file_type": "go",
+        "context_before": 3,
+        "context_after": 3,
+        "max_files": 20
+      },
+      "output": "./e2e/tests/resume_test.go\n  26-31:\n    26| \n    27| \t\t// Commit files from `entire enable` so main has a clean working tree\n    28| \t\t// for branch switching (mirrors a real repo where .gitignore is tracked).\n    29| \t\ts.Git(t, \"add\", \".\")\n    30| \t\ts.Git(t, \"commit\", \"-m\", \"Enable entire\")\n    31| \n\n./cmd/entire/cli/strategy/common_test.go\n  984-990:\n    984| \t\t{\".gemini/settings.json\", true},\n    985| \t\t{\"src/main.go\", false},\n    986| \t\t{\"README.md\", false},\n    987| \t\t{\".gitignore\", false},",
+      "output_tokens": 12186,
+      "duration_ms": 19.160032272338867,
+      "turn_number": 10
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/checkpoint/temporary.go"
+      },
+      "output": "cmd/entire/cli/checkpoint/temporary.go:1-80\n  1| package checkpoint\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"crypto/sha256\"\n  6| \t\"encoding/hex\"\n  7| \t\"encoding/json\"\n  8| \t\"errors\"\n  9| \t\"fmt\"\n  10| \t\"log/slog\"\n  11| \t\"os\"\n  12| \t\"os/exec\"\n  13| \t\"path/filepath\"\n  14| \t\"sort\"\n  15| \t\"strings\"\n  16| \t\"time\"\n  17| \n  18| \t\"github.com/entireio/cli/cmd/entire/cli/agent\"\n  19| \t\"github.com/entireio/cli/cmd/entire/cli/agent/types\"\n  20| \t\"github.com/entireio/cli/cmd/entire/cli/jsonutil\"\n  21| \t\"git",
+      "output_tokens": 3355,
+      "duration_ms": 0.7901191711425781,
+      "turn_number": 11
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/checkpoint/temporary.go",
+        "start_line": 80,
+        "end_line": 220
+      },
+      "output": "cmd/entire/cli/checkpoint/temporary.go:80-220\n  80| \t\tif lastCommit, err := s.repo.CommitObject(parentHash); err == nil {\n  81| \t\t\tlastTreeHash = lastCommit.TreeHash\n  82| \t\t}\n  83| \t}\n  84| \n  85| \t// Collect all files to include\n  86| \tvar allFiles []string\n  87| \tvar allDeletedFiles []string\n  88| \tif opts.IsFirstCheckpoint {\n  89| \t\t// For the first checkpoint, capture all changed files (modified tracked + untracked)\n  90| \t\t// using `git status --porcelain -z` which respects both repo and g",
+      "output_tokens": 6256,
+      "duration_ms": 0.61798095703125,
+      "turn_number": 12
+    }
+  ],
+  "total_tool_calls": 18,
+  "total_turns": 12,
+  "wall_clock_ms": 29864.37487602234,
+  "input_tokens": 78645,
+  "output_tokens": 1662,
+  "tool_output_tokens": 33510,
+  "total_cost_usd": 0.260865,
+  "first_call_tool": "search_code",
+  "first_call_produced_file": true,
+  "retry_count": 0,
+  "error": "",
+  "total_tool_duration_ms": 191.87259674072266,
+  "tool_execution_share": 0.006424798695343672,
+  "search_call_count": 10,
+  "read_call_count": 2,
+  "avg_search_code_duration_ms": 17.46523380279541,
+  "median_search_code_duration_ms": 15.737056732177734
+}

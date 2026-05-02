@@ -1,0 +1,362 @@
+{
+  "overall": {
+    "baseline": {
+      "wall_clock_ms": 38206.150579452515,
+      "total_tool_calls": 20.2,
+      "total_cost_usd": 0.55805436,
+      "tool_output_tokens": 61835.6,
+      "total_tool_duration_ms": 165.47880172729492,
+      "tool_execution_share": 0.004610635549446858,
+      "search_call_count": 8.04,
+      "read_call_count": 8.44,
+      "avg_search_code_duration_ms": 16.93730765604984,
+      "median_search_code_duration_ms": 16.204376220703125
+    },
+    "fff": {
+      "wall_clock_ms": 36250.05747795105,
+      "total_tool_calls": 20.0,
+      "total_cost_usd": 0.4160694,
+      "tool_output_tokens": 51492.88,
+      "total_tool_duration_ms": 174.7030735015869,
+      "tool_execution_share": 0.004049543286727378,
+      "search_call_count": 7.64,
+      "read_call_count": 8.88,
+      "avg_search_code_duration_ms": 11.598736253532616,
+      "median_search_code_duration_ms": 1.394186019897461
+    },
+    "rg_ranked": {
+      "wall_clock_ms": 36149.46786880493,
+      "total_tool_calls": 20.24,
+      "total_cost_usd": 0.48903156,
+      "tool_output_tokens": 66370.68,
+      "total_tool_duration_ms": 164.3464469909668,
+      "tool_execution_share": 0.004537918345822688,
+      "search_call_count": 6.92,
+      "read_call_count": 10.04,
+      "avg_search_code_duration_ms": 18.344980628790292,
+      "median_search_code_duration_ms": 15.872955322265625
+    },
+    "pgr_v4": {
+      "wall_clock_ms": 36884.51996803284,
+      "total_tool_calls": 20.92,
+      "total_cost_usd": 0.48236688,
+      "tool_output_tokens": 61219.08,
+      "total_tool_duration_ms": 123.59067916870117,
+      "tool_execution_share": 0.0032702569145123,
+      "search_call_count": 6.56,
+      "read_call_count": 11.12,
+      "avg_search_code_duration_ms": 14.605400989582012,
+      "median_search_code_duration_ms": 13.402166366577148
+    }
+  },
+  "by_type": {
+    "code_understanding": {
+      "baseline": {
+        "wall_clock_ms": 36533.88339678446,
+        "total_tool_calls": 19.866666666666667,
+        "total_cost_usd": 0.5012686,
+        "tool_output_tokens": 54626.26666666667,
+        "total_tool_duration_ms": 193.23951403299967,
+        "tool_execution_share": 0.005518682159040145,
+        "search_call_count": 9.2,
+        "read_call_count": 6.866666666666666,
+        "avg_search_code_duration_ms": 17.093207912380457,
+        "median_search_code_duration_ms": 16.142940521240234
+      },
+      "fff": {
+        "wall_clock_ms": 34869.79699134827,
+        "total_tool_calls": 19.0,
+        "total_cost_usd": 0.3279898,
+        "tool_output_tokens": 38631.933333333334,
+        "total_tool_duration_ms": 138.5204792022705,
+        "tool_execution_share": 0.0034376660323039206,
+        "search_call_count": 8.066666666666666,
+        "read_call_count": 7.466666666666667,
+        "avg_search_code_duration_ms": 17.80546591633604,
+        "median_search_code_duration_ms": 0.9526332219441732
+      },
+      "rg_ranked": {
+        "wall_clock_ms": 34853.246545791626,
+        "total_tool_calls": 19.733333333333334,
+        "total_cost_usd": 0.388665,
+        "tool_output_tokens": 61045.13333333333,
+        "total_tool_duration_ms": 178.53344281514487,
+        "tool_execution_share": 0.005002845745856708,
+        "search_call_count": 7.466666666666667,
+        "read_call_count": 8.466666666666667,
+        "avg_search_code_duration_ms": 16.83721301902054,
+        "median_search_code_duration_ms": 14.513492584228516
+      },
+      "pgr_v4": {
+        "wall_clock_ms": 34929.384072621666,
+        "total_tool_calls": 19.0,
+        "total_cost_usd": 0.312281,
+        "tool_output_tokens": 36055.4,
+        "total_tool_duration_ms": 120.33031781514485,
+        "tool_execution_share": 0.0031923768343329216,
+        "search_call_count": 6.466666666666667,
+        "read_call_count": 9.066666666666666,
+        "avg_search_code_duration_ms": 13.61008470020597,
+        "median_search_code_duration_ms": 12.69667943318685
+      }
+    },
+    "debug_or_validation": {
+      "baseline": {
+        "wall_clock_ms": 43093.159879956926,
+        "total_tool_calls": 19.571428571428573,
+        "total_cost_usd": 0.7360101428571428,
+        "tool_output_tokens": 79692.14285714286,
+        "total_tool_duration_ms": 110.62925202505929,
+        "tool_execution_share": 0.0026726293045063756,
+        "search_call_count": 5.571428571428571,
+        "read_call_count": 10.714285714285714,
+        "avg_search_code_duration_ms": 16.645521705751687,
+        "median_search_code_duration_ms": 15.977467809404645
+      },
+      "fff": {
+        "wall_clock_ms": 39158.00530569894,
+        "total_tool_calls": 20.857142857142858,
+        "total_cost_usd": 0.5953174285714286,
+        "tool_output_tokens": 77565.42857142857,
+        "total_tool_duration_ms": 22.249834878104075,
+        "tool_execution_share": 0.0006081461664789544,
+        "search_call_count": 6.428571428571429,
+        "read_call_count": 11.285714285714286,
+        "avg_search_code_duration_ms": 1.588163205555507,
+        "median_search_code_duration_ms": 1.4535699571881975
+      },
+      "rg_ranked": {
+        "wall_clock_ms": 38387.175185339795,
+        "total_tool_calls": 19.857142857142858,
+        "total_cost_usd": 0.7196288571428572,
+        "tool_output_tokens": 82089.71428571429,
+        "total_tool_duration_ms": 130.44108663286482,
+        "tool_execution_share": 0.003555072604412948,
+        "search_call_count": 5.714285714285714,
+        "read_call_count": 12.142857142857142,
+        "avg_search_code_duration_ms": 20.778402476624297,
+        "median_search_code_duration_ms": 18.802200044904435
+      },
+      "pgr_v4": {
+        "wall_clock_ms": 39657.769203186035,
+        "total_tool_calls": 22.142857142857142,
+        "total_cost_usd": 0.8215902857142857,
+        "tool_output_tokens": 111605.85714285714,
+        "total_tool_duration_ms": 140.98991666521346,
+        "tool_execution_share": 0.003791160706876106,
+        "search_call_count": 7.0,
+        "read_call_count": 12.428571428571429,
+        "avg_search_code_duration_ms": 16.495936404943613,
+        "median_search_code_duration_ms": 14.337165015084404
+      }
+    },
+    "implementation": {
+      "baseline": {
+        "wall_clock_ms": 35164.46479161581,
+        "total_tool_calls": 23.333333333333332,
+        "total_cost_usd": 0.426753,
+        "tool_output_tokens": 56217.0,
+        "total_tool_duration_ms": 154.65752283732095,
+        "tool_execution_share": 0.004592417073008215,
+        "search_call_count": 8.0,
+        "read_call_count": 11.0,
+        "avg_search_code_duration_ms": 16.83864025842576,
+        "median_search_code_duration_ms": 17.04100767771403
+      },
+      "fff": {
+        "wall_clock_ms": 36366.14831288656,
+        "total_tool_calls": 23.0,
+        "total_cost_usd": 0.438222,
+        "tool_output_tokens": 54961.666666666664,
+        "total_tool_duration_ms": 711.3402684529623,
+        "tool_execution_share": 0.015138856172757656,
+        "search_call_count": 8.333333333333334,
+        "read_call_count": 10.333333333333334,
+        "avg_search_code_duration_ms": 3.9230917181287492,
+        "median_search_code_duration_ms": 3.4633874893188477
+      },
+      "rg_ranked": {
+        "wall_clock_ms": 37409.25741195679,
+        "total_tool_calls": 23.666666666666668,
+        "total_cost_usd": 0.452804,
+        "tool_output_tokens": 56320.666666666664,
+        "total_tool_duration_ms": 172.52397537231445,
+        "tool_execution_share": 0.004506588075608648,
+        "search_call_count": 7.0,
+        "read_call_count": 13.0,
+        "avg_search_code_duration_ms": 20.20583436602638,
+        "median_search_code_duration_ms": 15.83536465962728
+      },
+      "pgr_v4": {
+        "wall_clock_ms": 40189.284563064575,
+        "total_tool_calls": 27.666666666666668,
+        "total_cost_usd": 0.541275,
+        "tool_output_tokens": 69468.33333333333,
+        "total_tool_duration_ms": 99.29426511128743,
+        "tool_execution_share": 0.0024442151332269815,
+        "search_call_count": 6.0,
+        "read_call_count": 18.333333333333332,
+        "avg_search_code_duration_ms": 15.170733133951822,
+        "median_search_code_duration_ms": 14.747937520345053
+      }
+    }
+  },
+  "paired_by_task": {
+    "fff": {
+      "wall_clock_ms": {
+        "n_tasks": 25,
+        "mean_diff": -1956.0931015014648,
+        "median_diff": 300.3063201904297
+      },
+      "total_tool_calls": {
+        "n_tasks": 25,
+        "mean_diff": -0.2,
+        "median_diff": 0.0
+      },
+      "total_cost_usd": {
+        "n_tasks": 25,
+        "mean_diff": -0.14198496000000002,
+        "median_diff": -0.009339000000000042
+      },
+      "tool_output_tokens": {
+        "n_tasks": 25,
+        "mean_diff": -10342.72,
+        "median_diff": -1882.0
+      },
+      "total_tool_duration_ms": {
+        "n_tasks": 25,
+        "mean_diff": 9.224271774291992,
+        "median_diff": -103.0433177947998
+      },
+      "tool_execution_share": {
+        "n_tasks": 25,
+        "mean_diff": -0.0005610922627194794,
+        "median_diff": -0.0031937739948215355
+      },
+      "search_call_count": {
+        "n_tasks": 25,
+        "mean_diff": -0.4,
+        "median_diff": 1.0
+      },
+      "read_call_count": {
+        "n_tasks": 25,
+        "mean_diff": 0.44,
+        "median_diff": 1.0
+      },
+      "avg_search_code_duration_ms": {
+        "n_tasks": 25,
+        "mean_diff": -5.338571402517223,
+        "median_diff": -14.956951141357422
+      },
+      "median_search_code_duration_ms": {
+        "n_tasks": 25,
+        "mean_diff": -14.810190200805664,
+        "median_diff": -15.521407127380371
+      }
+    },
+    "rg_ranked": {
+      "wall_clock_ms": {
+        "n_tasks": 25,
+        "mean_diff": -2056.682710647583,
+        "median_diff": -1209.5370292663574
+      },
+      "total_tool_calls": {
+        "n_tasks": 25,
+        "mean_diff": 0.04,
+        "median_diff": 1.0
+      },
+      "total_cost_usd": {
+        "n_tasks": 25,
+        "mean_diff": -0.06902280000000001,
+        "median_diff": -0.00816900000000001
+      },
+      "tool_output_tokens": {
+        "n_tasks": 25,
+        "mean_diff": 4535.08,
+        "median_diff": -162.0
+      },
+      "total_tool_duration_ms": {
+        "n_tasks": 25,
+        "mean_diff": -1.132354736328125,
+        "median_diff": 22.10688591003418
+      },
+      "tool_execution_share": {
+        "n_tasks": 25,
+        "mean_diff": -7.271720362416975e-05,
+        "median_diff": 0.00016170863306852554
+      },
+      "search_call_count": {
+        "n_tasks": 25,
+        "mean_diff": -1.12,
+        "median_diff": -1.0
+      },
+      "read_call_count": {
+        "n_tasks": 25,
+        "mean_diff": 1.6,
+        "median_diff": 2.0
+      },
+      "avg_search_code_duration_ms": {
+        "n_tasks": 25,
+        "mean_diff": 1.4076729727404524,
+        "median_diff": 2.1035075187683105
+      },
+      "median_search_code_duration_ms": {
+        "n_tasks": 25,
+        "mean_diff": -0.3314208984375,
+        "median_diff": 0.010371208190917969
+      }
+    },
+    "pgr_v4": {
+      "wall_clock_ms": {
+        "n_tasks": 25,
+        "mean_diff": -1321.6306114196777,
+        "median_diff": 3393.153667449951
+      },
+      "total_tool_calls": {
+        "n_tasks": 25,
+        "mean_diff": 0.72,
+        "median_diff": 1.0
+      },
+      "total_cost_usd": {
+        "n_tasks": 25,
+        "mean_diff": -0.07568748000000002,
+        "median_diff": 0.012336000000000069
+      },
+      "tool_output_tokens": {
+        "n_tasks": 25,
+        "mean_diff": -616.52,
+        "median_diff": 2956.0
+      },
+      "total_tool_duration_ms": {
+        "n_tasks": 25,
+        "mean_diff": -41.88812255859375,
+        "median_diff": -22.310256958007812
+      },
+      "tool_execution_share": {
+        "n_tasks": 25,
+        "mean_diff": -0.0013403786349345575,
+        "median_diff": -0.0010834991235530098
+      },
+      "search_call_count": {
+        "n_tasks": 25,
+        "mean_diff": -1.48,
+        "median_diff": -1.0
+      },
+      "read_call_count": {
+        "n_tasks": 25,
+        "mean_diff": 2.68,
+        "median_diff": 3.0
+      },
+      "avg_search_code_duration_ms": {
+        "n_tasks": 25,
+        "mean_diff": -2.3319066664678263,
+        "median_diff": -2.539396286010742
+      },
+      "median_search_code_duration_ms": {
+        "n_tasks": 25,
+        "mean_diff": -2.8022098541259766,
+        "median_diff": -2.0531415939331055
+      }
+    }
+  }
+}

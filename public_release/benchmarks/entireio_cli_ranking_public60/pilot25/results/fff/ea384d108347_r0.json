@@ -1,0 +1,83 @@
+{
+  "repeat": 0,
+  "task_id": "ea384d108347",
+  "repo": "entireio-cli",
+  "task_type": "code_understanding",
+  "condition": "fff",
+  "prompt": "What does the nolint:ireturn linter rule refer to?",
+  "answer": "Here is a full explanation of `nolint:ireturn` as used in this codebase:\n\n---\n\n## `ireturn` \u2014 The Linter Rule\n\n`ireturn` is a **golangci-lint** linter that flags functions which **return an interface type** instead of a concrete type. The philosophy behind it is to enforce the Go best-practice guideline: *\"accept interfaces, return structs\"*. Returning an interface makes it harder for callers to reason about the concrete type, can hide implementation details unnecessarily, and reduces type-safety.\n\n---\n\n## How It's Configured (`.golangci.yaml`)\n\nThe linter is **enabled** in the project and configured with an **allow-list** of interface types that are explicitly permitted as return values:\n\n```yaml\nireturn:\n  allow:\n    - anon        # anonymous interfaces\n    - error       # the built-in error interface\n    - empty       # empty interface (any / interface{})\n    - stdlib      # any interface from the Go standard library\n    - grpc.DialOption\n    - github.com/entireio/cli/cmd/entire/cli/agent.Agent\n    - github.com/entireio/cli/cmd/entire/cli/checkpoint.CommittedReader\n    - github.com/entireio/cli/cmd/entire/cli/strategy.Strategy\n    - github.com/go-git/go-git/...   # several go-git interfaces\n```\n\nAny interface return type **not** on this allow-list will trigger a linter error.\n\n---\n\n## Where `//nolint:ireturn` Is Used\n\nThere are two recurring patterns where the rule is intentionally suppressed:\n\n### 1. Type-assertion helpers (`capabilities.go`)\n```go\nfunc AsHookSupport(ag Agent) (HookSupport, bool) { //nolint:ireturn // type-assertion helper must return interface\n```\nThese `AsXxx` functions perform a **Go type assertion** (e.g., `ag.(HookSupport)`) to check whether an `Agent` implements a specific capability interface. The return type *must* be an interface \u2014 there is no concrete type to return \u2014 so `ireturn` is suppressed with a clear comment explaining why.\n\n### 2. Bubbletea TUI pattern (`search_tui.go`)\n```go\nfunc (m searchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ireturn // bubbletea interface\n```\nThe [Bubbletea](https://github.com/charmbracelet/bubbletea) TUI framework **requires** `Update` and related methods to return the `tea.Model` interface as part of its contract. Since the return type is dictated by the external framework, the linter is suppressed here too.\n\n---\n\n## Summary\n\n| Aspect | Detail |\n|---|---|\n| **What it checks** | Functions that return an interface type instead of a concrete type |\n| **Why it exists** | Enforces \"accept interfaces, return structs\" Go idiom |\n| **When suppressed** | When returning an interface is *unavoidable*: type-assertion helpers and third-party framework contracts (Bubbletea) |\n| **Allow-list** | `error`, stdlib interfaces, and a curated set of project/dependency interfaces are globally whitelisted |",
+  "tool_calls": [
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "nolint:ireturn"
+      },
+      "output": "\u2192 Read cmd/entire/cli/agent/capabilities.go [def]\ncmd/entire/cli/agent/capabilities.go\n 30: func AsHookSupport(ag Agent) (HookSupport, bool) { //nolint:ireturn // type-assertion helper must return interface\n  31| if ag == nil {\n  32| return nil, false\n  33| }\n  34| hs, ok := ag.(HookSupport)\n  35| if !ok {\n  36| return nil, false\n  37| }\n  38| if cd, ok := ag.(CapabilityDeclarer); ok {\n 46: func AsTranscriptAnalyzer(ag Agent) (TranscriptAnalyzer, bool) { //nolint:ireturn // type-assertion helper",
+      "output_tokens": 2113,
+      "duration_ms": 0.7460117340087891,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "ireturn"
+      },
+      "output": "\u2192 Read cmd/entire/cli/agent/capabilities.go [def]\ncmd/entire/cli/agent/capabilities.go\n 30: func AsHookSupport(ag Agent) (HookSupport, bool) { //nolint:ireturn // type-assertion helper must return interface\n  31| if ag == nil {\n  32| return nil, false\n  33| }\n  34| hs, ok := ag.(HookSupport)\n  35| if !ok {\n  36| return nil, false\n  37| }\n  38| if cd, ok := ag.(CapabilityDeclarer); ok {\n 46: func AsTranscriptAnalyzer(ag Agent) (TranscriptAnalyzer, bool) { //nolint:ireturn // type-assertion helper",
+      "output_tokens": 2158,
+      "duration_ms": 1.0042190551757812,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": ".golangci.yaml",
+        "start_line": 95,
+        "end_line": 115
+      },
+      "output": ".golangci.yaml:95-115\n  95|           msg: \"go-git Checkout deletes .gitignored dirs - use CheckoutBranch() from git_operations.go\"\n  96|           pkg: 'github\\.com/go-git/go-git'\n  97|     govet:\n  98|       enable-all: true\n  99|       disable:\n  100|         - fieldalignment\n  101|         - shadow\n  102|     ireturn:\n  103|       allow:\n  104|         - anon\n  105|         - error\n  106|         - empty\n  107|         - stdlib\n  108|         - grpc.DialOption\n  109|         - github.com/ent",
+      "output_tokens": 993,
+      "duration_ms": 1.0559558868408203,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "nolint:ireturn",
+        "max_files": 20
+      },
+      "output": "\u2192 Read cmd/entire/cli/agent/capabilities.go [def]\ncmd/entire/cli/agent/capabilities.go\n 30: func AsHookSupport(ag Agent) (HookSupport, bool) { //nolint:ireturn // type-assertion helper must return interface\n  31| if ag == nil {\n  32| return nil, false\n  33| }\n  34| hs, ok := ag.(HookSupport)\n  35| if !ok {\n  36| return nil, false\n  37| }\n  38| if cd, ok := ag.(CapabilityDeclarer); ok {\n 46: func AsTranscriptAnalyzer(ag Agent) (TranscriptAnalyzer, bool) { //nolint:ireturn // type-assertion helper",
+      "output_tokens": 2113,
+      "duration_ms": 0.32901763916015625,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": ".golangci.yaml",
+        "start_line": 30,
+        "end_line": 45
+      },
+      "output": ".golangci.yaml:30-45\n  30|     - grouper\n  31|     - iface\n  32|     - importas\n  33|     - inamedparam\n  34|     - ineffassign\n  35|     - intrange\n  36|     - ireturn\n  37|     - loggercheck\n  38|     - maintidx\n  39|     - makezero\n  40|     - mirror\n  41|     - misspell\n  42|     - musttag\n  43|     - nakedret\n  44|     - nilerr\n  45|     - nilnesserr\n  (110 more lines)",
+      "output_tokens": 376,
+      "duration_ms": 0.2720355987548828,
+      "turn_number": 3
+    }
+  ],
+  "total_tool_calls": 5,
+  "total_turns": 4,
+  "wall_clock_ms": 20553.65824699402,
+  "input_tokens": 13310,
+  "output_tokens": 1163,
+  "tool_output_tokens": 7753,
+  "total_cost_usd": 0.057374999999999995,
+  "first_call_tool": "search_code",
+  "first_call_produced_file": true,
+  "retry_count": 0,
+  "error": "",
+  "total_tool_duration_ms": 3.4072399139404297,
+  "tool_execution_share": 0.00016577291852357912,
+  "search_call_count": 3,
+  "read_call_count": 2,
+  "avg_search_code_duration_ms": 0.6930828094482422,
+  "median_search_code_duration_ms": 0.7460117340087891
+}

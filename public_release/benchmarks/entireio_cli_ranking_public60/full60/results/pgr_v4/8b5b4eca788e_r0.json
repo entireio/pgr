@@ -1,0 +1,298 @@
+{
+  "repeat": 0,
+  "task_id": "8b5b4eca788e",
+  "repo": "entireio-cli",
+  "task_type": "debug_or_validation",
+  "condition": "pgr_v4",
+  "prompt": "I am running this test on Windows TestSingleSessionSubagentCommitInTurn. And it is failing, not always, it fails because after running the test we identify that there is a shadow branch that should not be there. I copied the entire.log on windows execution windows-broken-test.json (failing one) and the same test but this time running on macos the entire.log are inside mac-ok-test.json.",
+  "answer": "",
+  "tool_calls": [
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "TestSingleSessionSubagentCommitInTurn"
+      },
+      "output": "  summary:\n    query: TestSingleSessionSubagentCommitInTurn\n    scope: all files\n    files: 1 total, 1 shown\n    buckets: 0 source, 1 test, 0 low-priority\n    definition_candidates: 1\n    best_next_step: read e2e/tests/single_session_test.go around line 89\n\ne2e/tests/single_session_test.go\n  why: definition, test\n  92-92:\n    92| func TestSingleSessionSubagentCommitInTurn(t *testing.T) {\n  89-89:\n    89| // TestSingleSessionSubagentCommitInTurn: one prompt with subagent creates a file and commit",
+      "output_tokens": 506,
+      "duration_ms": 15.289068222045898,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "pattern": "windows-broken-test.json"
+      },
+      "output": "No files found.",
+      "output_tokens": 15,
+      "duration_ms": 7.668018341064453,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "pattern": "windows-broken-test"
+      },
+      "output": "No files found.",
+      "output_tokens": 15,
+      "duration_ms": 10.694265365600586,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "pattern": "mac-ok-test"
+      },
+      "output": "No files found.",
+      "output_tokens": 15,
+      "duration_ms": 7.1239471435546875,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/tests/single_session_test.go",
+        "start_line": 89,
+        "max_lines": 80
+      },
+      "output": "e2e/tests/single_session_test.go:89-114\n 89| // TestSingleSessionSubagentCommitInTurn: one prompt with subagent creates a file and commits it.\n 90| // Expects both an initial checkpoint (post-commit) and a catchup checkpoint\n 91| // (end-of-turn) referencing the same checkpoint ID.\n 92| func TestSingleSessionSubagentCommitInTurn(t *testing.T) {\n 93| \ttestutil.ForEachAgent(t, 2*time.Minute, func(t *testing.T, s *testutil.RepoState, ctx context.Context) {\n 94| \t\tif s.Agent.Name() == \"copilot-cli\" ",
+      "output_tokens": 1545,
+      "duration_ms": 0.18906593322753906,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "WaitForNoShadowBranches"
+      },
+      "output": "  summary:\n    query: WaitForNoShadowBranches\n    scope: all files\n    files: 10 total, 10 shown\n    buckets: 1 source, 9 test, 0 low-priority\n    definition_candidates: 1\n    best_next_step: read e2e/testutil/assertions.go around line 137\n\ne2e/testutil/assertions.go\n  why: definition, source\n  141-141:\n    141| func WaitForNoShadowBranches(t *testing.T, dir string, timeout time.Duration) {\n  137-137:\n    137| // WaitForNoShadowBranches polls until all shadow branches are cleaned up or\n\ne2e/test",
+      "output_tokens": 2415,
+      "duration_ms": 15.961170196533203,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "shadow branch",
+        "file_type": "go"
+      },
+      "output": "  summary:\n    query: shadow branch\n    scope: type=go\n    files: 10 total, 10 shown\n    buckets: 10 source, 0 test, 0 low-priority\n    definition_candidates: 0\n    best_next_step: read cmd/entire/cli/benchutil/benchutil.go around line 350\n\ncmd/entire/cli/benchutil/benchutil.go\n  why: reference, source\n  350-350:\n    350| // SeedShadowBranch creates N checkpoint commits on the shadow branch\n\ncmd/entire/cli/checkpoint/checkpoint.go\n  why: reference, source\n  55-55:\n    55| \t// on shadow branches ",
+      "output_tokens": 3024,
+      "duration_ms": 15.887022018432617,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/testutil/assertions.go",
+        "start_line": 137,
+        "max_lines": 50
+      },
+      "output": "e2e/testutil/assertions.go:137-186\n137| // WaitForNoShadowBranches polls until all shadow branches are cleaned up or\n138| // the timeout expires. Shadow branch cleanup can lag slightly behind checkpoint\n139| // condensation (carry-forward creates intermediate branches that are deleted\n140| // asynchronously).\n141| func WaitForNoShadowBranches(t *testing.T, dir string, timeout time.Duration) {\n142| \tt.Helper()\n143| \tdeadline := time.Now().Add(timeout)\n144| \tfor time.Now().Before(deadline) {\n145| ",
+      "output_tokens": 2293,
+      "duration_ms": 0.2830028533935547,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "ShadowBranchPrefix",
+        "file_type": "go"
+      },
+      "output": "  summary:\n    query: ShadowBranchPrefix\n    scope: type=go\n    files: 1 total, 1 shown\n    buckets: 1 source, 0 test, 0 low-priority\n    definition_candidates: 0\n    best_next_step: read cmd/entire/cli/checkpoint/temporary.go around line 34\n\ncmd/entire/cli/checkpoint/temporary.go\n  why: reference, source\n  34-34:\n    34| \t// ShadowBranchPrefix is the prefix for shadow branches.\n  35-35:\n    35| \tShadowBranchPrefix = \"entire/\"\n  199-199:\n    199| \t\tif !strings.HasPrefix(branchName, ShadowBranchP",
+      "output_tokens": 509,
+      "duration_ms": 12.691020965576172,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/checkpoint/temporary.go"
+      },
+      "output": "cmd/entire/cli/checkpoint/temporary.go:1-80\n  1| package checkpoint\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"crypto/sha256\"\n  6| \t\"encoding/hex\"\n  7| \t\"encoding/json\"\n  8| \t\"errors\"\n  9| \t\"fmt\"\n 10| \t\"log/slog\"\n 11| \t\"os\"\n 12| \t\"os/exec\"\n 13| \t\"path/filepath\"\n 14| \t\"sort\"\n 15| \t\"strings\"\n 16| \t\"time\"\n 17| \n 18| \t\"github.com/entireio/cli/cmd/entire/cli/agent\"\n 19| \t\"github.com/entireio/cli/cmd/entire/cli/agent/types\"\n 20| \t\"github.com/entireio/cli/cmd/entire/cli/jsonutil\"\n 21| \t\"github.com/enti",
+      "output_tokens": 3285,
+      "duration_ms": 4.806756973266602,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "func shadowBranches",
+        "file_type": "go"
+      },
+      "output": "  summary:\n    query: func shadowBranches\n    scope: type=go\n    files: 1 total, 1 shown\n    buckets: 1 source, 0 test, 0 low-priority\n    definition_candidates: 1\n    best_next_step: read e2e/testutil/assertions.go around line 123\n\ne2e/testutil/assertions.go\n  why: definition, source\n  123-123:\n    123| func shadowBranches(t *testing.T, dir string) []string {\n",
+      "output_tokens": 363,
+      "duration_ms": 15.458106994628906,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/testutil/assertions.go",
+        "start_line": 123,
+        "max_lines": 16
+      },
+      "output": "e2e/testutil/assertions.go:123-138\n123| func shadowBranches(t *testing.T, dir string) []string {\n124| \tt.Helper()\n125| \tbranches := GitOutput(t, dir, \"for-each-ref\", \"--format=%(refname:short)\", \"refs/heads/entire/\")\n126| \tvar shadow []string\n127| \tfor _, b := range strings.Split(branches, \"\\n\") {\n128| \t\tb = strings.TrimSpace(b)\n129| \t\tif b == \"\" || strings.HasPrefix(b, \"entire/checkpoints\") {\n130| \t\t\tcontinue\n131| \t\t}\n132| \t\tshadow = append(shadow, b)\n133| \t}\n134| \treturn shadow\n135| }\n136| \n13",
+      "output_tokens": 685,
+      "duration_ms": 0.4239082336425781,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/checkpoint/temporary.go",
+        "start_line": 80,
+        "max_lines": 120
+      },
+      "output": "cmd/entire/cli/checkpoint/temporary.go:80-199\n 80| \t\tif lastCommit, err := s.repo.CommitObject(parentHash); err == nil {\n 81| \t\t\tlastTreeHash = lastCommit.TreeHash\n 82| \t\t}\n 83| \t}\n 84| \n 85| \t// Collect all files to include\n 86| \tvar allFiles []string\n 87| \tvar allDeletedFiles []string\n 88| \tif opts.IsFirstCheckpoint {\n 89| \t\t// For the first checkpoint, capture all changed files (modified tracked + untracked)\n 90| \t\t// using `git status --porcelain -z` which respects both repo and global .giti",
+      "output_tokens": 5334,
+      "duration_ms": 0.44798851013183594,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "DeleteShadowBranch\\|DeleteTemporary\\|delete.*shadow\\|shadow.*delete",
+        "file_type": "go"
+      },
+      "output": "No matches found.\n  query: DeleteShadowBranch\\|DeleteTemporary\\|delete.*shadow\\|shadow.*delete\n  scope: type=go\n  hint: broaden the query, remove path_glob/file_type filters, or try a simpler symbol name.",
+      "output_tokens": 204,
+      "duration_ms": 16.698837280273438,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "ShadowBranchNameForCommit",
+        "file_type": "go"
+      },
+      "output": "  summary:\n    query: ShadowBranchNameForCommit\n    scope: type=go\n    files: 10 total, 10 shown\n    buckets: 8 source, 2 test, 0 low-priority\n    definition_candidates: 5\n    best_next_step: read cmd/entire/cli/checkpoint/temporary.go around line 69\n\ncmd/entire/cli/checkpoint/temporary.go\n  why: definition, source\n  653-653:\n    653| func ShadowBranchNameForCommit(baseCommit, worktreeID string) string {\n  69-69:\n    69| \tshadowBranchName := ShadowBranchNameForCommit(opts.BaseCommit, opts.Worktr",
+      "output_tokens": 3343,
+      "duration_ms": 15.849113464355469,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/checkpoint/temporary.go",
+        "start_line": 640,
+        "max_lines": 40
+      },
+      "output": "cmd/entire/cli/checkpoint/temporary.go:640-679\n640| func (s *GitStore) DeleteShadowBranch(ctx context.Context, baseCommit, worktreeID string) error {\n641| \tshadowBranchName := ShadowBranchNameForCommit(baseCommit, worktreeID)\n642| \tcmd := exec.CommandContext(ctx, \"git\", \"branch\", \"-D\", \"--\", shadowBranchName)\n643| \tif output, err := cmd.CombinedOutput(); err != nil {\n644| \t\treturn fmt.Errorf(\"failed to delete shadow branch %s: %s: %w\", shadowBranchName, strings.TrimSpace(string(output)), err)\n64",
+      "output_tokens": 2239,
+      "duration_ms": 0.40221214294433594,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/strategy/manual_commit_condensation.go",
+        "start_line": 110,
+        "max_lines": 60
+      },
+      "output": "cmd/entire/cli/strategy/manual_commit_condensation.go:110-169\n110| // Metadata is stored at sharded path: <checkpoint_id[:2]>/<checkpoint_id[2:]>/\n111| // Uses checkpoint.GitStore.WriteCommitted for the git operations.\n112| //\n113| // For mid-session commits (no Stop/SaveStep called yet), the shadow branch may not exist.\n114| // In this case, data is extracted from the live transcript instead.\n115| func (s *ManualCommitStrategy) CondenseSession(ctx context.Context, repo *git.Repository, checkpoi",
+      "output_tokens": 3560,
+      "duration_ms": 0.286102294921875,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/strategy/manual_commit_condensation.go",
+        "start_line": 169,
+        "max_lines": 80
+      },
+      "output": "cmd/entire/cli/strategy/manual_commit_condensation.go:169-248\n169| \t}\n170| \n171| \tfilterFilesTouched(sessionData, committedFiles)\n172| \n173| \t// On failure: drop transcript, continue with metadata (no retry path in hooks).\n174| \tredactedTranscript, redactDuration, err := redactSessionTranscript(ctx, sessionData.Transcript)\n175| \tif err != nil {\n176| \t\tlogging.Warn(logCtx, \"failed to redact transcript secrets, dropping transcript for checkpoint\",\n177| \t\t\tslog.String(\"session_id\", state.SessionID)",
+      "output_tokens": 3540,
+      "duration_ms": 0.4990100860595703,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/strategy/manual_commit_git.go",
+        "start_line": 60,
+        "max_lines": 80
+      },
+      "output": "cmd/entire/cli/strategy/manual_commit_git.go:60-139\n 60| \t\tmigrateSpan.RecordError(err)\n 61| \t\tmigrateSpan.End()\n 62| \t\treturn err\n 63| \t}\n 64| \tmigrateSpan.End()\n 65| \n 66| \t// Get checkpoint store\n 67| \tstore, err := s.getCheckpointStore()\n 68| \tif err != nil {\n 69| \t\treturn fmt.Errorf(\"failed to get checkpoint store: %w\", err)\n 70| \t}\n 71| \n 72| \t// Check if shadow branch exists to report whether we created it\n 73| \tshadowBranchName := checkpoint.ShadowBranchNameForCommit(state.BaseCommit, st",
+      "output_tokens": 3572,
+      "duration_ms": 0.2980232238769531,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/strategy/manual_commit_condensation.go",
+        "start_line": 248,
+        "max_lines": 100
+      },
+      "output": "cmd/entire/cli/strategy/manual_commit_condensation.go:248-347\n248| \t// Write checkpoint metadata to v1 branch\n249| \twriteV1Start := time.Now()\n250| \twriteCtx, writeCommittedSpan := perf.Start(ctx, \"write_committed_v1\")\n251| \tif err := store.WriteCommitted(writeCtx, writeOpts); err != nil {\n252| \t\twriteCommittedSpan.RecordError(err)\n253| \t\twriteCommittedSpan.End()\n254| \t\treturn nil, fmt.Errorf(\"failed to write checkpoint metadata: %w\", err)\n255| \t}\n256| \twriteCommittedSpan.End()\n257| \twriteV1Dura",
+      "output_tokens": 4646,
+      "duration_ms": 0.3960132598876953,
+      "turn_number": 10
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/strategy/manual_commit_session.go",
+        "start_line": 80,
+        "max_lines": 100
+      },
+      "output": "cmd/entire/cli/strategy/manual_commit_session.go:80-179\n 80| \n 81| \tvar states []*SessionState\n 82| \tfor _, sessionState := range sessionStates {\n 83| \t\tstate := sessionState\n 84| \n 85| \t\t// Skip and cleanup orphaned sessions whose shadow branch no longer exists.\n 86| \t\t// Keep active sessions (shadow branch may not be created yet) and sessions\n 87| \t\t// with LastCheckpointID (needed for checkpoint ID reuse on subsequent commits).\n 88| \t\t// Clean up everything else: stale pre-state-machine sessi",
+      "output_tokens": 4037,
+      "duration_ms": 0.14495849609375,
+      "turn_number": 10
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "func.*PostCommit",
+        "file_type": "go"
+      },
+      "output": "  summary:\n    query: func.*PostCommit\n    scope: type=go\n    files: 6 total, 6 shown\n    buckets: 2 source, 4 test, 0 low-priority\n    definition_candidates: 6\n    best_next_step: read cmd/entire/cli/hooks_git_cmd.go around line 184\n\ncmd/entire/cli/hooks_git_cmd.go\n  why: definition, source\n  184-184:\n    184| func newHooksGitPostCommitCmd() *cobra.Command {\n\ncmd/entire/cli/strategy/manual_commit_hooks.go\n  why: definition, source\n  918-918:\n    918| func (s *ManualCommitStrategy) PostCommit(ct",
+      "output_tokens": 1568,
+      "duration_ms": 14.801979064941406,
+      "turn_number": 11
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/strategy/cleanup.go",
+        "start_line": 190,
+        "max_lines": 60
+      },
+      "output": "cmd/entire/cli/strategy/cleanup.go:190-249\n190| \tfor _, state := range states {\n191| \t\t// Skip sessions that started recently - they may be actively in use\n192| \t\t// but haven't created their first checkpoint yet\n193| \t\tif now.Sub(state.StartedAt) < sessionGracePeriod {\n194| \t\t\tcontinue\n195| \t\t}\n196| \n197| \t\t// Check if session has checkpoints on entire/checkpoints/v1\n198| \t\thasCheckpoints := sessionsWithCheckpoints[state.SessionID]\n199| \n200| \t\t// Check if shadow branch exists for this session'",
+      "output_tokens": 2402,
+      "duration_ms": 0.11992454528808594,
+      "turn_number": 11
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/strategy/manual_commit_hooks.go",
+        "start_line": 918,
+        "max_lines": 120
+      },
+      "output": "cmd/entire/cli/strategy/manual_commit_hooks.go:918-1037\n918| func (s *ManualCommitStrategy) PostCommit(ctx context.Context) error { //nolint:unparam // error return is part of the hook contract; callers check it\n919| \tlogCtx := logging.WithComponent(ctx, \"checkpoint\")\n920| \n921| \t_, openRepoSpan := perf.Start(ctx, \"open_repository_and_head\")\n922| \trepo, err := OpenRepository(ctx)\n923| \tif err != nil {\n924| \t\topenRepoSpan.RecordError(err)\n925| \t\topenRepoSpan.End()\n926| \t\treturn nil\n927| \t}\n928| \n",
+      "output_tokens": 4651,
+      "duration_ms": 0.5381107330322266,
+      "turn_number": 12
+    }
+  ],
+  "total_tool_calls": 24,
+  "total_turns": 12,
+  "wall_clock_ms": 32941.6229724884,
+  "input_tokens": 118296,
+  "output_tokens": 1973,
+  "tool_output_tokens": 53766,
+  "total_cost_usd": 0.38448299999999996,
+  "first_call_tool": "search_code",
+  "first_call_produced_file": true,
+  "retry_count": 0,
+  "error": "",
+  "total_tool_duration_ms": 156.95762634277344,
+  "tool_execution_share": 0.004764720501896901,
+  "search_call_count": 8,
+  "read_call_count": 13,
+  "avg_search_code_duration_ms": 15.329539775848389,
+  "median_search_code_duration_ms": 15.653610229492188
+}

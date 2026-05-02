@@ -1,0 +1,301 @@
+{
+  "repeat": 0,
+  "task_id": "6191df2265d1",
+  "repo": "entireio-cli",
+  "task_type": "debug_or_validation",
+  "condition": "fff",
+  "prompt": "can you look at the failing e2e tests and figure out if this are real issue or harness / flake issues",
+  "answer": "",
+  "tool_calls": [
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": "."
+      },
+      "output": ".allowed-licenses\n.claude/\n.codex/\n.devcontainer/\n.entire/\n.ferrata/\n.gemini/\n.git/\n.github/\n.gitignore\n.golangci.yaml\n.goreleaser.yaml\n.opencode/\n.vscode/\nAGENTS.md\nCHANGELOG.md\nCLAUDE.md\nCODE_OF_CONDUCT.md\nCONTRIBUTING.md\nLICENSE\nREADME.md\nSECURITY.md\nWINDOWS.md\ncmd/\ndocs/\ne2e/\ngo.mod\ngo.sum\nmise-tasks/\nmise.toml\nperf/\nredact/\nscripts/",
+      "output_tokens": 339,
+      "duration_ms": 0.5788803100585938,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "glob": "**/*e2e*",
+        "max_results": 50
+      },
+      "output": "scripts/download-e2e-artifacts.sh git:clean\nscripts/test-attribution-e2e.sh git:clean",
+      "output_tokens": 85,
+      "duration_ms": 0.5090236663818359,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": "e2e",
+        "recursive": true
+      },
+      "output": "README.md\ncmd/testreport/main.go\nbootstrap/main.go\ntests/attribution_test.go\ntests/checkpoint_metadata_test.go\ntests/codex_resume_test.go\ntests/deleted_files_test.go\ntests/disable_test.go\ntests/edge_cases_test.go\ntests/existing_files_test.go\ntests/external_agent_test.go\ntests/factory_hooks_test.go\ntests/interactive_test.go\ntests/main_test.go\ntests/mid_turn_commit_test.go\ntests/multi_session_test.go\ntests/resume_remote_test.go\ntests/resume_test.go\ntests/rewind_test.go\ntests/session_lifecycle_test",
+      "output_tokens": 1130,
+      "duration_ms": 1.1229515075683594,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": ".github",
+        "recursive": true
+      },
+      "output": "CODEOWNERS\ncopilot-instructions.md\ndependabot.yml\nworkflows/ci.yml\nworkflows/e2e-isolated.yml\nworkflows/e2e-windows.yml\nworkflows/e2e.yml\nworkflows/license-check.yml\nworkflows/lint.yml\nworkflows/nightly.yml\nworkflows/pr-binary-size.yml\nworkflows/release.yml\nISSUE_TEMPLATE/bug_report.yml\nISSUE_TEMPLATE/config.yml\nISSUE_TEMPLATE/feature_request.yml",
+      "output_tokens": 348,
+      "duration_ms": 0.21886825561523438,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/tests/main_test.go"
+      },
+      "output": "e2e/tests/main_test.go:1-78\n  1| //go:build e2e\n  2| \n  3| package tests\n  4| \n  5| import (\n  6| \t\"fmt\"\n  7| \t\"os\"\n  8| \t\"os/exec\"\n  9| \t\"path/filepath\"\n  10| \t\"runtime\"\n  11| \t\"testing\"\n  12| \n  13| \t\"github.com/entireio/cli/e2e/agents\"\n  14| \t\"github.com/entireio/cli/e2e/entire\"\n  15| \t\"github.com/entireio/cli/e2e/testutil\"\n  16| )\n  17| \n  18| func TestMain(m *testing.M) {\n  19| \trunDir := os.Getenv(\"E2E_ARTIFACT_DIR\")\n  20| \tif runDir == \"\" {\n  21| \t\t_, file, _, _ := runtime.Caller(0)\n  22|",
+      "output_tokens": 3057,
+      "duration_ms": 0.9818077087402344,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": ".github/workflows/e2e.yml"
+      },
+      "output": ".github/workflows/e2e.yml:1-80\n  1| name: E2E Tests\n  2| \n  3| on:\n  4|   workflow_dispatch:\n  5|     inputs:\n  6|       agent:\n  7|         description: 'Run a single agent (leave empty for all)'\n  8|         required: false\n  9|         type: choice\n  10|         options:\n  11|           - ''\n  12|           - claude-code\n  13|           - opencode\n  14|           - gemini-cli\n  15|           - factoryai-droid\n  16|           - cursor-cli\n  17|           - copilot-cli\n  18|           - roger-r",
+      "output_tokens": 2932,
+      "duration_ms": 0.3058910369873047,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": ".github/workflows/e2e-isolated.yml"
+      },
+      "output": ".github/workflows/e2e-isolated.yml:1-80\n  1| name: E2E Isolated Test\n  2| \n  3| on:\n  4|   workflow_dispatch:\n  5|     inputs:\n  6|       agent:\n  7|         description: \"Agent to test\"\n  8|         required: true\n  9|         default: \"gemini-cli\"\n  10|         type: choice\n  11|         options: [claude-code, opencode, gemini-cli, cursor-cli, factoryai-droid, copilot-cli, roger-roger, codex]\n  12|       test:\n  13|         description: \"Test name filter (regex)\"\n  14|         required: true\n ",
+      "output_tokens": 3546,
+      "duration_ms": 0.2751350402832031,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": ".github/workflows/e2e.yml",
+        "start_line": 80
+      },
+      "output": ".github/workflows/e2e.yml:80-159\n  80|           echo \"$HOME/.local/bin\" >> $GITHUB_PATH\n  81| \n  82|       - name: Verify roger-roger agent\n  83|         if: matrix.agent == 'roger-roger'\n  84|         run: |\n  85|           set -euo pipefail\n  86|           echo \"Verifying roger-roger binaries on PATH...\"\n  87|           command -v roger-roger\n  88|           command -v entire-agent-roger-roger\n  89| \n  90|       - name: Bootstrap agent\n  91|         if: matrix.agent != 'roger-roger'\n  92|    ",
+      "output_tokens": 4096,
+      "duration_ms": 0.16379356384277344,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/tests/single_session_test.go"
+      },
+      "output": "e2e/tests/single_session_test.go:1-80\n  1| //go:build e2e\n  2| \n  3| package tests\n  4| \n  5| import (\n  6| \t\"context\"\n  7| \t\"os\"\n  8| \t\"path/filepath\"\n  9| \t\"testing\"\n  10| \t\"time\"\n  11| \n  12| \t\"github.com/entireio/cli/e2e/testutil\"\n  13| \t\"github.com/stretchr/testify/assert\"\n  14| )\n  15| \n  16| // TestHumanOnlyChangesAndCommits: human creates a file and commits without any\n  17| // agent interaction. No checkpoint should be created.\n  18| func TestHumanOnlyChangesAndCommits(t *testing.T) {\n ",
+      "output_tokens": 3433,
+      "duration_ms": 0.06985664367675781,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/tests/interactive_test.go"
+      },
+      "output": "e2e/tests/interactive_test.go:1-41\n  1| //go:build e2e\n  2| \n  3| package tests\n  4| \n  5| import (\n  6| \t\"context\"\n  7| \t\"testing\"\n  8| \t\"time\"\n  9| \n  10| \t\"github.com/entireio/cli/e2e/testutil\"\n  11| )\n  12| \n  13| func TestInteractiveMultiStep(t *testing.T) {\n  14| \ttestutil.ForEachAgent(t, 3*time.Minute, func(t *testing.T, s *testutil.RepoState, ctx context.Context) {\n  15| \t\tprompt := s.Agent.PromptPattern()\n  16| \n  17| \t\tsession := s.StartSession(t, ctx)\n  18| \t\tif session == nil {\n  19|",
+      "output_tokens": 1681,
+      "duration_ms": 0.2541542053222656,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/testutil/assertions.go"
+      },
+      "output": "e2e/testutil/assertions.go:1-80\n  1| package testutil\n  2| \n  3| import (\n  4| \t\"crypto/sha256\"\n  5| \t\"encoding/hex\"\n  6| \t\"encoding/json\"\n  7| \t\"fmt\"\n  8| \t\"os\"\n  9| \t\"path/filepath\"\n  10| \t\"regexp\"\n  11| \t\"strings\"\n  12| \t\"testing\"\n  13| \t\"time\"\n  14| \n  15| \t\"github.com/stretchr/testify/assert\"\n  16| \t\"github.com/stretchr/testify/require\"\n  17| )\n  18| \n  19| // DeepCheckpointValidation contains expected values for comprehensive checkpoint validation.\n  20| type DeepCheckpointValidation struc",
+      "output_tokens": 3009,
+      "duration_ms": 0.3399848937988281,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/testutil/repo.go"
+      },
+      "output": "e2e/testutil/repo.go:1-80\n  1| package testutil\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"crypto/sha256\"\n  6| \t\"encoding/hex\"\n  7| \t\"encoding/json\"\n  8| \t\"errors\"\n  9| \t\"fmt\"\n  10| \t\"os\"\n  11| \t\"os/exec\"\n  12| \t\"path/filepath\"\n  13| \t\"strings\"\n  14| \t\"testing\"\n  15| \t\"time\"\n  16| \n  17| \t\"github.com/entireio/cli/e2e/agents\"\n  18| \t\"github.com/entireio/cli/e2e/entire\"\n  19| )\n  20| \n  21| const droidRepoSettingsPath = \".factory/settings.json\"\n  22| \n  23| // RepoState holds the working state for",
+      "output_tokens": 3160,
+      "duration_ms": 0.21386146545410156,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/testutil/assertions.go",
+        "start_line": 80,
+        "end_line": 200
+      },
+      "output": "e2e/testutil/assertions.go:80-200\n  80| \tAssertNewCommitsWithTimeout(t, s, atLeast, 20*time.Second)\n  81| }\n  82| \n  83| // AssertNewCommitsWithTimeout is like AssertNewCommits but with a configurable\n  84| // timeout. Use this when WaitFor may settle on stale pane content (e.g.\n  85| // multi-turn interactive tests where the previous turn's prompt is still\n  86| // visible), giving the agent more time to complete its commit.\n  87| func AssertNewCommitsWithTimeout(t *testing.T, s *RepoState, atL",
+      "output_tokens": 5543,
+      "duration_ms": 0.4229545593261719,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/testutil/repo.go",
+        "start_line": 80,
+        "end_line": 200
+      },
+      "output": "e2e/testutil/repo.go:80-200\n  80| \t\tif err := os.WriteFile(filepath.Join(entireDir, \"settings.json\"),\n  81| \t\t\t[]byte(\"{\\\"external_agents\\\": true}\\n\"), 0o644); err != nil {\n  82| \t\t\tt.Fatalf(\"write external_agents setting: %v\", err)\n  83| \t\t}\n  84| \t}\n  85| \n  86| \tentire.Enable(t, dir, agent.EntireAgent())\n  87| \tif agent.Name() == \"gemini-cli\" {\n  88| \t\tsetupGeminiTestHome(t, dir)\n  89| \t}\n  90| \tif agent.Name() == \"factoryai-droid\" {\n  91| \t\tif err := configureDroidRepoSettings(dir); err != n",
+      "output_tokens": 5209,
+      "duration_ms": 0.3120899200439453,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/testutil/repo.go",
+        "start_line": 200,
+        "end_line": 400
+      },
+      "output": "e2e/testutil/repo.go:200-400\n  200| \t}\n  201| \tacks[repoDir][\"entire-search\"] = hash\n  202| \n  203| \tout, err := json.MarshalIndent(acks, \"\", \"  \")\n  204| \tif err != nil {\n  205| \t\tt.Fatalf(\"marshal gemini acknowledgments: %v\", err)\n  206| \t}\n  207| \tout = append(out, '\\n')\n  208| \n  209| \tif err := os.WriteFile(ackPath, out, 0o644); err != nil {\n  210| \t\tt.Fatalf(\"write gemini acknowledgments: %v\", err)\n  211| \t}\n  212| }\n  213| \n  214| func geminiTestHomeDir(repoDir string) string {\n  215| \tre",
+      "output_tokens": 7998,
+      "duration_ms": 0.24008750915527344,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/tests/resume_test.go"
+      },
+      "output": "e2e/tests/resume_test.go:1-80\n  1| //go:build e2e\n  2| \n  3| package tests\n  4| \n  5| import (\n  6| \t\"context\"\n  7| \t\"fmt\"\n  8| \t\"os\"\n  9| \t\"os/exec\"\n  10| \t\"path/filepath\"\n  11| \t\"testing\"\n  12| \t\"time\"\n  13| \n  14| \t\"github.com/entireio/cli/e2e/entire\"\n  15| \t\"github.com/entireio/cli/e2e/testutil\"\n  16| \t\"github.com/stretchr/testify/assert\"\n  17| \t\"github.com/stretchr/testify/require\"\n  18| )\n  19| \n  20| // TestResumeFromFeatureBranch: agent creates a file on a feature branch and\n  21| // use",
+      "output_tokens": 3631,
+      "duration_ms": 0.08296966552734375,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/testutil/repo.go",
+        "start_line": 400,
+        "end_line": 600
+      },
+      "output": "e2e/testutil/repo.go:400-600\n  400| \t}\n  401| }\n  402| \n  403| // runScenario runs the test function and recovers from errScenarioRestart\n  404| // panics triggered by transient API errors in RunPrompt. Returns true if\n  405| // the scenario should be restarted with a fresh repository.\n  406| func runScenario(t *testing.T, s *RepoState, ctx context.Context, fn func(t *testing.T, s *RepoState, ctx context.Context)) (restarted bool) {\n  407| \tt.Helper()\n  408| \tdefer func() {\n  409| \t\tif r := reco",
+      "output_tokens": 7987,
+      "duration_ms": 0.6489753723144531,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/tests/rewind_test.go"
+      },
+      "output": "e2e/tests/rewind_test.go:1-80\n  1| //go:build e2e\n  2| \n  3| package tests\n  4| \n  5| import (\n  6| \t\"context\"\n  7| \t\"fmt\"\n  8| \t\"os\"\n  9| \t\"path/filepath\"\n  10| \t\"testing\"\n  11| \t\"time\"\n  12| \n  13| \t\"github.com/entireio/cli/e2e/entire\"\n  14| \t\"github.com/entireio/cli/e2e/testutil\"\n  15| \t\"github.com/stretchr/testify/assert\"\n  16| \t\"github.com/stretchr/testify/require\"\n  17| )\n  18| \n  19| // TestRewindPreCommit: agent creates two files in sequence (no user commit),\n  20| // then rewinds to the",
+      "output_tokens": 3504,
+      "duration_ms": 0.20813941955566406,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/tests/multi_session_test.go"
+      },
+      "output": "e2e/tests/multi_session_test.go:1-78\n  1| //go:build e2e\n  2| \n  3| package tests\n  4| \n  5| import (\n  6| \t\"context\"\n  7| \t\"testing\"\n  8| \t\"time\"\n  9| \n  10| \t\"github.com/entireio/cli/e2e/agents\"\n  11| \t\"github.com/entireio/cli/e2e/testutil\"\n  12| )\n  13| \n  14| // TestMultiSessionManualCommit: two prompts create files, user commits manually.\n  15| func TestMultiSessionManualCommit(t *testing.T) {\n  16| \ttestutil.ForEachAgent(t, 3*time.Minute, func(t *testing.T, s *testutil.RepoState, ctx conte",
+      "output_tokens": 3552,
+      "duration_ms": 0.43082237243652344,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/tests/session_lifecycle_test.go"
+      },
+      "output": "e2e/tests/session_lifecycle_test.go:1-80\n  1| //go:build e2e\n  2| \n  3| package tests\n  4| \n  5| import (\n  6| \t\"context\"\n  7| \t\"os\"\n  8| \t\"path/filepath\"\n  9| \t\"testing\"\n  10| \t\"time\"\n  11| \n  12| \t\"github.com/entireio/cli/e2e/testutil\"\n  13| \t\"github.com/stretchr/testify/assert\"\n  14| )\n  15| \n  16| // TestEndedSessionUserCommitsAfterExit tests that after an agent session ends\n  17| // naturally, user commits still get checkpoint trailers.\n  18| func TestEndedSessionUserCommitsAfterExit(t *tes",
+      "output_tokens": 3592,
+      "duration_ms": 0.48828125,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/tests/edge_cases_test.go"
+      },
+      "output": "e2e/tests/edge_cases_test.go:1-80\n  1| //go:build e2e\n  2| \n  3| package tests\n  4| \n  5| import (\n  6| \t\"context\"\n  7| \t\"fmt\"\n  8| \t\"os\"\n  9| \t\"path/filepath\"\n  10| \t\"testing\"\n  11| \t\"time\"\n  12| \n  13| \t\"github.com/entireio/cli/e2e/agents\"\n  14| \t\"github.com/entireio/cli/e2e/testutil\"\n  15| \t\"github.com/stretchr/testify/assert\"\n  16| )\n  17| \n  18| // TestAgentContinuesAfterCommit: agent commits, then makes more changes in a\n  19| // second prompt. User commits those. Both commits should have ",
+      "output_tokens": 3847,
+      "duration_ms": 0.3256797790527344,
+      "turn_number": 10
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/tests/stash_workflows_test.go"
+      },
+      "output": "e2e/tests/stash_workflows_test.go:1-80\n  1| //go:build e2e\n  2| \n  3| package tests\n  4| \n  5| import (\n  6| \t\"context\"\n  7| \t\"os\"\n  8| \t\"path/filepath\"\n  9| \t\"testing\"\n  10| \t\"time\"\n  11| \n  12| \t\"github.com/entireio/cli/e2e/testutil\"\n  13| \t\"github.com/stretchr/testify/assert\"\n  14| )\n  15| \n  16| // TestPartialCommitStashNewPrompt: agent creates 3 files; user commits one,\n  17| // stashes the rest; second prompt creates 2 more files; user commits those.\n  18| // Verifies two distinct checkpoi",
+      "output_tokens": 3711,
+      "duration_ms": 0.1277923583984375,
+      "turn_number": 10
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/tests/mid_turn_commit_test.go"
+      },
+      "output": "e2e/tests/mid_turn_commit_test.go:1-62\n  1| //go:build e2e\n  2| \n  3| package tests\n  4| \n  5| import (\n  6| \t\"context\"\n  7| \t\"testing\"\n  8| \t\"time\"\n  9| \n  10| \t\"github.com/entireio/cli/e2e/testutil\"\n  11| )\n  12| \n  13| // TestMidTurnCommit_DifferentFilesThanPreviousTurn: Turn 1 creates file A\n  14| // (tracked via Stop checkpoint), Turn 2 creates+commits different files B,C.\n  15| // Validates that the mid-turn commit gets a checkpoint on entire/checkpoints/v1\n  16| // even though the committ",
+      "output_tokens": 3279,
+      "duration_ms": 0.3688335418701172,
+      "turn_number": 11
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/tests/split_commits_test.go"
+      },
+      "output": "e2e/tests/split_commits_test.go:1-80\n  1| //go:build e2e\n  2| \n  3| package tests\n  4| \n  5| import (\n  6| \t\"context\"\n  7| \t\"os\"\n  8| \t\"path/filepath\"\n  9| \t\"testing\"\n  10| \t\"time\"\n  11| \n  12| \t\"github.com/entireio/cli/e2e/agents\"\n  13| \t\"github.com/entireio/cli/e2e/testutil\"\n  14| \t\"github.com/stretchr/testify/assert\"\n  15| )\n  16| \n  17| // TestUserSplitsAgentChanges: agent creates 4 files in one prompt; user\n  18| // commits them in two separate batches. Each batch gets its own checkpoint.\n ",
+      "output_tokens": 3622,
+      "duration_ms": 0.1621246337890625,
+      "turn_number": 11
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/tests/existing_files_test.go"
+      },
+      "output": "e2e/tests/existing_files_test.go:1-80\n  1| //go:build e2e\n  2| \n  3| package tests\n  4| \n  5| import (\n  6| \t\"context\"\n  7| \t\"os\"\n  8| \t\"path/filepath\"\n  9| \t\"testing\"\n  10| \t\"time\"\n  11| \n  12| \t\"github.com/entireio/cli/e2e/testutil\"\n  13| \t\"github.com/stretchr/testify/assert\"\n  14| )\n  15| \n  16| // TestModifyExistingTrackedFile: agent modifies an existing tracked file\n  17| // (not a new file), user commits. Checkpoint should be created.\n  18| func TestModifyExistingTrackedFile(t *testing.T) ",
+      "output_tokens": 3533,
+      "duration_ms": 0.4570484161376953,
+      "turn_number": 12
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/tests/deleted_files_test.go"
+      },
+      "output": "e2e/tests/deleted_files_test.go:1-50\n  1| //go:build e2e\n  2| \n  3| package tests\n  4| \n  5| import (\n  6| \t\"context\"\n  7| \t\"os\"\n  8| \t\"path/filepath\"\n  9| \t\"testing\"\n  10| \t\"time\"\n  11| \n  12| \t\"github.com/entireio/cli/e2e/testutil\"\n  13| \t\"github.com/stretchr/testify/assert\"\n  14| \t\"github.com/stretchr/testify/require\"\n  15| )\n  16| \n  17| // TestDeletedFilesCommitDeletion tests that deleting a file during a session\n  18| // doesn't break checkpointing. The deletion is bundled with a new file ",
+      "output_tokens": 2038,
+      "duration_ms": 0.1971721649169922,
+      "turn_number": 12
+    }
+  ],
+  "total_tool_calls": 26,
+  "total_turns": 12,
+  "wall_clock_ms": 36992.379903793335,
+  "input_tokens": 197350,
+  "output_tokens": 1629,
+  "tool_output_tokens": 87862,
+  "total_cost_usd": 0.616485,
+  "first_call_tool": "list_dir",
+  "first_call_produced_file": true,
+  "retry_count": 0,
+  "error": "",
+  "total_tool_duration_ms": 9.507179260253906,
+  "tool_execution_share": 0.00025700372036023035,
+  "search_call_count": 0,
+  "avg_search_code_duration_ms": 0.0,
+  "median_search_code_duration_ms": 0.0,
+  "avg_read_code_duration_ms": 0.3217025236649947,
+  "median_read_code_duration_ms": 0.2905130386352539
+}

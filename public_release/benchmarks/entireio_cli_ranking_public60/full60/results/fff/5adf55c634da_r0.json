@@ -1,0 +1,247 @@
+{
+  "repeat": 0,
+  "task_id": "5adf55c634da",
+  "repo": "entireio-cli",
+  "task_type": "debug_or_validation",
+  "condition": "fff",
+  "prompt": "Please fix the failing test:",
+  "answer": "",
+  "tool_calls": [
+    {
+      "tool_name": "list_dir",
+      "tool_input": {},
+      "output": ".allowed-licenses\n.claude/\n.codex/\n.devcontainer/\n.entire/\n.ferrata/\n.gemini/\n.git/\n.github/\n.gitignore\n.golangci.yaml\n.goreleaser.yaml\n.opencode/\n.vscode/\nAGENTS.md\nCHANGELOG.md\nCLAUDE.md\nCODE_OF_CONDUCT.md\nCONTRIBUTING.md\nLICENSE\nREADME.md\nSECURITY.md\nWINDOWS.md\ncmd/\ndocs/\ne2e/\ngo.mod\ngo.sum\nmise-tasks/\nmise.toml\nperf/\nredact/\nscripts/",
+      "output_tokens": 339,
+      "duration_ms": 0.4341602325439453,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "glob": "**/*test*",
+        "max_results": 50
+      },
+      "output": "50/233 matches\ncmd/entire/cli/logout_test.go git:clean\ncmd/entire/cli/agent/capabilities_test.go git:clean\ncmd/entire/cli/agent/chunking_test.go git:clean\ncmd/entire/cli/agent/claudecode/claude_test.go git:clean\ncmd/entire/cli/agent/claudecode/hooks_test.go git:clean\ncmd/entire/cli/agent/claudecode/lifecycle_test.go git:clean\ncmd/entire/cli/agent/claudecode/response_test.go git:clean\ncmd/entire/cli/agent/claudecode/transcript_test.go git:clean\ncmd/entire/cli/agent/codex/codex_test.go git:clean\nc",
+      "output_tokens": 2745,
+      "duration_ms": 0.42700767517089844,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "glob": "**/*test*",
+        "max_results": 200
+      },
+      "output": "200/233 matches\ncmd/entire/cli/agent/agent_test.go git:clean\ncmd/entire/cli/agent/architecture_test.go git:clean\ncmd/entire/cli/agent/capabilities_test.go git:clean\ncmd/entire/cli/agent/chunking_test.go git:clean\ncmd/entire/cli/agent/claudecode/claude_test.go git:clean\ncmd/entire/cli/agent/claudecode/hooks_test.go git:clean\ncmd/entire/cli/agent/claudecode/lifecycle_test.go git:clean\ncmd/entire/cli/agent/claudecode/response_test.go git:clean\ncmd/entire/cli/agent/claudecode/transcript_test.go git:",
+      "output_tokens": 11116,
+      "duration_ms": 0.9319782257080078,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": ".github",
+        "recursive": true
+      },
+      "output": "CODEOWNERS\ncopilot-instructions.md\ndependabot.yml\nworkflows/ci.yml\nworkflows/e2e-isolated.yml\nworkflows/e2e-windows.yml\nworkflows/e2e.yml\nworkflows/license-check.yml\nworkflows/lint.yml\nworkflows/nightly.yml\nworkflows/pr-binary-size.yml\nworkflows/release.yml\nISSUE_TEMPLATE/bug_report.yml\nISSUE_TEMPLATE/config.yml\nISSUE_TEMPLATE/feature_request.yml",
+      "output_tokens": 348,
+      "duration_ms": 0.5769729614257812,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "git:dirty",
+        "max_files": 50
+      },
+      "output": "0 exact matches. 14 approximate:\ncmd/entire/cli/paths/worktree_test.go\n 74: \t\t\tname: \"gitdir without worktrees path\",\ncmd/entire/cli/status.go\n 385: \t\tgitdirPath := strings.TrimPrefix(content, \"gitdir: \")\n 386: \t\tif !filepath.IsAbs(gitdirPath) {",
+      "output_tokens": 245,
+      "duration_ms": 8.164167404174805,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": ".codex"
+      },
+      "output": "agents/\nconfig.toml\nhooks.json",
+      "output_tokens": 30,
+      "duration_ms": 0.10180473327636719,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": ".codex/agents"
+      },
+      "output": "entire-search.toml",
+      "output_tokens": 18,
+      "duration_ms": 0.2548694610595703,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": ".entire"
+      },
+      "output": ".gitignore\nsettings.json",
+      "output_tokens": 24,
+      "duration_ms": 0.164031982421875,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": ".entire/settings.json"
+      },
+      "output": ".entire/settings.json:1-11\n  1| {\n  2|   \"enabled\": true,\n  3|   \"local_dev\": true,\n  4|   \"strategy\": \"manual-commit\",\n  5|   \"strategy_options\": {\n  6|     \"checkpoint_remote\": {\n  7|       \"provider\": \"github\",\n  8|       \"repo\": \"entireio/cli-checkpoints\"\n  9|     }\n  10|   }\n  11| }",
+      "output_tokens": 288,
+      "duration_ms": 0.6380081176757812,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "AGENTS.md"
+      },
+      "output": "AGENTS.md:1-80\n  1| # Entire - CLI\n  2| \n  3| This repo contains the CLI for Entire.\n  4| \n  5| ## Architecture\n  6| \n  7| - CLI built with github.com/spf13/cobra and github.com/charmbracelet/huh\n  8| \n  9| ## Key Directories\n  10| \n  11| ### Commands (`cmd/`)\n  12| \n  13| - `entire/`: Main CLI entry point\n  14| - `entire/cli`: CLI utilities and helpers\n  15| - `entire/cli/commands`: actual command implementations\n  16| - `entire/cli/agent`: agent implementations (Claude Code, Gemini CLI, OpenCo",
+      "output_tokens": 3847,
+      "duration_ms": 0.4048347473144531,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "AGENTS.md",
+        "start_line": 80,
+        "max_lines": 100
+      },
+      "output": "AGENTS.md:80-179\n  80| \n  81| E2E tests:\n  82| \n  83| - Use the `//go:build e2e` build tag\n  84| - Located in `e2e/tests/`\n  85| - See [`e2e/README.md`](e2e/README.md) for full documentation (structure, debugging, adding agents)\n  86| - Test real agent interactions (Claude Code, Gemini CLI, OpenCode, Cursor, Factory AI Droid, Copilot CLI, or Vogon creating files, committing, etc.)\n  87| - Validate checkpoint scenarios documented in `docs/architecture/checkpoint-scenarios.md`\n  88| - Support mult",
+      "output_tokens": 4588,
+      "duration_ms": 0.49376487731933594,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "CLAUDE.md",
+        "max_lines": 80
+      },
+      "output": "CLAUDE.md:1-80\n  1| # Entire - CLI\n  2| \n  3| This repo contains the CLI for Entire.\n  4| \n  5| ## Architecture\n  6| \n  7| - CLI built with github.com/spf13/cobra and github.com/charmbracelet/huh\n  8| \n  9| ## Key Directories\n  10| \n  11| ### Commands (`cmd/`)\n  12| \n  13| - `entire/`: Main CLI entry point\n  14| - `entire/cli`: CLI utilities and helpers\n  15| - `entire/cli/commands`: actual command implementations\n  16| - `entire/cli/agent`: agent implementations (Claude Code, Gemini CLI, OpenCo",
+      "output_tokens": 3847,
+      "duration_ms": 0.2827644348144531,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "glob": "**/*.go",
+        "pattern": "git:dirty"
+      },
+      "output": "cmd/entire/cli/integration_test/subdirectory_test.go git:clean\ncmd/entire/cli/integration_test/mid_session_rebase_test.go git:clean",
+      "output_tokens": 131,
+      "duration_ms": 1.096963882446289,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": ".opencode",
+        "max_lines": 5
+      },
+      "output": "File not found: .opencode",
+      "output_tokens": 25,
+      "duration_ms": 7.961034774780273,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "glob": "**/*.go",
+        "max_results": 200
+      },
+      "output": "200/448 matches\ncmd/entire/cli/resume.go git:clean\ncmd/entire/cli/agent/architecture_test.go git:clean\ncmd/entire/cli/agent/capabilities.go git:clean\ncmd/entire/cli/agent/capabilities_test.go git:clean\ncmd/entire/cli/agent/chunking.go git:clean\ncmd/entire/cli/agent/chunking_test.go git:clean\ncmd/entire/cli/agent/claudecode/claude.go git:clean\ncmd/entire/cli/agent/claudecode/claude_test.go git:clean\ncmd/entire/cli/agent/claudecode/generate.go git:clean\ncmd/entire/cli/agent/claudecode/hooks.go git",
+      "output_tokens": 10486,
+      "duration_ms": 0.797271728515625,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": ".github/workflows/ci.yml"
+      },
+      "output": ".github/workflows/ci.yml:1-74\n  1| name: Tests\n  2| on:\n  3|   workflow_dispatch:\n  4|   pull_request:\n  5|   push:\n  6|     branches:\n  7|       - main\n  8| jobs:\n  9|   test-core:\n  10|     runs-on: ubuntu-latest\n  11|     steps:\n  12|       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6\n  13|         with:\n  14|           ref: ${{ github.event.pull_request.head.sha || github.sha }}\n  15|       - name: Setup Keyring\n  16|         run: |\n  17|           sudo apt-get upda",
+      "output_tokens": 2770,
+      "duration_ms": 1.3740062713623047,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "glob": "**/*.go",
+        "max_results": 500
+      },
+      "output": "cmd/entire/cli/agent/agent.go git:clean\ncmd/entire/cli/agent/agent_test.go git:clean\ncmd/entire/cli/agent/architecture_test.go git:clean\ncmd/entire/cli/agent/capabilities.go git:clean\ncmd/entire/cli/agent/capabilities_test.go git:clean\ncmd/entire/cli/agent/chunking.go git:clean\ncmd/entire/cli/agent/chunking_test.go git:clean\ncmd/entire/cli/agent/claudecode/claude.go git:clean\ncmd/entire/cli/agent/claudecode/claude_test.go git:clean\ncmd/entire/cli/agent/claudecode/generate.go git:clean\ncmd/entire",
+      "output_tokens": 22231,
+      "duration_ms": 0.8952617645263672,
+      "turn_number": 10
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": ".ferrata"
+      },
+      "output": "setup",
+      "output_tokens": 5,
+      "duration_ms": 0.10895729064941406,
+      "turn_number": 11
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": ".gemini"
+      },
+      "output": ".gitignore\nagents/\ncommands/\nsettings.json\ntest-hooks.sh",
+      "output_tokens": 56,
+      "duration_ms": 0.06318092346191406,
+      "turn_number": 11
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": ".gemini/agents"
+      },
+      "output": "dev.md\nentire-search.md\nreviewer.md\ntest-doc.md",
+      "output_tokens": 47,
+      "duration_ms": 0.2980232238769531,
+      "turn_number": 12
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": ".gemini/commands"
+      },
+      "output": "analyst.md\ndev-cycle.md\ndev.md\nreviewer.md",
+      "output_tokens": 42,
+      "duration_ms": 0.15497207641601562,
+      "turn_number": 12
+    }
+  ],
+  "total_tool_calls": 21,
+  "total_turns": 12,
+  "wall_clock_ms": 31638.992071151733,
+  "input_tokens": 142358,
+  "output_tokens": 1331,
+  "tool_output_tokens": 63228,
+  "total_cost_usd": 0.447039,
+  "first_call_tool": "list_dir",
+  "first_call_produced_file": true,
+  "retry_count": 0,
+  "error": "",
+  "total_tool_duration_ms": 25.62403678894043,
+  "tool_execution_share": 0.000809887898176892,
+  "search_call_count": 1,
+  "read_call_count": 6,
+  "avg_search_code_duration_ms": 8.164167404174805,
+  "median_search_code_duration_ms": 8.164167404174805
+}

@@ -1,0 +1,256 @@
+{
+  "repeat": 0,
+  "task_id": "d7c8f8341919",
+  "repo": "entireio-cli",
+  "task_type": "code_understanding",
+  "condition": "fff",
+  "prompt": "can you do me a summary for the cases when we show the \"you have another active session\" warning?",
+  "answer": "",
+  "tool_calls": [
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "another active session"
+      },
+      "output": "0 exact matches. 4 approximate:\ncmd/entire/cli/clean.go\n 102: \t\t\tfmt.Fprintf(cmd.ErrOrStderr(), \"Warning: could not check for active sessions: %v\\n\", err)\ncmd/entire/cli/reset.go\n 47: \t\t\t\t\tfmt.Fprintf(cmd.ErrOrStderr(), \"Warning: could not check for active sessions: %v\\n\", err)\ncmd/entire/cli/strategy/manual_commit_condensation.go\n 1183: // cleanupShadowBranchIfUnused deletes a shadow branch if no other active sessions reference it.",
+      "output_tokens": 436,
+      "duration_ms": 10.749101638793945,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "active session"
+      },
+      "output": "30/55 matches shown\n.claude/skills/e2e/debug.md\n 53: - `> send: ...` -- interactive session inputs\n.ferrata/setup\n 24: # Install Entire CLI (yes to skip prompts in non-interactive sessions)\nCHANGELOG.md\n 394: - Added concurrent ACTIVE sessions limitation to contributing guide ([#326](https://github.com/entireio/cli/pull/326))\nCLAUDE.md\n 486: <session-id>.json            # Active session state (base_commit, checkpoint_count, etc.)\nREADME.md\n 244: | `entire sessions stop` | Mark one or more active",
+      "output_tokens": 2551,
+      "duration_ms": 1.6019344329833984,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "you have another active session"
+      },
+      "output": "0 matches.",
+      "output_tokens": 10,
+      "duration_ms": 2.8009414672851562,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "Active sessions detected"
+      },
+      "output": "\u2192 Read cmd/entire/cli/clean.go (best match)\ncmd/entire/cli/clean.go\n 107: fmt.Fprintln(cmd.ErrOrStderr(), \"Active sessions detected on current HEAD:\")\ncmd/entire/cli/reset.go\n 52: fmt.Fprintln(cmd.ErrOrStderr(), \"Active sessions detected on current HEAD:\")",
+      "output_tokens": 256,
+      "duration_ms": 0.23484230041503906,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "active session warning"
+      },
+      "output": "0 matches for 'active session warning'. Auto-broadened to 'session warning':\ncmd/entire/cli/integration_test/hooks.go\n 413: // Used in tests to allow sequential sessions to run without triggering concurrent session warnings.\ncmd/entire/cli/integration_test/logs_only_rewind_test.go\n 246: // Clear session 1 state to simulate session completion (avoids concurrent session warning)\n 433: // Clear session state to simulate session completion (avoids concurrent session warning)\n 488: // Clear session s",
+      "output_tokens": 1094,
+      "duration_ms": 1.230001449584961,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "concurrent.*session"
+      },
+      "output": "\u2192 Read cmd/entire/cli/lifecycle_test.go [def]\n30/42 matches shown\ncmd/entire/cli/integration_test/manual_commit_workflow_test.go\n 407: func TestShadow_MultipleConcurrentSessions(t *testing.T) {\n  408| t.Parallel()\n  409| env := NewTestEnv(t)\n  410| defer env.Cleanup()\ncmd/entire/cli/integration_test/session_conflict_test.go\n 407: func TestSessionStart_InformationalMessageNoConcurrentSessions(t *testing.T) {\n  408| t.Parallel()\n  409| env := NewTestEnv(t)\n  410| defer env.Cleanup()\ncmd/entire/cli",
+      "output_tokens": 2501,
+      "duration_ms": 2.6738643646240234,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/integration_test/session_conflict_test.go"
+      },
+      "output": "cmd/entire/cli/integration_test/session_conflict_test.go:1-80\n  1| //go:build integration\n  2| \n  3| package integration\n  4| \n  5| import (\n  6| \t\"encoding/json\"\n  7| \t\"os\"\n  8| \t\"path/filepath\"\n  9| \t\"strings\"\n  10| \t\"testing\"\n  11| \t\"time\"\n  12| \n  13| \t\"github.com/go-git/go-git/v6\"\n  14| \t\"github.com/go-git/go-git/v6/plumbing\"\n  15| \t\"github.com/go-git/go-git/v6/plumbing/object\"\n  16| )\n  17| \n  18| // TestSessionIDConflict_OrphanedBranchIsReset tests that starting a new session\n  19| // res",
+      "output_tokens": 3152,
+      "duration_ms": 0.308990478515625,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/integration_test/session_conflict_test.go",
+        "start_line": 80,
+        "max_lines": 400
+      },
+      "output": "cmd/entire/cli/integration_test/session_conflict_test.go:80-479\n  80| \tsession2.CreateTranscript(\"Add test2 file\", []FileChange{{Path: \"test2.txt\", Content: \"content from session 2\"}})\n  81| \tif err := env.SimulateStop(session2.ID, session2.TranscriptPath); err != nil {\n  82| \t\tt.Fatalf(\"SimulateStop (session2) failed: %v\", err)\n  83| \t}\n  84| \n  85| \t// Verify shadow branch now has session2's checkpoint\n  86| \tstate2, _ := env.GetSessionState(session2.ID)\n  87| \tif state2 == nil || state2.StepC",
+      "output_tokens": 15734,
+      "duration_ms": 0.6089210510253906,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "other active conversation"
+      },
+      "output": "\u2192 Read cmd/entire/cli/integration_test/session_conflict_test.go (best match)\ncmd/entire/cli/integration_test/session_conflict_test.go\n 384: if !strings.Contains(msg, \"1 other active conversation(s) in this workspace\") {\n 385: t.Errorf(\"Message should contain '1 other active conversation(s) in this workspace', got:\\n%s\", msg)\n 459: if strings.Contains(msg, \"other active conversation\") {\n 460: t.Errorf(\"Message should NOT mention other active conversations when none exist, got:\\n%s\", msg)\ncmd/enti",
+      "output_tokens": 996,
+      "duration_ms": 0.6320476531982422,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "SessionIDConflictError"
+      },
+      "output": "CLAUDE.md\n 586: - If the existing session DOES have a state file (concurrent session in same directory), a `SessionIDConflictError` is returned\ncmd/entire/cli/strategy/manual_commit_hooks.go\n 2130: // returns a SessionIDConflictError to prevent orphaning existing session work.\ncmd/entire/cli/transcript/compact/testdata/claude_full2.jsonl\n 326: {\"parentUuid\":\"11930b2a-4c11-44e1-bd7f-6f3aa50ffff4\",\"isSidechain\":false,\"promptId\":\"9d4ee26b-78a9-40e1-bf57-f6771edb7285\",\"type\":\"user\",\"message\":{\"role\"",
+      "output_tokens": 851,
+      "duration_ms": 0.5178451538085938,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/lifecycle.go",
+        "start_line": 1,
+        "max_lines": 150
+      },
+      "output": "cmd/entire/cli/lifecycle.go:1-150\n  1| // lifecycle.go implements the generic lifecycle event dispatcher.\n  2| // It routes normalized events from any agent to the appropriate framework actions.\n  3| //\n  4| // The dispatcher inverts the current flow from \"agent handler calls framework functions\"\n  5| // to \"framework dispatcher calls agent methods.\" Agents are passive data providers;\n  6| // the dispatcher handles all orchestration: state transitions, strategy calls,\n  7| // file change detecti",
+      "output_tokens": 6867,
+      "duration_ms": 0.5738735198974609,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "SessionIDConflictError",
+        "path_glob": "cmd/entire/cli/strategy/*.go"
+      },
+      "output": "\u2192 Read cmd/entire/cli/strategy/manual_commit_hooks.go (only match)\ncmd/entire/cli/strategy/manual_commit_hooks.go\n 2130: // returns a SessionIDConflictError to prevent orphaning existing session work.",
+      "output_tokens": 200,
+      "duration_ms": 0.45800209045410156,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/lifecycle.go",
+        "start_line": 150,
+        "max_lines": 30
+      },
+      "output": "cmd/entire/cli/lifecycle.go:150-179\n  150| \n  151| \tif emptyRepo {\n  152| \t\treturn \"\\n\\nPowered by Entire:\\n  No commits yet \u2014 checkpoints will activate after your first commit.\"\n  153| \t}\n  154| \treturn \"\\n\\nPowered by Entire:\\n  This conversation will be linked to your next commit.\"\n  155| }\n  156| \n  157| // handleLifecycleModelUpdate persists the model name for the current session.\n  158| //\n  159| // If the session state file already exists (e.g., Gemini's BeforeModel fires\n  160| // after ",
+      "output_tokens": 1508,
+      "duration_ms": 0.4742145538330078,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "CountOtherActiveSessionsWithCheckpoints"
+      },
+      "output": "\u2192 Read cmd/entire/cli/integration_test/hook_bench_test.go (best match)\ncmd/entire/cli/strategy/manual_commit_session.go\n 239: func (s *ManualCommitStrategy) CountOtherActiveSessionsWithCheckpoints(ctx context.Context, currentSessionID string) (int, error) {\n  240| currentWorktree, err := paths.WorktreeRoot(ctx)\n  241| if err != nil {\n  242| return 0, fmt.Errorf(\"failed to get worktree root: %w\", err)\n  243| }\ncmd/entire/cli/integration_test/hook_bench_test.go\n 46: // once in CountOtherActiveSess",
+      "output_tokens": 816,
+      "duration_ms": 0.43392181396484375,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/strategy/manual_commit_session.go",
+        "start_line": 234,
+        "max_lines": 80
+      },
+      "output": "cmd/entire/cli/strategy/manual_commit_session.go:234-313\n  234| // CountOtherActiveSessionsWithCheckpoints counts how many other active sessions\n  235| // from the SAME worktree (different from currentSessionID) have created checkpoints\n  236| // on the SAME base commit (current HEAD). This is used to show an informational message\n  237| // about concurrent sessions that will be included in the next commit.\n  238| // Returns 0, nil if no such sessions exist.\n  239| func (s *ManualCommitStrategy)",
+      "output_tokens": 3634,
+      "duration_ms": 0.44226646423339844,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "SessionIDConflictError",
+        "path_glob": "cmd/entire/cli/strategy/manual_commit_hooks.go",
+        "context_before": 5,
+        "context_after": 30
+      },
+      "output": "\u2192 Read cmd/entire/cli/strategy/manual_commit_hooks.go (only match)\ncmd/entire/cli/strategy/manual_commit_hooks.go\n 2130: // returns a SessionIDConflictError to prevent orphaning existing session work.",
+      "output_tokens": 200,
+      "duration_ms": 0.270843505859375,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/strategy/manual_commit_hooks.go",
+        "start_line": 2120,
+        "max_lines": 80
+      },
+      "output": "cmd/entire/cli/strategy/manual_commit_hooks.go:2120-2199\n  2120| }\n  2121| \n  2122| // InitializeSession creates session state for a new session or updates an existing one.\n  2123| // This implements the optional SessionInitializer interface.\n  2124| // Called during UserPromptSubmit to allow git hooks to detect active sessions.\n  2125| //\n  2126| // If the session already exists and HEAD has moved (e.g., user committed), updates\n  2127| // BaseCommit to the new HEAD so future checkpoints go to ",
+      "output_tokens": 4402,
+      "duration_ms": 0.9210109710693359,
+      "turn_number": 10
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "clean.go.*Active sessions detected"
+      },
+      "output": "0 matches for 'clean.go.*Active sessions detected'. Auto-broadened to 'sessions detected':\n\u2192 Read cmd/entire/cli/clean.go (best match)\ncmd/entire/cli/clean.go\n 107: fmt.Fprintln(cmd.ErrOrStderr(), \"Active sessions detected on current HEAD:\")\ncmd/entire/cli/reset.go\n 52: fmt.Fprintln(cmd.ErrOrStderr(), \"Active sessions detected on current HEAD:\")",
+      "output_tokens": 347,
+      "duration_ms": 2.3038387298583984,
+      "turn_number": 10
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/clean.go",
+        "start_line": 85,
+        "max_lines": 60
+      },
+      "output": "cmd/entire/cli/clean.go:85-144\n  85| \treturn cmd\n  86| }\n  87| \n  88| // runCleanCurrentHead cleans session data for the current HEAD commit.\n  89| func runCleanCurrentHead(ctx context.Context, cmd *cobra.Command, force, dryRun bool) error {\n  90| \tstrat := GetStrategy(ctx)\n  91| \tw := cmd.OutOrStdout()\n  92| \n  93| \t// Dry-run: show what would be cleaned\n  94| \tif dryRun {\n  95| \t\treturn previewCurrentHead(ctx, w)\n  96| \t}\n  97| \n  98| \t// Check for active sessions before cleaning\n  99| \tif !fo",
+      "output_tokens": 2002,
+      "duration_ms": 1.1360645294189453,
+      "turn_number": 11
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/reset.go",
+        "start_line": 35,
+        "max_lines": 60
+      },
+      "output": "cmd/entire/cli/reset.go:35-94\n  35| \n  36| \t\t\tstrat := GetStrategy(ctx)\n  37| \n  38| \t\t\t// Handle --session flag: delegate to clean's session logic\n  39| \t\t\tif sessionFlag != \"\" {\n  40| \t\t\t\treturn runCleanSession(ctx, cmd, strat, sessionFlag, forceFlag, false, \"Reset\", \"reset\")\n  41| \t\t\t}\n  42| \n  43| \t\t\t// Check for active sessions before bulk reset\n  44| \t\t\tif !forceFlag {\n  45| \t\t\t\tactiveSessions, err := activeSessionsOnCurrentHead(ctx)\n  46| \t\t\t\tif err != nil {\n  47| \t\t\t\t\tfmt.Fprintf(cmd.Err",
+      "output_tokens": 2096,
+      "duration_ms": 0.3230571746826172,
+      "turn_number": 11
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "activeSessionsOnCurrentHead"
+      },
+      "output": "\u2192 Read cmd/entire/cli/clean.go (best match)\ncmd/entire/cli/clean.go\n 519: func activeSessionsOnCurrentHead(ctx context.Context) ([]*session.State, error) {\n  520| repo, err := openRepository(ctx)\n  521| if err != nil {\n  522| return nil, err\n  523| }\n 100: activeSessions, err := activeSessionsOnCurrentHead(ctx)\n 517: // activeSessionsOnCurrentHead returns sessions on the current HEAD\ncmd/entire/cli/reset.go\n 45: activeSessions, err := activeSessionsOnCurrentHead(ctx)",
+      "output_tokens": 471,
+      "duration_ms": 0.5300045013427734,
+      "turn_number": 12
+    }
+  ],
+  "total_tool_calls": 21,
+  "total_turns": 12,
+  "wall_clock_ms": 26796.766996383667,
+  "input_tokens": 127057,
+  "output_tokens": 1481,
+  "tool_output_tokens": 50124,
+  "total_cost_usd": 0.40338599999999997,
+  "first_call_tool": "search_code",
+  "first_call_produced_file": true,
+  "retry_count": 0,
+  "error": "",
+  "total_tool_duration_ms": 29.225587844848633,
+  "tool_execution_share": 0.0010906385777356181,
+  "search_call_count": 13,
+  "read_call_count": 8,
+  "avg_search_code_duration_ms": 1.8797837770902193,
+  "median_search_code_duration_ms": 0.6320476531982422
+}

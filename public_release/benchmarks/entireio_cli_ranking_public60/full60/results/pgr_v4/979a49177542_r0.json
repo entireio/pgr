@@ -1,0 +1,313 @@
+{
+  "repeat": 0,
+  "task_id": "979a49177542",
+  "repo": "entireio-cli",
+  "task_type": "debug_or_validation",
+  "condition": "pgr_v4",
+  "prompt": "give me steps to manually test my droid additions",
+  "answer": "",
+  "tool_calls": [
+    {
+      "tool_name": "list_dir",
+      "tool_input": {},
+      "output": "AGENTS.md\nCHANGELOG.md\nCLAUDE.md\nCODE_OF_CONDUCT.md\nCONTRIBUTING.md\nLICENSE\nREADME.md\nSECURITY.md\nWINDOWS.md\ncmd/\ndocs/\ne2e/\ngo.mod\ngo.sum\nmise-tasks/\nmise.toml\nperf/\nredact/\nscripts/",
+      "output_tokens": 183,
+      "duration_ms": 0.38886070251464844,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "droid"
+      },
+      "output": "  summary:\n    query: droid\n    scope: all files\n    files: 10 total, 10 shown\n    buckets: 8 source, 2 test, 0 low-priority\n    definition_candidates: 5\n    best_next_step: read cmd/entire/cli/agent/factoryaidroid/transcript.go around line 1\n\ncmd/entire/cli/agent/factoryaidroid/transcript.go\n  why: definition, source\n  25-25:\n    25| type droidEnvelope struct {\n  32-32:\n    32| type droidMessageRole struct {\n  95-95:\n    95| \tvar env droidEnvelope\n\ne2e/agents/droid.go\n  why: definition, source\n",
+      "output_tokens": 3141,
+      "duration_ms": 16.4639949798584,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/agent/factoryaidroid/factoryaidroid.go"
+      },
+      "output": "cmd/entire/cli/agent/factoryaidroid/factoryaidroid.go:1-80\n  1| // Package factoryaidroid implements the Agent interface for Factory AI Droid.\n  2| package factoryaidroid\n  3| \n  4| import (\n  5| \t\"context\"\n  6| \t\"errors\"\n  7| \t\"fmt\"\n  8| \t\"os\"\n  9| \t\"path/filepath\"\n 10| \t\"regexp\"\n 11| \t\"time\"\n 12| \n 13| \t\"github.com/entireio/cli/cmd/entire/cli/agent\"\n 14| \t\"github.com/entireio/cli/cmd/entire/cli/agent/types\"\n 15| \t\"github.com/entireio/cli/cmd/entire/cli/paths\"\n 16| )\n 17| \n 18| // nonAlphanumer",
+      "output_tokens": 3309,
+      "duration_ms": 0.37980079650878906,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/agent/factoryaidroid/hooks.go"
+      },
+      "output": "cmd/entire/cli/agent/factoryaidroid/hooks.go:1-80\n  1| package factoryaidroid\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"encoding/json\"\n  6| \t\"fmt\"\n  7| \t\"os\"\n  8| \t\"path/filepath\"\n  9| \t\"slices\"\n 10| \n 11| \t\"github.com/entireio/cli/cmd/entire/cli/agent\"\n 12| \t\"github.com/entireio/cli/cmd/entire/cli/jsonutil\"\n 13| \t\"github.com/entireio/cli/cmd/entire/cli/paths\"\n 14| )\n 15| \n 16| // Ensure FactoryAIDroidAgent implements HookSupport\n 17| var _ agent.HookSupport = (*FactoryAIDroidAgent)(nil)\n 18| \n",
+      "output_tokens": 3575,
+      "duration_ms": 0.24890899658203125,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/agent/factoryaidroid/lifecycle.go"
+      },
+      "output": "cmd/entire/cli/agent/factoryaidroid/lifecycle.go:1-80\n  1| package factoryaidroid\n  2| \n  3| import (\n  4| \t\"bytes\"\n  5| \t\"context\"\n  6| \t\"encoding/json\"\n  7| \t\"fmt\"\n  8| \t\"io\"\n  9| \t\"os\"\n 10| \t\"strings\"\n 11| \t\"time\"\n 12| \n 13| \t\"github.com/entireio/cli/cmd/entire/cli/agent\"\n 14| \t\"github.com/entireio/cli/cmd/entire/cli/textutil\"\n 15| \t\"github.com/entireio/cli/cmd/entire/cli/transcript\"\n 16| )\n 17| \n 18| // Compile-time interface assertions.\n 19| var (\n 20| \t_ agent.TranscriptAnalyzer     = (*Fa",
+      "output_tokens": 2941,
+      "duration_ms": 0.24700164794921875,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/agent/factoryaidroid/hooks.go",
+        "start_line": 80,
+        "end_line": 200
+      },
+      "output": "cmd/entire/cli/agent/factoryaidroid/hooks.go:80-159\n 80| \t\t\t\treturn 0, fmt.Errorf(\"failed to parse hooks in settings.json: %w\", err)\n 81| \t\t\t}\n 82| \t\t}\n 83| \t\tif permRaw, ok := rawSettings[\"permissions\"]; ok {\n 84| \t\t\tif err := json.Unmarshal(permRaw, &rawPermissions); err != nil {\n 85| \t\t\t\treturn 0, fmt.Errorf(\"failed to parse permissions in settings.json: %w\", err)\n 86| \t\t\t}\n 87| \t\t}\n 88| \t} else {\n 89| \t\trawSettings = make(map[string]json.RawMessage)\n 90| \t}\n 91| \n 92| \tif rawHooks == nil {\n ",
+      "output_tokens": 4040,
+      "duration_ms": 0.4279613494873047,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/agent/factoryaidroid/lifecycle.go",
+        "start_line": 80,
+        "end_line": 330
+      },
+      "output": "cmd/entire/cli/agent/factoryaidroid/lifecycle.go:80-159\n 80| \n 81| // GetTranscriptPosition returns the current line count of the JSONL transcript.\n 82| func (f *FactoryAIDroidAgent) GetTranscriptPosition(path string) (int, error) {\n 83| \t_, pos, err := ParseDroidTranscript(path, 0)\n 84| \tif err != nil {\n 85| \t\treturn 0, err\n 86| \t}\n 87| \treturn pos, nil\n 88| }\n 89| \n 90| // ExtractModifiedFilesFromOffset extracts files modified since a given line offset.\n 91| func (f *FactoryAIDroidAgent) Extra",
+      "output_tokens": 3343,
+      "duration_ms": 0.22912025451660156,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/agent/factoryaidroid/factoryaidroid.go",
+        "start_line": 80
+      },
+      "output": "cmd/entire/cli/agent/factoryaidroid/factoryaidroid.go:80-159\n 80| func (f *FactoryAIDroidAgent) ChunkTranscript(_ context.Context, content []byte, maxSize int) ([][]byte, error) {\n 81| \tchunks, err := agent.ChunkJSONL(content, maxSize)\n 82| \tif err != nil {\n 83| \t\treturn nil, fmt.Errorf(\"failed to chunk transcript: %w\", err)\n 84| \t}\n 85| \treturn chunks, nil\n 86| }\n 87| \n 88| // ReassembleTranscript concatenates JSONL chunks with newlines.\n 89| func (f *FactoryAIDroidAgent) ReassembleTranscript(c",
+      "output_tokens": 3624,
+      "duration_ms": 0.19931793212890625,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/agent/factoryaidroid/hooks.go",
+        "start_line": 159,
+        "end_line": 480
+      },
+      "output": "cmd/entire/cli/agent/factoryaidroid/hooks.go:159-238\n159| \t}\n160| \tif !hookCommandExists(stop, stopCmd) {\n161| \t\tstop = addHookToMatcher(stop, \"\", stopCmd)\n162| \t\tcount++\n163| \t}\n164| \tif !hookCommandExists(userPromptSubmit, userPromptSubmitCmd) {\n165| \t\tuserPromptSubmit = addHookToMatcher(userPromptSubmit, \"\", userPromptSubmitCmd)\n166| \t\tcount++\n167| \t}\n168| \tif !hookCommandExistsWithMatcher(preToolUse, \"Task\", preTaskCmd) {\n169| \t\tpreToolUse = addHookToMatcher(preToolUse, \"Task\", preTaskCmd)\n1",
+      "output_tokens": 3215,
+      "duration_ms": 0.4730224609375,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/agent/factoryaidroid/lifecycle.go",
+        "start_line": 159,
+        "end_line": 330
+      },
+      "output": "cmd/entire/cli/agent/factoryaidroid/lifecycle.go:159-238\n159| \treturn ExtractAllModifiedFilesFromBytes(transcriptData, fromOffset, subagentsDir)\n160| }\n161| \n162| // CalculateTotalTokenUsage computes token usage including all spawned subagents.\n163| func (f *FactoryAIDroidAgent) CalculateTotalTokenUsage(transcriptData []byte, fromOffset int, subagentsDir string) (*agent.TokenUsage, error) {\n164| \treturn CalculateTotalTokenUsageFromBytes(transcriptData, fromOffset, subagentsDir)\n165| }\n166| \n167|",
+      "output_tokens": 2910,
+      "duration_ms": 0.23984909057617188,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "CLAUDE.md"
+      },
+      "output": "CLAUDE.md:1-80\n  1| # Entire - CLI\n  2| \n  3| This repo contains the CLI for Entire.\n  4| \n  5| ## Architecture\n  6| \n  7| - CLI built with github.com/spf13/cobra and github.com/charmbracelet/huh\n  8| \n  9| ## Key Directories\n 10| \n 11| ### Commands (`cmd/`)\n 12| \n 13| - `entire/`: Main CLI entry point\n 14| - `entire/cli`: CLI utilities and helpers\n 15| - `entire/cli/commands`: actual command implementations\n 16| - `entire/cli/agent`: agent implementations (Claude Code, Gemini CLI, OpenCode, Cur",
+      "output_tokens": 3777,
+      "duration_ms": 0.308990478515625,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/agent/factoryaidroid/hooks.go",
+        "start_line": 238,
+        "end_line": 480
+      },
+      "output": "cmd/entire/cli/agent/factoryaidroid/hooks.go:238-317\n238| \t}\n239| \n240| \treturn count, nil\n241| }\n242| \n243| // parseHookType parses a specific hook type from rawHooks into the target slice.\n244| // Silently ignores parse errors (leaves target unchanged).\n245| func parseHookType(rawHooks map[string]json.RawMessage, hookType string, target *[]FactoryHookMatcher) {\n246| \tif data, ok := rawHooks[hookType]; ok {\n247| \t\t//nolint:errcheck,gosec // Intentionally ignoring parse errors - leave target as ",
+      "output_tokens": 3579,
+      "duration_ms": 0.21982192993164062,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "CLAUDE.md",
+        "start_line": 80,
+        "end_line": 200
+      },
+      "output": "CLAUDE.md:80-159\n 80| \n 81| E2E tests:\n 82| \n 83| - Use the `//go:build e2e` build tag\n 84| - Located in `e2e/tests/`\n 85| - See [`e2e/README.md`](e2e/README.md) for full documentation (structure, debugging, adding agents)\n 86| - Test real agent interactions (Claude Code, Gemini CLI, OpenCode, Cursor, Factory AI Droid, Copilot CLI, or Vogon creating files, committing, etc.)\n 87| - Validate checkpoint scenarios documented in `docs/architecture/checkpoint-scenarios.md`\n 88| - Support multiple agen",
+      "output_tokens": 3623,
+      "duration_ms": 0.2770423889160156,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/agents/droid.go"
+      },
+      "output": "e2e/agents/droid.go:1-80\n  1| package agents\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"encoding/json\"\n  6| \t\"errors\"\n  7| \t\"fmt\"\n  8| \t\"os\"\n  9| \t\"os/exec\"\n 10| \t\"path/filepath\"\n 11| \t\"strings\"\n 12| \t\"time\"\n 13| )\n 14| \n 15| func init() {\n 16| \tif env := os.Getenv(\"E2E_AGENT\"); env != \"\" && env != \"factoryai-droid\" {\n 17| \t\treturn\n 18| \t}\n 19| \tif _, err := exec.LookPath(\"droid\"); err != nil {\n 20| \t\treturn\n 21| \t}\n 22| \tRegister(&Droid{})\n 23| }\n 24| \n 25| // Droid implements the Agent interfa",
+      "output_tokens": 2593,
+      "duration_ms": 0.17380714416503906,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/agents/droid.go",
+        "start_line": 80
+      },
+      "output": "e2e/agents/droid.go:80-159\n 80| func DefaultDroidModel() string { return defaultDroidModel }\n 81| \n 82| func (d *Droid) Bootstrap() error {\n 83| \tapiKey := os.Getenv(\"ANTHROPIC_API_KEY\")\n 84| \tif apiKey == \"\" {\n 85| \t\treturn nil\n 86| \t}\n 87| \n 88| \thome, err := os.UserHomeDir()\n 89| \tif err != nil {\n 90| \t\treturn fmt.Errorf(\"get home dir: %w\", err)\n 91| \t}\n 92| \tdir := filepath.Join(home, \".factory\")\n 93| \tif err := os.MkdirAll(dir, 0o755); err != nil {\n 94| \t\treturn fmt.Errorf(\"mkdir %s: %w\", d",
+      "output_tokens": 2761,
+      "duration_ms": 0.35691261291503906,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "CLAUDE.md",
+        "start_line": 160,
+        "end_line": 350
+      },
+      "output": "CLAUDE.md:160-239\n160| \n161| `mise run check` runs the three commands above.\n162| \n163| Safety note: do not treat a clean `mise run lint` result as final unless it was run after the most recent `mise run fmt` pass.\n164| \n165| **Common CI failures from skipping this:**\n166| \n167| - `gofmt` formatting differences \u2192 run `mise run fmt`\n168| - Lint errors \u2192 run `mise run lint` and fix issues\n169| - Test failures \u2192 run `mise run test` and fix\n170| \n171| ### Code Duplication Prevention\n172| \n173| Befor",
+      "output_tokens": 3408,
+      "duration_ms": 0.3132820129394531,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/testutil/repo.go"
+      },
+      "output": "e2e/testutil/repo.go:1-80\n  1| package testutil\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"crypto/sha256\"\n  6| \t\"encoding/hex\"\n  7| \t\"encoding/json\"\n  8| \t\"errors\"\n  9| \t\"fmt\"\n 10| \t\"os\"\n 11| \t\"os/exec\"\n 12| \t\"path/filepath\"\n 13| \t\"strings\"\n 14| \t\"testing\"\n 15| \t\"time\"\n 16| \n 17| \t\"github.com/entireio/cli/e2e/agents\"\n 18| \t\"github.com/entireio/cli/e2e/entire\"\n 19| )\n 20| \n 21| const droidRepoSettingsPath = \".factory/settings.json\"\n 22| \n 23| // RepoState holds the working state for a single test",
+      "output_tokens": 3090,
+      "duration_ms": 0.4010200500488281,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "factoryai-droid",
+        "path_glob": "cmd/entire/cli/integration_test/*.go"
+      },
+      "output": "  summary:\n    query: factoryai-droid\n    scope: glob=cmd/entire/cli/integration_test/*.go\n    files: 4 total, 4 shown\n    buckets: 1 source, 3 test, 0 low-priority\n    definition_candidates: 0\n    best_next_step: read cmd/entire/cli/integration_test/hooks.go around line 868\n\ncmd/entire/cli/integration_test/hooks.go\n  why: reference, source\n  868-868:\n    868| \tcmd := exec.Command(getTestBinary(), \"hooks\", \"factoryai-droid\", hookName)\n  885-885:\n    885| \tcmd := exec.Command(getTestBinary(), \"ho",
+      "output_tokens": 1370,
+      "duration_ms": 13.085126876831055,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/integration_test/setup_factoryai_hooks_test.go"
+      },
+      "output": "cmd/entire/cli/integration_test/setup_factoryai_hooks_test.go:1-80\n  1| //go:build integration\n  2| \n  3| package integration\n  4| \n  5| import (\n  6| \t\"encoding/json\"\n  7| \t\"os\"\n  8| \t\"path/filepath\"\n  9| \t\"strings\"\n 10| \t\"testing\"\n 11| \n 12| \t\"github.com/entireio/cli/cmd/entire/cli/agent/factoryaidroid\"\n 13| )\n 14| \n 15| // Use the real Factory types from the factoryaidroid package to avoid schema drift.\n 16| type FactorySettings = factoryaidroid.FactorySettings\n 17| \n 18| // TestSetupFactoryA",
+      "output_tokens": 3004,
+      "duration_ms": 0.4279613494873047,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/integration_test/hooks.go",
+        "start_line": 840,
+        "end_line": 960
+      },
+      "output": "cmd/entire/cli/integration_test/hooks.go:840-919\n840| \t}\n841| }\n842| \n843| // NewFactoryDroidHookRunner creates a new Factory Droid hook runner.\n844| func NewFactoryDroidHookRunner(repoDir string, t interface {\n845| \tHelper()\n846| \tFatalf(format string, args ...interface{})\n847| \tLogf(format string, args ...interface{})\n848| }) *FactoryDroidHookRunner {\n849| \treturn &FactoryDroidHookRunner{\n850| \t\tRepoDir: repoDir,\n851| \t\tT:       t,\n852| \t}\n853| }\n854| \n855| // runDroidHookWithInput runs a Fact",
+      "output_tokens": 2825,
+      "duration_ms": 0.3552436828613281,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/integration_test/hooks.go",
+        "start_line": 919,
+        "end_line": 1100
+      },
+      "output": "cmd/entire/cli/integration_test/hooks.go:919-998\n919| \tinput := map[string]string{\n920| \t\t\"session_id\":      sessionID,\n921| \t\t\"transcript_path\": \"\",\n922| \t\t\"prompt\":          \"test prompt\",\n923| \t}\n924| \n925| \tinputJSON, err := json.Marshal(input)\n926| \tif err != nil {\n927| \t\treturn HookOutput{Err: fmt.Errorf(\"failed to marshal hook input: %w\", err)}\n928| \t}\n929| \n930| \treturn r.runDroidHookWithOutput(\"user-prompt-submit\", inputJSON)\n931| }\n932| \n933| // SimulateStop simulates the Stop hook for",
+      "output_tokens": 2706,
+      "duration_ms": 1.6031265258789062,
+      "turn_number": 10
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "pattern": "factoryaidroid",
+        "file_type": "go"
+      },
+      "output": "./cmd/entire/cli/agent/factoryaidroid/factoryaidroid.go\n./cmd/entire/cli/agent/factoryaidroid/factoryaidroid_test.go\n./cmd/entire/cli/agent/factoryaidroid/hooks.go\n./cmd/entire/cli/agent/factoryaidroid/hooks_test.go\n./cmd/entire/cli/agent/factoryaidroid/lifecycle.go\n./cmd/entire/cli/agent/factoryaidroid/lifecycle_test.go\n./cmd/entire/cli/agent/factoryaidroid/tool_use_fallback.go\n./cmd/entire/cli/agent/factoryaidroid/transcript.go\n./cmd/entire/cli/agent/factoryaidroid/transcript_test.go\n./cmd/ent",
+      "output_tokens": 537,
+      "duration_ms": 11.962175369262695,
+      "turn_number": 10
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/agent/factoryaidroid/types.go"
+      },
+      "output": "cmd/entire/cli/agent/factoryaidroid/types.go:1-80\n  1| package factoryaidroid\n  2| \n  3| import (\n  4| \t\"crypto/sha256\"\n  5| \t\"encoding/hex\"\n  6| \t\"encoding/json\"\n  7| )\n  8| \n  9| // FactorySettings represents the .factory/settings.json structure.\n 10| type FactorySettings struct {\n 11| \tHooks FactoryHooks `json:\"hooks\"`\n 12| }\n 13| \n 14| // FactoryHooks contains the hook configurations.\n 15| type FactoryHooks struct {\n 16| \tSessionStart     []FactoryHookMatcher `json:\"SessionStart,omitempty\"`\n",
+      "output_tokens": 3396,
+      "duration_ms": 0.1881122589111328,
+      "turn_number": 11
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/integration_test/hooks.go",
+        "start_line": 998,
+        "end_line": 1100
+      },
+      "output": "cmd/entire/cli/integration_test/hooks.go:998-1077\n998| \t}\n999| \n1000| \treturn r.runDroidHookWithInput(\"pre-tool-use\", input)\n1001| }\n1002| \n1003| // SimulatePostTask simulates the PostToolUse[Task] hook for Factory Droid.\n1004| func (r *FactoryDroidHookRunner) SimulatePostTask(input PostTaskInput) error {\n1005| \tr.T.Helper()\n1006| \n1007| \thookInput := map[string]interface{}{\n1008| \t\t\"session_id\":      input.SessionID,\n1009| \t\t\"transcript_path\": input.TranscriptPath,\n1010| \t\t\"tool_use_id\":     in",
+      "output_tokens": 3033,
+      "duration_ms": 0.14209747314453125,
+      "turn_number": 11
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/integration_test/agent_strategy_test.go",
+        "start_line": 220,
+        "end_line": 330
+      },
+      "output": "cmd/entire/cli/integration_test/agent_strategy_test.go:220-299\n220| \t}\n221| \n222| \t// Verify .entire/settings has agent set\n223| \tentireSettingsPath := filepath.Join(env.RepoDir, \".entire\", paths.SettingsFileName)\n224| \tdata, err := os.ReadFile(entireSettingsPath)\n225| \tif err != nil {\n226| \t\tt.Fatalf(\"failed to read .entire/%s: %v\", paths.SettingsFileName, err)\n227| \t}\n228| \n229| \tif !strings.Contains(string(data), `\"agent\"`) && !strings.Contains(string(data), `\"agent\":`) {\n230| \t\tt.Logf(\"setti",
+      "output_tokens": 3207,
+      "duration_ms": 0.2129077911376953,
+      "turn_number": 12
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "TestSetupFactoryAI\\|TestFactoryAIDroid\\|TestDroid",
+        "file_type": "go"
+      },
+      "output": "No matches found.\n  query: TestSetupFactoryAI\\|TestFactoryAIDroid\\|TestDroid\n  scope: type=go\n  hint: broaden the query, remove path_glob/file_type filters, or try a simpler symbol name.",
+      "output_tokens": 186,
+      "duration_ms": 25.234222412109375,
+      "turn_number": 12
+    }
+  ],
+  "total_tool_calls": 26,
+  "total_turns": 12,
+  "wall_clock_ms": 36050.64082145691,
+  "input_tokens": 199294,
+  "output_tokens": 1962,
+  "tool_output_tokens": 73376,
+  "total_cost_usd": 0.627312,
+  "first_call_tool": "list_dir",
+  "first_call_produced_file": true,
+  "retry_count": 0,
+  "error": "",
+  "total_tool_duration_ms": 74.55968856811523,
+  "tool_execution_share": 0.002068193154661989,
+  "search_call_count": 3,
+  "read_call_count": 21,
+  "avg_search_code_duration_ms": 18.261114756266277,
+  "median_search_code_duration_ms": 16.4639949798584
+}

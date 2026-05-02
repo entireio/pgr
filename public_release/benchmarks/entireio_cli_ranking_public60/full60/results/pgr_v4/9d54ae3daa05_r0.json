@@ -1,0 +1,249 @@
+{
+  "repeat": 0,
+  "task_id": "9d54ae3daa05",
+  "repo": "entireio-cli",
+  "task_type": "repo_task",
+  "condition": "pgr_v4",
+  "prompt": "Can you confirm things are working correctly for \"entire status --detailed\"?",
+  "answer": "",
+  "tool_calls": [
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "entire status --detailed"
+      },
+      "output": "No matches found.\n  query: entire status --detailed\n  scope: all files\n  hint: broaden the query, remove path_glob/file_type filters, or try a simpler symbol name.",
+      "output_tokens": 163,
+      "duration_ms": 16.57700538635254,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "entire status detailed"
+      },
+      "output": "No matches found.\n  query: entire status detailed\n  scope: all files\n  hint: broaden the query, remove path_glob/file_type filters, or try a simpler symbol name.",
+      "output_tokens": 161,
+      "duration_ms": 13.197183609008789,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "--detailed"
+      },
+      "output": "No matches found.\n  query: --detailed\n  scope: all files\n  hint: broaden the query, remove path_glob/file_type filters, or try a simpler symbol name.",
+      "output_tokens": 149,
+      "duration_ms": 17.39501953125,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "detailed"
+      },
+      "output": "  summary:\n    query: detailed\n    scope: all files\n    files: 10 total, 10 shown\n    buckets: 9 source, 1 test, 0 low-priority\n    definition_candidates: 2\n    best_next_step: read cmd/entire/cli/status.go around line 26\n\ncmd/entire/cli/status.go\n  why: definition, source\n  26-26:\n    26| \tvar detailed bool\n  42-42:\n    42| func runStatus(ctx context.Context, w io.Writer, detailed bool) error {\n  33-33:\n    33| \t\t\treturn runStatus(cmd.Context(), cmd.OutOrStdout(), detailed)\n\ncmd/entire/cli/benc",
+      "output_tokens": 2739,
+      "duration_ms": 12.769937515258789,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/status.go",
+        "max_lines": 100
+      },
+      "output": "cmd/entire/cli/status.go:1-100\n  1| package cli\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"errors\"\n  6| \t\"fmt\"\n  7| \t\"io\"\n  8| \t\"io/fs\"\n  9| \t\"os\"\n 10| \t\"os/exec\"\n 11| \t\"path/filepath\"\n 12| \t\"sort\"\n 13| \t\"strings\"\n 14| \t\"time\"\n 15| \n 16| \t\"github.com/entireio/cli/cmd/entire/cli/paths\"\n 17| \t\"github.com/entireio/cli/cmd/entire/cli/session\"\n 18| \t\"github.com/entireio/cli/cmd/entire/cli/settings\"\n 19| \t\"github.com/entireio/cli/cmd/entire/cli/strategy\"\n 20| \t\"github.com/entireio/cli/cmd/entire/cli/s",
+      "output_tokens": 3396,
+      "duration_ms": 0.4417896270751953,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/bench_test.go",
+        "max_lines": 100
+      },
+      "output": "cmd/entire/cli/bench_test.go:1-86\n  1| package cli\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"io\"\n  6| \t\"testing\"\n  7| \n  8| \t\"github.com/entireio/cli/cmd/entire/cli/benchutil\"\n  9| \t\"github.com/entireio/cli/cmd/entire/cli/paths\"\n 10| \t\"github.com/entireio/cli/cmd/entire/cli/session\"\n 11| )\n 12| \n 13| /* To use the interactive flame graph, run:\n 14| \n 15| mise exec -- go tool pprof -http=:8089 /tmp/status_cpu.prof &>/dev/null & echo \"pprof server started on http://localhost:8089\"\n 16| \n 17| and ",
+      "output_tokens": 3651,
+      "duration_ms": 0.2808570861816406,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/status.go",
+        "start_line": 96,
+        "max_lines": 150
+      },
+      "output": "cmd/entire/cli/status.go:96-245\n 96| // runStatusDetailed shows the effective status plus detailed status for each settings file.\n 97| func runStatusDetailed(ctx context.Context, w io.Writer, sty statusStyles, settingsPath, localSettingsPath string, projectExists, localExists bool) error {\n 98| \t// First show the effective/merged status\n 99| \teffectiveSettings, err := LoadEntireSettings(ctx)\n100| \tif err != nil {\n101| \t\treturn fmt.Errorf(\"failed to load settings: %w\", err)\n102| \t}\n103| \tfmt.Fpri",
+      "output_tokens": 4912,
+      "duration_ms": 0.3819465637207031,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "status.*detailed\\|detailed.*status",
+        "file_type": "go",
+        "path_glob": "**/*test*"
+      },
+      "output": "No matches found.\n  query: status.*detailed\\|detailed.*status\n  scope: glob=**/*test*, type=go\n  hint: broaden the query, remove path_glob/file_type filters, or try a simpler symbol name.",
+      "output_tokens": 187,
+      "duration_ms": 12.310028076171875,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "runStatusDetailed\\|TestStatus\\|status.*detailed",
+        "file_type": "go"
+      },
+      "output": "No matches found.\n  query: runStatusDetailed\\|TestStatus\\|status.*detailed\n  scope: type=go\n  hint: broaden the query, remove path_glob/file_type filters, or try a simpler symbol name.",
+      "output_tokens": 184,
+      "duration_ms": 17.996788024902344,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/status.go",
+        "start_line": 245,
+        "max_lines": 100
+      },
+      "output": "cmd/entire/cli/status.go:245-344\n245| \t}\n246| \n247| \t// Group by worktree path\n248| \tgroups := make(map[string]*worktreeGroup)\n249| \tfor _, s := range active {\n250| \t\twp := s.WorktreePath\n251| \t\tif wp == \"\" {\n252| \t\t\twp = unknownPlaceholder\n253| \t\t}\n254| \t\tg, ok := groups[wp]\n255| \t\tif !ok {\n256| \t\t\tg = &worktreeGroup{path: wp}\n257| \t\t\tgroups[wp] = g\n258| \t\t}\n259| \t\tg.sessions = append(g.sessions, s)\n260| \t}\n261| \n262| \t// Resolve branch names for each worktree (skip for unknown paths)\n263| \tfor",
+      "output_tokens": 3323,
+      "duration_ms": 0.2307891845703125,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/status.go",
+        "start_line": 344,
+        "max_lines": 85
+      },
+      "output": "cmd/entire/cli/status.go:344-428\n344| \t\t\t}\n345| \t\t\tfmt.Fprintln(w)\n346| \t\t}\n347| \t}\n348| \n349| \t// Footer: horizontal rule + session count\n350| \tfmt.Fprintln(w, sty.horizontalRule(sty.width))\n351| \tvar footer string\n352| \tif totalSessions == 1 {\n353| \t\tfooter = \"1 session\"\n354| \t} else {\n355| \t\tfooter = fmt.Sprintf(\"%d sessions\", totalSessions)\n356| \t}\n357| \tfmt.Fprintln(w, sty.render(sty.dim, footer))\n358| \tfmt.Fprintln(w)\n359| }\n360| \n361| // resolveWorktreeBranch resolves the current branch f",
+      "output_tokens": 3016,
+      "duration_ms": 0.3781318664550781,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "TestStatus\\|status_test\\|statusTest",
+        "file_type": "go"
+      },
+      "output": "No matches found.\n  query: TestStatus\\|status_test\\|statusTest\n  scope: type=go\n  hint: broaden the query, remove path_glob/file_type filters, or try a simpler symbol name.",
+      "output_tokens": 172,
+      "duration_ms": 15.983819961547852,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "glob": "**/*status*test*"
+      },
+      "output": "./cmd/entire/cli/status_test.go",
+      "output_tokens": 31,
+      "duration_ms": 8.050918579101562,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "glob": "**/*test*status*"
+      },
+      "output": "No files found.",
+      "output_tokens": 15,
+      "duration_ms": 6.52003288269043,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "runStatus",
+        "file_type": "go"
+      },
+      "output": "  summary:\n    query: runStatus\n    scope: type=go\n    files: 3 total, 3 shown\n    buckets: 1 source, 2 test, 0 low-priority\n    definition_candidates: 1\n    best_next_step: read cmd/entire/cli/status.go around line 33\n\ncmd/entire/cli/status.go\n  why: definition, source\n  42-42:\n    42| func runStatus(ctx context.Context, w io.Writer, detailed bool) error {\n  97-97:\n    97| func runStatusDetailed(ctx context.Context, w io.Writer, sty statusStyles, settingsPath, localSettingsPath string, projectE",
+      "output_tokens": 1215,
+      "duration_ms": 14.295816421508789,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/status_test.go"
+      },
+      "output": "cmd/entire/cli/status_test.go:1-80\n  1| package cli\n  2| \n  3| import (\n  4| \t\"bytes\"\n  5| \t\"context\"\n  6| \t\"os\"\n  7| \t\"path/filepath\"\n  8| \t\"strings\"\n  9| \t\"testing\"\n 10| \t\"time\"\n 11| \n 12| \t\"github.com/charmbracelet/lipgloss\"\n 13| \t\"github.com/entireio/cli/cmd/entire/cli/agent\"\n 14| \t\"github.com/entireio/cli/cmd/entire/cli/agent/types\"\n 15| \t\"github.com/entireio/cli/cmd/entire/cli/session\"\n 16| \n 17| \t\"github.com/go-git/go-git/v6\"\n 18| \t\"github.com/go-git/go-git/v6/plumbing/object\"\n 19| )\n 20|",
+      "output_tokens": 2446,
+      "duration_ms": 0.19788742065429688,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/status_test.go",
+        "start_line": 80,
+        "max_lines": 200
+      },
+      "output": "cmd/entire/cli/status_test.go:80-279\n 80| \theadPath := filepath.Join(dir, \".git\", \"HEAD\")\n 81| \tif err := os.WriteFile(headPath, []byte(hash.String()+\"\\n\"), 0o644); err != nil {\n 82| \t\tt.Fatalf(\"write HEAD: %v\", err)\n 83| \t}\n 84| \n 85| \tbranch := resolveWorktreeBranch(context.Background(), dir)\n 86| \tif branch != \"HEAD\" {\n 87| \t\tt.Errorf(\"resolveWorktreeBranch() = %q, want %q for detached HEAD\", branch, \"HEAD\")\n 88| \t}\n 89| }\n 90| \n 91| func TestResolveWorktreeBranch_WorktreeGitFile(t *testing.T",
+      "output_tokens": 7682,
+      "duration_ms": 0.4730224609375,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/status_test.go",
+        "start_line": 279,
+        "max_lines": 200
+      },
+      "output": "cmd/entire/cli/status_test.go:279-478\n279| \t// Project: enabled=true, strategy=manual-commit\n280| \t// Local: enabled=false, strategy=manual-commit\n281| \t// Detailed mode shows effective status first, then each file separately\n282| \twriteSettings(t, `{\"enabled\": true}`)\n283| \twriteLocalSettings(t, `{\"enabled\": false}`)\n284| \n285| \tvar stdout bytes.Buffer\n286| \tif err := runStatus(context.Background(), &stdout, true); err != nil {\n287| \t\tt.Fatalf(\"runStatus() error = %v\", err)\n288| \t}\n289| \n290| \t",
+      "output_tokens": 7869,
+      "duration_ms": 0.5691051483154297,
+      "turn_number": 10
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/status_test.go",
+        "start_line": 478,
+        "max_lines": 150
+      },
+      "output": "cmd/entire/cli/status_test.go:478-627\n478| \t\tif strings.Contains(line, \"Cursor\") {\n479| \t\t\tif strings.Contains(line, \"active\") {\n480| \t\t\t\tt.Errorf(\"Session without LastInteractionTime should not show 'active', got: %s\", line)\n481| \t\t\t}\n482| \t\t}\n483| \t}\n484| \n485| \t// Should contain per-session token counts\n486| \tif !strings.Contains(output, \"tokens 1.2k\") {\n487| \t\tt.Errorf(\"Expected per-session 'tokens 1.2k' for first session (800+400), got: %s\", output)\n488| \t}\n489| \n490| \t// Should contain agg",
+      "output_tokens": 5003,
+      "duration_ms": 0.5781650543212891,
+      "turn_number": 11
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/status_test.go",
+        "start_line": 627,
+        "max_lines": 200
+      },
+      "output": "cmd/entire/cli/status_test.go:627-826\n627| \t\ttu := &agent.TokenUsage{\n628| \t\t\tInputTokens:  100,\n629| \t\t\tOutputTokens: 50,\n630| \t\t}\n631| \t\tif got := totalTokens(tu); got != 150 {\n632| \t\t\tt.Errorf(\"totalTokens() = %d, want 150\", got)\n633| \t\t}\n634| \t})\n635| \n636| \tt.Run(\"with subagents\", func(t *testing.T) {\n637| \t\tt.Parallel()\n638| \t\ttu := &agent.TokenUsage{\n639| \t\t\tInputTokens:  100,\n640| \t\t\tOutputTokens: 50,\n641| \t\t\tSubagentTokens: &agent.TokenUsage{\n642| \t\t\t\tInputTokens:  200,\n643| \t\t\t\tOutputT",
+      "output_tokens": 5984,
+      "duration_ms": 0.4889965057373047,
+      "turn_number": 12
+    }
+  ],
+  "total_tool_calls": 20,
+  "total_turns": 12,
+  "wall_clock_ms": 27356.771230697632,
+  "input_tokens": 121533,
+  "output_tokens": 1485,
+  "tool_output_tokens": 52298,
+  "total_cost_usd": 0.386874,
+  "first_call_tool": "search_code",
+  "first_call_produced_file": true,
+  "retry_count": 0,
+  "error": "",
+  "total_tool_duration_ms": 139.11724090576172,
+  "tool_execution_share": 0.005085294596083591,
+  "search_call_count": 8,
+  "read_call_count": 10,
+  "avg_search_code_duration_ms": 15.065699815750122,
+  "median_search_code_duration_ms": 15.13981819152832
+}

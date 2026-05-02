@@ -1,0 +1,70 @@
+{
+  "repeat": 0,
+  "task_id": "ea384d108347",
+  "repo": "entireio-cli",
+  "task_type": "code_understanding",
+  "condition": "rg_ranked",
+  "prompt": "What does the nolint:ireturn linter rule refer to?",
+  "answer": "The `//nolint:ireturn` directive is a **golangci-lint suppression comment** for the [`ireturn`](https://github.com/butuzov/ireturn) linter. Here's what it means and why it's used in this codebase:\n\n---\n\n## What is the `ireturn` linter?\n\n`ireturn` (\"interface return\") is a Go static analysis linter that **flags functions which return interface types** rather than concrete types. The general Go best practice it enforces is:\n\n> *\"Accept interfaces, return structs.\"*\n\nReturning an interface makes the concrete type opaque to callers and can hide useful information, so `ireturn` warns against it by default.\n\n---\n\n## Why is it suppressed here?\n\nThere are two legitimate, well-commented patterns in this codebase where returning an interface is **intentional and unavoidable**:\n\n### 1. Type-assertion helper functions (`capabilities.go`)\n\n```go\nfunc AsHookSupport(ag Agent) (HookSupport, bool) { //nolint:ireturn // type-assertion helper must return interface\nfunc AsTranscriptAnalyzer(ag Agent) (TranscriptAnalyzer, bool) { //nolint:ireturn // type-assertion helper must return interface\nfunc AsTranscriptPreparer(ag Agent) (TranscriptPreparer, bool) { //nolint:ireturn // type-assertion helper must return interface\n```\n\nThese are Go-style capability/type-assertion helpers (similar to the `As*()`/`Is*()` pattern). They accept a broad `Agent` interface and attempt to narrow it to a more specific interface (e.g., `HookSupport`, `TranscriptAnalyzer`). The return type **must** be an interface because the concrete type is unknown at compile time \u2014 the whole point is to do a runtime type assertion.\n\n### 2. Bubbletea TUI framework pattern (`search_tui.go`)\n\n```go\nfunc (m searchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ireturn,cyclop // bubbletea interface\nfunc (m searchModel) updateSearchMode(msg tea.KeyMsg) (tea.Model, tea.Cmd) { //nolint:ireturn // bubbletea pattern\nfunc (m searchModel) updateBrowseMode(msg tea.KeyMsg) (tea.Model, tea.Cmd) { //nolint:ireturn // bubbletea pattern\n```\n\nThe [Bubble Tea](https://github.com/charmbracelet/bubbletea) TUI library defines a `tea.Model` interface that **requires** `Update()` to return `(tea.Model, tea.Cmd)`. The return type is dictated by the third-party framework's interface contract \u2014 it cannot be changed to a concrete type without breaking the interface implementation.\n\n---\n\n## Summary\n\n| Location | Reason for suppression |\n|---|---|\n| `capabilities.go` `As*()` helpers | Must return an interface because the concrete type is determined at runtime via type assertion |\n| `search_tui.go` `Update`/`update*Mode` | Must return `tea.Model` (an interface) to satisfy the Bubbletea framework's `Model` interface contract |\n\nIn both cases, the `//nolint:ireturn` comment is the correct tool \u2014 the linter's general rule is sound, but these are legitimate exceptions where returning an interface is architecturally necessary, not a design smell.",
+  "tool_calls": [
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "nolint:ireturn"
+      },
+      "output": "cmd/entire/cli/agent/capabilities.go\n  30-30:\n    30| func AsHookSupport(ag Agent) (HookSupport, bool) { //nolint:ireturn // type-assertion helper must return interface\n  46-46:\n    46| func AsTranscriptAnalyzer(ag Agent) (TranscriptAnalyzer, bool) { //nolint:ireturn // type-assertion helper must return interface\n  62-62:\n    62| func AsTranscriptPreparer(ag Agent) (TranscriptPreparer, bool) { //nolint:ireturn // type-assertion helper must return interface\n\ncmd/entire/cli/search_tui.go\n  169-169",
+      "output_tokens": 891,
+      "duration_ms": 16.256093978881836,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "ireturn"
+      },
+      "output": "cmd/entire/cli/agent/capabilities.go\n  30-30:\n    30| func AsHookSupport(ag Agent) (HookSupport, bool) { //nolint:ireturn // type-assertion helper must return interface\n  46-46:\n    46| func AsTranscriptAnalyzer(ag Agent) (TranscriptAnalyzer, bool) { //nolint:ireturn // type-assertion helper must return interface\n  62-62:\n    62| func AsTranscriptPreparer(ag Agent) (TranscriptPreparer, bool) { //nolint:ireturn // type-assertion helper must return interface\n\ncmd/entire/cli/search_tui.go\n  169-169",
+      "output_tokens": 891,
+      "duration_ms": 15.642166137695312,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/agent/capabilities.go"
+      },
+      "output": "cmd/entire/cli/agent/capabilities.go:1-80\n  1| package agent\n  2| \n  3| // CapabilityDeclarer is implemented by agents that declare their capabilities\n  4| // at registration time (e.g., external plugin agents). The As* helper functions\n  5| // below use this interface to gate capability access: an agent must both implement\n  6| // the optional interface AND declare the capability as true.\n  7| //\n  8| // Built-in agents (Claude Code, Gemini CLI, etc.) do NOT implement this interface.\n  9| // Fo",
+      "output_tokens": 3607,
+      "duration_ms": 0.3750324249267578,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/search_tui.go",
+        "start_line": 160,
+        "end_line": 285
+      },
+      "output": "cmd/entire/cli/search_tui.go:160-285\n  160| }\n  161| \n  162| func (m searchModel) Init() tea.Cmd {\n  163| \tif m.mode == modeSearch {\n  164| \t\treturn textinput.Blink\n  165| \t}\n  166| \treturn nil\n  167| }\n  168| \n  169| func (m searchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) { //nolint:ireturn,cyclop // bubbletea interface\n  170| \tswitch msg := msg.(type) {\n  171| \tcase searchResultsMsg:\n  172| \t\tm.loading = false\n  173| \t\tm.fetchingMore = false\n  174| \t\tif msg.err != nil {\n  175| \t\t\tm.searc",
+      "output_tokens": 3881,
+      "duration_ms": 0.32591819763183594,
+      "turn_number": 2
+    }
+  ],
+  "total_tool_calls": 4,
+  "total_turns": 3,
+  "wall_clock_ms": 19351.589918136597,
+  "input_tokens": 8954,
+  "output_tokens": 1120,
+  "tool_output_tokens": 9270,
+  "total_cost_usd": 0.043662,
+  "first_call_tool": "search_code",
+  "first_call_produced_file": true,
+  "retry_count": 0,
+  "error": "",
+  "total_tool_duration_ms": 32.59921073913574,
+  "tool_execution_share": 0.0016845753179475593,
+  "search_call_count": 2,
+  "read_call_count": 2,
+  "avg_search_code_duration_ms": 15.949130058288574,
+  "median_search_code_duration_ms": 15.949130058288574
+}

@@ -1,0 +1,293 @@
+{
+  "repeat": 0,
+  "task_id": "8b5b4eca788e",
+  "repo": "entireio-cli",
+  "task_type": "debug_or_validation",
+  "condition": "baseline",
+  "prompt": "I am running this test on Windows TestSingleSessionSubagentCommitInTurn. And it is failing, not always, it fails because after running the test we identify that there is a shadow branch that should not be there. I copied the entire.log on windows execution windows-broken-test.json (failing one) and the same test but this time running on macos the entire.log are inside mac-ok-test.json.",
+  "answer": "",
+  "tool_calls": [
+    {
+      "tool_name": "list_dir",
+      "tool_input": {},
+      "output": ".allowed-licenses\n.claude/\n.codex/\n.devcontainer/\n.entire/\n.ferrata/\n.gemini/\n.git/\n.github/\n.gitignore\n.golangci.yaml\n.goreleaser.yaml\n.opencode/\n.vscode/\nAGENTS.md\nCHANGELOG.md\nCLAUDE.md\nCODE_OF_CONDUCT.md\nCONTRIBUTING.md\nLICENSE\nREADME.md\nSECURITY.md\nWINDOWS.md\ncmd/\ndocs/\ne2e/\ngo.mod\ngo.sum\nmise-tasks/\nmise.toml\nperf/\nredact/\nscripts/",
+      "output_tokens": 339,
+      "duration_ms": 0.3669261932373047,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "TestSingleSessionSubagentCommitInTurn"
+      },
+      "output": "./e2e/tests/single_session_test.go\n  87-94:\n    87| }\n    88| \n    89| // TestSingleSessionSubagentCommitInTurn: one prompt with subagent creates a file and commits it.\n    90| // Expects both an initial checkpoint (post-commit) and a catchup checkpoint\n    91| // (end-of-turn) referencing the same checkpoint ID.\n    92| func TestSingleSessionSubagentCommitInTurn(t *testing.T) {\n    93| \ttestutil.ForEachAgent(t, 2*time.Minute, func(t *testing.T, s *testutil.RepoState, ctx context.Context) {\n    ",
+      "output_tokens": 542,
+      "duration_ms": 29.628992080688477,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "pattern": "windows-broken-test.json"
+      },
+      "output": "No files found.",
+      "output_tokens": 15,
+      "duration_ms": 9.292125701904297,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "pattern": "mac-ok-test.json"
+      },
+      "output": "No files found.",
+      "output_tokens": 15,
+      "duration_ms": 11.410236358642578,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/tests/single_session_test.go",
+        "start_line": 87,
+        "max_lines": 80
+      },
+      "output": "e2e/tests/single_session_test.go:87-114\n  87| }\n  88| \n  89| // TestSingleSessionSubagentCommitInTurn: one prompt with subagent creates a file and commits it.\n  90| // Expects both an initial checkpoint (post-commit) and a catchup checkpoint\n  91| // (end-of-turn) referencing the same checkpoint ID.\n  92| func TestSingleSessionSubagentCommitInTurn(t *testing.T) {\n  93| \ttestutil.ForEachAgent(t, 2*time.Minute, func(t *testing.T, s *testutil.RepoState, ctx context.Context) {\n  94| \t\tif s.Agent.Nam",
+      "output_tokens": 1600,
+      "duration_ms": 0.16927719116210938,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": ".entire"
+      },
+      "output": ".gitignore\nsettings.json",
+      "output_tokens": 24,
+      "duration_ms": 0.1442432403564453,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "WaitForNoShadowBranches"
+      },
+      "output": "./e2e/testutil/assertions.go\n  135-142:\n    135| }\n    136| \n    137| // WaitForNoShadowBranches polls until all shadow branches are cleaned up or\n    138| // the timeout expires. Shadow branch cleanup can lag slightly behind checkpoint\n    139| // condensation (carry-forward creates intermediate branches that are deleted\n    140| // asynchronously).\n    141| func WaitForNoShadowBranches(t *testing.T, dir string, timeout time.Duration) {\n    142| \tt.Helper()\n\n./e2e/tests/mid_turn_commit_test.go\n",
+      "output_tokens": 4062,
+      "duration_ms": 18.455982208251953,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/testutil/assertions.go",
+        "start_line": 137,
+        "max_lines": 40
+      },
+      "output": "e2e/testutil/assertions.go:137-176\n  137| // WaitForNoShadowBranches polls until all shadow branches are cleaned up or\n  138| // the timeout expires. Shadow branch cleanup can lag slightly behind checkpoint\n  139| // condensation (carry-forward creates intermediate branches that are deleted\n  140| // asynchronously).\n  141| func WaitForNoShadowBranches(t *testing.T, dir string, timeout time.Duration) {\n  142| \tt.Helper()\n  143| \tdeadline := time.Now().Add(timeout)\n  144| \tfor time.Now().Before(d",
+      "output_tokens": 1954,
+      "duration_ms": 0.5671977996826172,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "shadow",
+        "file_type": "go",
+        "max_files": 20
+      },
+      "output": "./e2e/testutil/repo.go\n  97-100:\n    97| \t// interactive agents run inside tmux (hasTTY()=true) but can't respond to\n    98| \t// prompts, and content detection may fail on the first checkpoint when no\n    99| \t// shadow branch exists yet. Prompt-mode agents still exercise the !hasTTY()\n    100| \t// fast path since they have no TTY regardless of this setting.\n  243-247:\n    243| \tif !ok {\n    244| \t\treturn fmt.Errorf(\n    245| \t\t\t\"global droid settings at %s missing customModels; repo-local %s sh",
+      "output_tokens": 9485,
+      "duration_ms": 21.179914474487305,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/testutil/assertions.go",
+        "start_line": 122,
+        "max_lines": 15
+      },
+      "output": "e2e/testutil/assertions.go:122-136\n  122| // shadowBranches returns all shadow branches (entire/*) excluding entire/checkpoints/*.\n  123| func shadowBranches(t *testing.T, dir string) []string {\n  124| \tt.Helper()\n  125| \tbranches := GitOutput(t, dir, \"for-each-ref\", \"--format=%(refname:short)\", \"refs/heads/entire/\")\n  126| \tvar shadow []string\n  127| \tfor _, b := range strings.Split(branches, \"\\n\") {\n  128| \t\tb = strings.TrimSpace(b)\n  129| \t\tif b == \"\" || strings.HasPrefix(b, \"entire/checkpoin",
+      "output_tokens": 640,
+      "duration_ms": 0.1919269561767578,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "ShadowBranchNameForCommit",
+        "file_type": "go"
+      },
+      "output": "./cmd/entire/cli/strategy/clean_test.go\n  408-410:\n    408| \n    409| \t// Create a shadow branch using worktree-specific naming (matching real behavior)\n    410| \t// Real code: shadowBranch := checkpoint.ShadowBranchNameForCommit(baseCommit, worktreeID)\n  413-413:\n    413| \tshadowBranchName := checkpoint.ShadowBranchNameForCommit(fullHash, worktreeID)\n  463-466:\n    463| \t\t\t\tshadowBranchName, fullHash, worktreeID,\n    464| \t\t\t\tcheckpoint.ShadowBranchNameForCommit(fullHash, worktreeID), item.Reas",
+      "output_tokens": 4277,
+      "duration_ms": 16.904830932617188,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "func ShadowBranchNameForCommit",
+        "file_type": "go"
+      },
+      "output": "./cmd/entire/cli/checkpoint/temporary.go\n  651-651:\n    651| // or the internal git worktree name for linked worktrees.\n  653-653:\n    653| func ShadowBranchNameForCommit(baseCommit, worktreeID string) string {\n  655-655:\n    655| \tif len(baseCommit) >= ShadowBranchHashLength {",
+      "output_tokens": 278,
+      "duration_ms": 25.491952896118164,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "condensation\\|condense\\|CarryForward\\|carry_forward\\|carryForward",
+        "file_type": "go",
+        "max_files": 5
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 14.770030975341797,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/checkpoint/temporary.go",
+        "start_line": 640,
+        "max_lines": 40
+      },
+      "output": "cmd/entire/cli/checkpoint/temporary.go:640-679\n  640| func (s *GitStore) DeleteShadowBranch(ctx context.Context, baseCommit, worktreeID string) error {\n  641| \tshadowBranchName := ShadowBranchNameForCommit(baseCommit, worktreeID)\n  642| \tcmd := exec.CommandContext(ctx, \"git\", \"branch\", \"-D\", \"--\", shadowBranchName)\n  643| \tif output, err := cmd.CombinedOutput(); err != nil {\n  644| \t\treturn fmt.Errorf(\"failed to delete shadow branch %s: %s: %w\", shadowBranchName, strings.TrimSpace(string(output)",
+      "output_tokens": 2318,
+      "duration_ms": 0.23698806762695312,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "DeleteShadowBranch\\|deleteShadowBranch\\|delete.*shadow\\|shadow.*delete",
+        "file_type": "go",
+        "max_files": 10
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 16.3421630859375,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "DeleteShadowBranch",
+        "file_type": "go",
+        "max_files": 15
+      },
+      "output": "./cmd/entire/cli/strategy/clean_test.go\n  178-180:\n    178| }\n    179| \n    180| func TestDeleteShadowBranches(t *testing.T) {\n  215-226:\n    215| \n    216| \t// Delete shadow branches\n    217| \tdeleted, failed, err := DeleteShadowBranches(context.Background(), shadowBranches)\n    218| \tif err != nil {\n    219| \t\tt.Fatalf(\"DeleteShadowBranches() error = %v\", err)\n    220| \t}\n    221| \n    222| \t// All should be deleted successfully\n    223| \tif len(deleted) != 2 {\n    224| \t\tt.Errorf(\"DeleteShado",
+      "output_tokens": 3161,
+      "duration_ms": 14.880895614624023,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/strategy/manual_commit_condensation.go",
+        "start_line": 100,
+        "max_lines": 80
+      },
+      "output": "cmd/entire/cli/strategy/manual_commit_condensation.go:100-179\n  100| \trepoDir          string              // Repository worktree path for git CLI commands\n  101| \tparentCommitHash string              // HEAD's first parent hash for per-commit non-agent file detection\n  102| \theadCommitHash   string              // HEAD commit hash (passed through for attribution)\n  103| \tallAgentFiles    map[string]struct{} // Union of all sessions' FilesTouched for cross-session exclusion (nil = single-session",
+      "output_tokens": 4923,
+      "duration_ms": 0.6058216094970703,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "subagent\\|sub_agent\\|SubAgent",
+        "file_type": "go",
+        "max_files": 10
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 16.45207405090332,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "subagent\\|sub-agent",
+        "file_type": "go",
+        "max_files": 10
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 14.914751052856445,
+      "turn_number": 10
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "agent-stop\\|agent_stop\\|AgentStop\\|session-end\\|session_end\\|SessionEnd",
+        "file_type": "go",
+        "max_files": 10
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 15.074014663696289,
+      "turn_number": 10
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": "cmd/entire/cli/strategy"
+      },
+      "output": "accumulation_bench_test.go\ncheckpoint_remote.go\ncheckpoint_remote_test.go\ncheckpoint_token.go\ncheckpoint_token_test.go\nclean_test.go\ncleanup.go\ncommit_hook_perf_test.go\ncommon.go\ncommon_helpers_test.go\ncommon_test.go\ncontent_overlap.go\ncontent_overlap_test.go\nglobal_test.go\nhard_reset_test.go\nhook_managers.go\nhook_managers_test.go\nhooks.go\nhooks_test.go\nmanual_commit.go\nmanual_commit_attribution.go\nmanual_commit_attribution_test.go\nmanual_commit_condensation.go\nmanual_commit_condensation_test.go",
+      "output_tokens": 1232,
+      "duration_ms": 0.3781318664550781,
+      "turn_number": 11
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": "cmd/entire/cli"
+      },
+      "output": "agent/\napi/\napi_client.go\nattach.go\nattach_test.go\nattach_transcript.go\nauth/\nbench_enable_test.go\nbench_test.go\nbenchutil/\ncheckpoint/\nclean.go\nclean_test.go\ncommit_message.go\ncommit_message_test.go\nconfig.go\nconfig_test.go\nconstants.go\ndoctor.go\ndoctor_test.go\nerrors.go\nexplain.go\nexplain_test.go\nfetch_no_config_pollution_test.go\ngit_operations.go\ngit_operations_test.go\ngitops/\nglobal_test.go\nhelp.go\nhook_registry.go\nhook_registry_test.go\nhooks.go\nhooks_claudecode_posttodo.go\nhooks_cmd.go\nhook",
+      "output_tokens": 1356,
+      "duration_ms": 0.4150867462158203,
+      "turn_number": 11
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/setup_subagents.go",
+        "max_lines": 80
+      },
+      "output": "cmd/entire/cli/setup_subagents.go:1-80\n  1| package cli\n  2| \n  3| import (\n  4| \t\"bytes\"\n  5| \t\"context\"\n  6| \t\"errors\"\n  7| \t\"fmt\"\n  8| \t\"io\"\n  9| \t\"os\"\n  10| \t\"path/filepath\"\n  11| \t\"strings\"\n  12| \n  13| \t\"github.com/entireio/cli/cmd/entire/cli/agent\"\n  14| \t\"github.com/entireio/cli/cmd/entire/cli/agent/types\"\n  15| \t\"github.com/entireio/cli/cmd/entire/cli/paths\"\n  16| )\n  17| \n  18| const entireManagedSearchSubagentMarker = \"ENTIRE-MANAGED SEARCH SUBAGENT v1\"\n  19| \n  20| type searchSubagen",
+      "output_tokens": 3153,
+      "duration_ms": 1.1730194091796875,
+      "turn_number": 12
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "pattern": "windows-broken-test"
+      },
+      "output": "No files found.",
+      "output_tokens": 15,
+      "duration_ms": 16.429901123046875,
+      "turn_number": 12
+    }
+  ],
+  "total_tool_calls": 24,
+  "total_turns": 12,
+  "wall_clock_ms": 37724.138021469116,
+  "input_tokens": 114765,
+  "output_tokens": 1812,
+  "tool_output_tokens": 39474,
+  "total_cost_usd": 0.371475,
+  "first_call_tool": "list_dir",
+  "first_call_produced_file": true,
+  "retry_count": 0,
+  "error": "",
+  "total_tool_duration_ms": 245.47648429870605,
+  "tool_execution_share": 0.006507146277510791,
+  "search_call_count": 11,
+  "read_call_count": 6,
+  "avg_search_code_duration_ms": 18.55414563959295,
+  "median_search_code_duration_ms": 16.45207405090332
+}

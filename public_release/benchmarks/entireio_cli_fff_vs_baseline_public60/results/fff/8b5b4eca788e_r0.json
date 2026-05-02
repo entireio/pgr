@@ -1,0 +1,285 @@
+{
+  "repeat": 0,
+  "task_id": "8b5b4eca788e",
+  "repo": "entireio-cli",
+  "task_type": "debug_or_validation",
+  "condition": "fff",
+  "prompt": "I am running this test on Windows TestSingleSessionSubagentCommitInTurn. And it is failing, not always, it fails because after running the test we identify that there is a shadow branch that should not be there. I copied the entire.log on windows execution windows-broken-test.json (failing one) and the same test but this time running on macos the entire.log are inside mac-ok-test.json.",
+  "answer": "",
+  "tool_calls": [
+    {
+      "tool_name": "list_dir",
+      "tool_input": {},
+      "output": ".allowed-licenses\n.claude/\n.codex/\n.devcontainer/\n.entire/\n.ferrata/\n.gemini/\n.git/\n.github/\n.gitignore\n.golangci.yaml\n.goreleaser.yaml\n.opencode/\n.vscode/\nAGENTS.md\nCHANGELOG.md\nCLAUDE.md\nCODE_OF_CONDUCT.md\nCONTRIBUTING.md\nLICENSE\nREADME.md\nSECURITY.md\nWINDOWS.md\ncmd/\ndocs/\ne2e/\ngo.mod\ngo.sum\nmise-tasks/\nmise.toml\nperf/\nredact/\nscripts/",
+      "output_tokens": 339,
+      "duration_ms": 0.370025634765625,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "TestSingleSessionSubagentCommitInTurn"
+      },
+      "output": "\u2192 Read .claude/skills/agent-integration/implementer.md (best match)\ne2e/tests/single_session_test.go\n 92: func TestSingleSessionSubagentCommitInTurn(t *testing.T) {\n  93| testutil.ForEachAgent(t, 2*time.Minute, func(t *testing.T, s *testutil.RepoState, ctx context.Context) {\n  94| if s.Agent.Name() == \"copilot-cli\" {\n  95| t.Skip(\"copilot-cli may run prompt-mode subagents in the background while the foreground process returns and fires agent-stop/session-end hooks first; when the later subagent ",
+      "output_tokens": 779,
+      "duration_ms": 0.4730224609375,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "pattern": "windows-broken-test.json"
+      },
+      "output": "0 results (602 indexed)",
+      "output_tokens": 23,
+      "duration_ms": 2.371072769165039,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "pattern": "mac-ok-test.json"
+      },
+      "output": "cmd/entire/cli/transcript/compact/testdata/claude_full.jsonl git:clean\ncmd/entire/cli/transcript/compact/testdata/gemini_full.jsonl git:clean\ncmd/entire/cli/transcript/compact/testdata/claude_full2.jsonl git:clean\ncmd/entire/cli/transcript/compact/testdata/copilot_full.jsonl git:clean\ncmd/entire/cli/transcript/compact/testdata/opencode_full.jsonl git:clean\ncmd/entire/cli/transcript/compact/testdata/codex_expected.jsonl git:clean\ncmd/entire/cli/transcript/compact/testdata/droid_expected.jsonl git",
+      "output_tokens": 949,
+      "duration_ms": 1.39617919921875,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/tests/single_session_test.go",
+        "start_line": 89,
+        "max_lines": 80
+      },
+      "output": "e2e/tests/single_session_test.go:89-114\n  89| // TestSingleSessionSubagentCommitInTurn: one prompt with subagent creates a file and commits it.\n  90| // Expects both an initial checkpoint (post-commit) and a catchup checkpoint\n  91| // (end-of-turn) referencing the same checkpoint ID.\n  92| func TestSingleSessionSubagentCommitInTurn(t *testing.T) {\n  93| \ttestutil.ForEachAgent(t, 2*time.Minute, func(t *testing.T, s *testutil.RepoState, ctx context.Context) {\n  94| \t\tif s.Agent.Name() == \"copilot",
+      "output_tokens": 1585,
+      "duration_ms": 0.36025047302246094,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": ".entire"
+      },
+      "output": ".gitignore\nsettings.json",
+      "output_tokens": 24,
+      "duration_ms": 0.27298927307128906,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "WaitForNoShadowBranches"
+      },
+      "output": "30/35 matches shown\ne2e/tests/attribution_test.go\n 43: testutil.WaitForNoShadowBranches(t, s.Dir, 10*time.Second)\n 73: testutil.WaitForNoShadowBranches(t, s.Dir, 10*time.Second)\n 113: testutil.WaitForNoShadowBranches(t, s.Dir, 10*time.Second)\n 137: testutil.WaitForNoShadowBranches(t, s.Dir, 10*time.Second)\ne2e/tests/checkpoint_metadata_test.go\n 38: testutil.WaitForNoShadowBranches(t, s.Dir, 10*time.Second)\ne2e/tests/deleted_files_test.go\n 48: testutil.WaitForNoShadowBranches(t, s.Dir, 10*time.Se",
+      "output_tokens": 2399,
+      "duration_ms": 0.6320476531982422,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "func WaitForNoShadowBranches"
+      },
+      "output": "\u2192 Read e2e/testutil/assertions.go (only match)\ne2e/testutil/assertions.go\n 141: func WaitForNoShadowBranches(t *testing.T, dir string, timeout time.Duration) {\n  142| t.Helper()\n  143| deadline := time.Now().Add(timeout)\n  144| for time.Now().Before(deadline) {\n  145| shadow := shadowBranches(t, dir)\n  146| if len(shadow) == 0 {\n  147| return\n  148| }\n  149| time.Sleep(200 * time.Millisecond)",
+      "output_tokens": 395,
+      "duration_ms": 0.3840923309326172,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "shadow branch"
+      },
+      "output": "30/53 matches shown\n.claude/skills/test-repo/SKILL.md\n 96: | Shadow branch | \u2713 entire/{hash} |\n 148: - Shadow branches: `entire/<commit-hash[:7]>` created for checkpoints\n 149: - Metadata: stored on both shadow branches and `entire/checkpoints/v1` branch (condensed on user commits)\n 150: - Rewind: restores files from shadow branch commit tree (no git reset)\n 195: # Verify shadow branch still exists\n.claude/skills/test-repo/test-harness.sh\n 127: echo \"==> Verifying shadow branch...\"\n 131: echo \"\u2713",
+      "output_tokens": 3236,
+      "duration_ms": 0.7190704345703125,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/testutil/assertions.go",
+        "start_line": 130,
+        "max_lines": 60
+      },
+      "output": "e2e/testutil/assertions.go:130-189\n  130| \t\t\tcontinue\n  131| \t\t}\n  132| \t\tshadow = append(shadow, b)\n  133| \t}\n  134| \treturn shadow\n  135| }\n  136| \n  137| // WaitForNoShadowBranches polls until all shadow branches are cleaned up or\n  138| // the timeout expires. Shadow branch cleanup can lag slightly behind checkpoint\n  139| // condensation (carry-forward creates intermediate branches that are deleted\n  140| // asynchronously).\n  141| func WaitForNoShadowBranches(t *testing.T, dir string, time",
+      "output_tokens": 2738,
+      "duration_ms": 0.35691261291503906,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "func shadowBranches"
+      },
+      "output": "\u2192 Read e2e/testutil/assertions.go (only match)\ne2e/testutil/assertions.go\n 123: func shadowBranches(t *testing.T, dir string) []string {\n  124| t.Helper()\n  125| branches := GitOutput(t, dir, \"for-each-ref\", \"--format=%(refname:short)\", \"refs/heads/entire/\")\n  126| var shadow []string\n  127| for _, b := range strings.Split(branches, \"\\n\") {\n  128| b = strings.TrimSpace(b)\n  129| if b == \"\" || strings.HasPrefix(b, \"entire/checkpoints\") {\n  130| continue\n  131| }",
+      "output_tokens": 465,
+      "duration_ms": 0.40984153747558594,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "pattern": "windows-broken-test"
+      },
+      "output": "0 results (602 indexed)",
+      "output_tokens": 23,
+      "duration_ms": 1.6019344329833984,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "pattern": "mac-ok-test"
+      },
+      "output": "cmd/entire/cli/integration_test/manual_commit_workflow_test.go git:clean\ncmd/entire/cli/integration_test/manual_commit_untracked_files_test.go git:clean",
+      "output_tokens": 152,
+      "duration_ms": 0.47206878662109375,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": ".entire"
+      },
+      "output": ".gitignore\nsettings.json",
+      "output_tokens": 24,
+      "duration_ms": 0.21123886108398438,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": "cmd/entire/cli"
+      },
+      "output": "agent/\napi/\napi_client.go\nattach.go\nattach_test.go\nattach_transcript.go\nauth/\nbench_enable_test.go\nbench_test.go\nbenchutil/\ncheckpoint/\nclean.go\nclean_test.go\ncommit_message.go\ncommit_message_test.go\nconfig.go\nconfig_test.go\nconstants.go\ndoctor.go\ndoctor_test.go\nerrors.go\nexplain.go\nexplain_test.go\nfetch_no_config_pollution_test.go\ngit_operations.go\ngit_operations_test.go\ngitops/\nglobal_test.go\nhelp.go\nhook_registry.go\nhook_registry_test.go\nhooks.go\nhooks_claudecode_posttodo.go\nhooks_cmd.go\nhook",
+      "output_tokens": 1356,
+      "duration_ms": 1.062154769897461,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "manual_commit_reset"
+      },
+      "output": "\u2192 Read CLAUDE.md (only match)\nCLAUDE.md\n 389: - `manual_commit_reset.go` - Shadow branch reset/cleanup functionality",
+      "output_tokens": 116,
+      "duration_ms": 0.5178451538085938,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": "cmd/entire/cli/gitops"
+      },
+      "output": "diff.go\ndiff_test.go",
+      "output_tokens": 20,
+      "duration_ms": 0.247955322265625,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": "cmd/entire/cli/checkpoint"
+      },
+      "output": "backwards_compat_test.go\nblob_resolver.go\nblob_resolver_test.go\ncheckpoint.go\ncheckpoint_test.go\ncommitted.go\ncommitted_reader_resolve.go\ncommitted_reader_resolve_test.go\ncommitted_update_test.go\nfetching_tree.go\nglobal_test.go\nid/\nparse_tree.go\nparse_tree_test.go\nprompts.go\nprompts_test.go\nstore.go\ntemporary.go\ntemporary_test.go\ntree_surgery_equiv_test.go\nv2_committed.go\nv2_generation.go\nv2_generation_test.go\nv2_read.go\nv2_read_test.go\nv2_resolve.go\nv2_resolve_test.go\nv2_store.go\nv2_store_test.",
+      "output_tokens": 502,
+      "duration_ms": 0.4851818084716797,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": "cmd/entire/cli/session"
+      },
+      "output": "gen_state_diagram.go\nphase.go\nphase_test.go\nstate.go\nstate_test.go",
+      "output_tokens": 66,
+      "duration_ms": 0.27489662170410156,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "shadow branch cleanup"
+      },
+      "output": "cmd/entire/cli/integration_test/mid_session_rebase_test.go\n 242: // This verifies there's no race condition between shadow branch cleanup\ncmd/entire/cli/strategy/manual_commit_condensation.go\n 1064: // Non-fatal: condensation succeeded, shadow branch cleanup is best-effort\ncmd/entire/cli/transcript/compact/testdata/claude_expected2.jsonl\n 41: {\"v\":1,\"agent\":\"claude-code\",\"cli_version\":\"0.5.1\",\"type\":\"assistant\",\"ts\":\"2026-03-27T08:12:51.991Z\",\"id\":\"msg_01B7mJyRSW2hYVjz6kfQVKfQ\",\"input_tokens\":1,",
+      "output_tokens": 1212,
+      "duration_ms": 1.7247200012207031,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/strategy/manual_commit_condensation.go",
+        "start_line": 1050,
+        "max_lines": 40
+      },
+      "output": "cmd/entire/cli/strategy/manual_commit_condensation.go:1050-1089\n  1050| \tstate.AttributionBaseCommit = state.BaseCommit\n  1051| \tstate.PromptAttributions = nil\n  1052| \tstate.PendingPromptAttribution = nil\n  1053| \n  1054| \tif err := s.saveSessionState(ctx, state); err != nil {\n  1055| \t\treturn fmt.Errorf(\"failed to save session state: %w\", err)\n  1056| \t}\n  1057| \n  1058| \t// Clean up shadow branch if no other sessions need it\n  1059| \tif err := s.cleanupShadowBranchIfUnused(ctx, repo, shadowBr",
+      "output_tokens": 2045,
+      "duration_ms": 0.6928443908691406,
+      "turn_number": 10
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "DeleteShadowBranch\\|DeleteBranch\\|shadow.*delete\\|delete.*shadow"
+      },
+      "output": "0 matches.",
+      "output_tokens": 10,
+      "duration_ms": 4.503726959228516,
+      "turn_number": 10
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "cleanupShadowBranchIfUnused"
+      },
+      "output": "\u2192 Read cmd/entire/cli/strategy/manual_commit_condensation.go (best match)\ncmd/entire/cli/strategy/manual_commit_condensation.go\n 1184: func (s *ManualCommitStrategy) cleanupShadowBranchIfUnused(ctx context.Context, _ *git.Repository, shadowBranchName, excludeSessionID string) error {\n  1185| // List all session states to check if any other session uses this shadow branch\n  1186| allStates, err := s.listAllSessionStates(ctx)\n  1187| if err != nil {\n  1188| return fmt.Errorf(\"failed to list sessio",
+      "output_tokens": 982,
+      "duration_ms": 0.3802776336669922,
+      "turn_number": 11
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/strategy/manual_commit_condensation.go",
+        "start_line": 1184,
+        "max_lines": 70
+      },
+      "output": "cmd/entire/cli/strategy/manual_commit_condensation.go:1184-1253\n  1184| func (s *ManualCommitStrategy) cleanupShadowBranchIfUnused(ctx context.Context, _ *git.Repository, shadowBranchName, excludeSessionID string) error {\n  1185| \t// List all session states to check if any other session uses this shadow branch\n  1186| \tallStates, err := s.listAllSessionStates(ctx)\n  1187| \tif err != nil {\n  1188| \t\treturn fmt.Errorf(\"failed to list session states: %w\", err)\n  1189| \t}\n  1190| \n  1191| \tfor _, st",
+      "output_tokens": 3475,
+      "duration_ms": 0.6561279296875,
+      "turn_number": 12
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/strategy/manual_commit_reset.go"
+      },
+      "output": "cmd/entire/cli/strategy/manual_commit_reset.go:1-80\n  1| package strategy\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"fmt\"\n  6| \t\"io\"\n  7| \t\"os\"\n  8| \n  9| \t\"github.com/entireio/cli/cmd/entire/cli/paths\"\n  10| \n  11| \t\"github.com/go-git/go-git/v6/plumbing\"\n  12| )\n  13| \n  14| // isAccessibleMode returns true if accessibility mode should be enabled.\n  15| // This checks the ACCESSIBLE environment variable.\n  16| func isAccessibleMode() bool {\n  17| \treturn os.Getenv(\"ACCESSIBLE\") != \"\"\n  18| }\n  ",
+      "output_tokens": 2855,
+      "duration_ms": 0.18310546875,
+      "turn_number": 12
+    }
+  ],
+  "total_tool_calls": 25,
+  "total_turns": 12,
+  "wall_clock_ms": 33643.69010925293,
+  "input_tokens": 77683,
+  "output_tokens": 1476,
+  "tool_output_tokens": 25770,
+  "total_cost_usd": 0.255189,
+  "first_call_tool": "list_dir",
+  "first_call_produced_file": true,
+  "retry_count": 1,
+  "error": "",
+  "total_tool_duration_ms": 20.75958251953125,
+  "tool_execution_share": 0.0006170423771030336,
+  "search_call_count": 9,
+  "avg_search_code_duration_ms": 1.0827382405598958,
+  "median_search_code_duration_ms": 0.5178451538085938,
+  "avg_read_code_duration_ms": 0.4498481750488281,
+  "median_read_code_duration_ms": 0.36025047302246094
+}

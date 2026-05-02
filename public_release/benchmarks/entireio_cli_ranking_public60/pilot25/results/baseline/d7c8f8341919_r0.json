@@ -1,0 +1,255 @@
+{
+  "repeat": 0,
+  "task_id": "d7c8f8341919",
+  "repo": "entireio-cli",
+  "task_type": "code_understanding",
+  "condition": "baseline",
+  "prompt": "can you do me a summary for the cases when we show the \"you have another active session\" warning?",
+  "answer": "",
+  "tool_calls": [
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "another active session"
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 32.72581100463867,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "active session"
+      },
+      "output": "./e2e/testutil/artifacts.go\n  62-66:\n    62| \t// so it already exists in the artifact dir and survives global timeouts.\n    63| \n    64| \t// Capture final pane content from interactive sessions, then close.\n    65| \t// Must happen here (not in a separate t.Cleanup) because cleanup\n    66| \t// functions run LIFO \u2014 closing first would kill the tmux session\n\n./e2e/testutil/repo.go\n  29-33:\n    29| \tCheckpointBefore string\n    30| \tConsoleLog       *os.File\n    31| \tsession          agents.Session /",
+      "output_tokens": 4088,
+      "duration_ms": 14.878034591674805,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "You have another"
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 20.811080932617188,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "active session warning"
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 15.691995620727539,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "already.*session"
+      },
+      "output": "./cmd/entire/cli/sessions.go\n  475-479:\n    475| \n    476| \tif state.Phase == session.PhaseEnded || state.EndedAt != nil {\n    477| \t\tfmt.Fprintf(cmd.OutOrStdout(), \"Session %s is already stopped.\\n\", sessionID)\n    478| \t\treturn nil\n    479| \t}\n\n./cmd/entire/cli/integration_test/old_session_basecommit_test.go\n  198-200:\n    198| \t}\n    199| \n    200| \t// Set session1 to ENDED with no new content (simulating already-condensed session)\n  202-202:\n    202| \tif err != nil {\n\n./cmd/entire/cli/agent/",
+      "output_tokens": 3352,
+      "duration_ms": 18.039226531982422,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "session.*already"
+      },
+      "output": "./CHANGELOG.md\n  316-320:\n    316| ### Fixed\n    317| \n    318| - Commits hanging for up to 3s per session while waiting for transcript updates that were already flushed ([#482](https://github.com/entireio/cli/pull/482))\n    319| \n    320| ### Housekeeping\n\n./scripts/migrate-sessions.sh\n  252-252:\n    252|     # Check if this is session metadata (has session_id) or already aggregated\n\n./cmd/entire/cli/integration_test/old_session_basecommit_test.go\n  198-200:\n    198| \t}\n    199| \n    200| \t// S",
+      "output_tokens": 3559,
+      "duration_ms": 17.8680419921875,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "session.*running\\|running.*session\\|concurrent.*session\\|session.*conflict"
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 22.27187156677246,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "warn.*session\\|session.*warn"
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 16.855955123901367,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "Warning.*session\\|session.*Warning"
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 22.416114807128906,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "active sessions"
+      },
+      "output": "./e2e/testutil/artifacts.go\n  62-66:\n    62| \t// so it already exists in the artifact dir and survives global timeouts.\n    63| \n    64| \t// Capture final pane content from interactive sessions, then close.\n    65| \t// Must happen here (not in a separate t.Cleanup) because cleanup\n    66| \t// functions run LIFO \u2014 closing first would kill the tmux session\n\n./README.md\n  242-246:\n    242| | `entire rewind`  | Rewind to a previous checkpoint                                                          ",
+      "output_tokens": 10595,
+      "duration_ms": 18.364906311035156,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "hasActiveSessions\\|HasActiveSessions\\|findActiveSessions\\|FindActiveSessions"
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 22.205829620361328,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "session.*in progress\\|in.progress.*session"
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 19.867897033691406,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "activeSessionGuard\\|active_session_guard\\|activeGuard"
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 18.941402435302734,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "clean.go"
+      },
+      "output": "./cmd/entire/cli/transcript/compact/testdata/gemini_expected.jsonl\n  3-3:\n    3| {\"v\":1,\"agent\":\"gemini-cli\",\"cli_version\":\"0.5.1\",\"type\":\"assistant\",\"ts\":\"2026-03-18T21:05:47.368Z\",\"id\":\"73b7e24c-41e1-4851-ac19-9dc0181c7ed3\",\"input_tokens\":16207,\"output_tokens\":12,\"content\":[{\"id\":\"list_directory-1773867946612-3a5636ee59c078\",\"input\":{\"dir_path\":\"cmd/entire/cli/\"},\"name\":\"list_directory\",\"result\":{\"output\":\"Directory listing for /private/tmp/cli-updated-gemini-hooks/cmd/entire/cli:\\n[DIR] agent",
+      "output_tokens": 3061,
+      "duration_ms": 17.68803596496582,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/clean.go",
+        "start_line": 90,
+        "max_lines": 60
+      },
+      "output": "cmd/entire/cli/clean.go:90-149\n  90| \tstrat := GetStrategy(ctx)\n  91| \tw := cmd.OutOrStdout()\n  92| \n  93| \t// Dry-run: show what would be cleaned\n  94| \tif dryRun {\n  95| \t\treturn previewCurrentHead(ctx, w)\n  96| \t}\n  97| \n  98| \t// Check for active sessions before cleaning\n  99| \tif !force {\n  100| \t\tactiveSessions, err := activeSessionsOnCurrentHead(ctx)\n  101| \t\tif err != nil {\n  102| \t\t\tfmt.Fprintf(cmd.ErrOrStderr(), \"Warning: could not check for active sessions: %v\\n\", err)\n  103| \t\t\tfmt.F",
+      "output_tokens": 2001,
+      "duration_ms": 0.5230903625488281,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/reset.go"
+      },
+      "output": "cmd/entire/cli/reset.go:1-80\n  1| package cli\n  2| \n  3| import (\n  4| \t\"errors\"\n  5| \t\"fmt\"\n  6| \n  7| \t\"github.com/charmbracelet/huh\"\n  8| \t\"github.com/entireio/cli/cmd/entire/cli/logging\"\n  9| \t\"github.com/entireio/cli/cmd/entire/cli/paths\"\n  10| \t\"github.com/spf13/cobra\"\n  11| )\n  12| \n  13| func newResetCmd() *cobra.Command {\n  14| \tvar forceFlag bool\n  15| \tvar sessionFlag string\n  16| \n  17| \tcmd := &cobra.Command{\n  18| \t\tUse:        \"reset\",\n  19| \t\tShort:      \"Reset the shadow branch ",
+      "output_tokens": 2798,
+      "duration_ms": 0.1838207244873047,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "activeSessionsOnCurrentHead"
+      },
+      "output": "./cmd/entire/cli/clean.go\n  98-101:\n    98| \t// Check for active sessions before cleaning\n    99| \tif !force {\n    100| \t\tactiveSessions, err := activeSessionsOnCurrentHead(ctx)\n    101| \t\tif err != nil {\n  515-519:\n    515| }\n    516| \n    517| // activeSessionsOnCurrentHead returns sessions on the current HEAD\n    518| // that are in an active phase (ACTIVE).\n    519| func activeSessionsOnCurrentHead(ctx context.Context) ([]*session.State, error) {\n  521-521:\n    521| \tif err != nil {\n\n./cmd/e",
+      "output_tokens": 708,
+      "duration_ms": 17.850875854492188,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "Active sessions detected\\|active session.*detected\\|detected.*active session"
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 17.204999923706055,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/clean.go",
+        "start_line": 515,
+        "max_lines": 50
+      },
+      "output": "cmd/entire/cli/clean.go:515-555\n  515| }\n  516| \n  517| // activeSessionsOnCurrentHead returns sessions on the current HEAD\n  518| // that are in an active phase (ACTIVE).\n  519| func activeSessionsOnCurrentHead(ctx context.Context) ([]*session.State, error) {\n  520| \trepo, err := openRepository(ctx)\n  521| \tif err != nil {\n  522| \t\treturn nil, err\n  523| \t}\n  524| \n  525| \thead, err := repo.Head()\n  526| \tif err != nil {\n  527| \t\treturn nil, fmt.Errorf(\"failed to get HEAD: %w\", err)\n  528| \t}\n ",
+      "output_tokens": 1206,
+      "duration_ms": 0.5440711975097656,
+      "turn_number": 10
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "active session\\|activeSession",
+        "path_glob": "cmd/entire/cli/*.go"
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 10.297060012817383,
+      "turn_number": 11
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "Active session\\|active_session",
+        "path_glob": "cmd/entire/cli/*.go"
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 9.634971618652344,
+      "turn_number": 11
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "activeSessions\\|active sessions",
+        "path_glob": "cmd/entire/cli/*.go"
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 18.857955932617188,
+      "turn_number": 12
+    }
+  ],
+  "total_tool_calls": 22,
+  "total_turns": 12,
+  "wall_clock_ms": 32373.114109039307,
+  "input_tokens": 105237,
+  "output_tokens": 1378,
+  "tool_output_tokens": 31589,
+  "total_cost_usd": 0.33638100000000004,
+  "first_call_tool": "search_code",
+  "first_call_produced_file": false,
+  "retry_count": 0,
+  "error": "",
+  "total_tool_duration_ms": 353.72304916381836,
+  "tool_execution_share": 0.01092644494973225,
+  "search_call_count": 19,
+  "read_call_count": 3,
+  "avg_search_code_duration_ms": 18.55116141469855,
+  "median_search_code_duration_ms": 18.039226531982422
+}

@@ -1,0 +1,104 @@
+{
+  "repeat": 0,
+  "task_id": "94de498254e2",
+  "repo": "entireio-cli",
+  "task_type": "code_understanding",
+  "condition": "rg_ranked",
+  "prompt": "can you help me understand what `entire clean` is doing?",
+  "answer": "Here's a comprehensive breakdown of what `entire clean` does:\n\n---\n\n## `entire clean` Overview\n\n`entire clean` is a command for removing session data and related artifacts left behind by Entire. It replaced the deprecated `entire reset` command. It has **three operating modes** controlled by flags:\n\n---\n\n### Default: `entire clean` (current HEAD)\nDefined in `runCleanCurrentHead`:\n1. **Checks for active sessions** on the current HEAD commit. If any are found, it aborts and asks you to wait or use `--force`.\n2. **Prompts for confirmation** (unless `--force` is used).\n3. Calls `strat.Reset(...)` to clean:\n   - Session state files (`.git/entire-sessions/<session-id>.json`)\n   - The shadow branch (`entire/<commit-hash>-<worktree-hash>`) for the current HEAD\n\n---\n\n### `entire clean --all`\nDefined in `runCleanAll` \u2192 `runCleanAllWithItems`:\n1. **Lists everything** across the whole repo \u2014 all sessions, shadow branches, checkpoints, and temp files in `.entire/tmp/` \u2014 without filtering for orphaned-only.\n2. **Shows a grouped preview** of what will be deleted (shadow branches, session states, checkpoint metadata, temp files).\n3. **Prompts for confirmation** (unless `--force`).\n4. Deletes everything and reports what succeeded or failed.\n5. **Preserves** the `entire/checkpoints/v1` branch itself.\n\n---\n\n### `entire clean --session <id>`\nDefined in `runCleanSession`:\n1. **Loads a specific session** by ID and verifies it exists.\n2. **Prompts for confirmation** showing the session's phase and checkpoint count.\n3. Calls `strat.ResetSession(...)` to remove just that session's data.\n4. Notes that **file changes remain in the working directory** \u2014 only the session metadata is removed.\n\n---\n\n### Shared Flags\n| Flag | Short | Description |\n|---|---|---|\n| `--force` / `-f` | | Skip confirmation and override active session guard |\n| `--all` / `-a` | | Clean all session data across the repo |\n| `--dry-run` / `-d` | | Preview what would be deleted, without deleting |\n| `--session <id>` | | Target a specific session by ID |\n\n> \u26a0\ufe0f `--all` and `--session` are mutually exclusive.\n\n---\n\n### `--dry-run` behavior\n- For **current HEAD**: shows session states and shadow branch that would be removed.\n- For **`--all`**: shows a grouped list of all items that would be removed, then exits without deleting.",
+  "tool_calls": [
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "entire clean"
+      },
+      "output": "CHANGELOG.md\n  47-47:\n    47| - `entire clean` fully replaces deprecated `entire reset` ([#858](https://github.com/entireio/cli/pull/858))\n  63-63:\n    63| - `entire clean --all` now cleans all sessions, not just orphaned ones ([#846](https://github.com/entireio/cli/pull/846))\n  90-90:\n    90| - Deprecated `entire reset` command in favor of `entire clean` ([#720](https://github.com/entireio/cli/pull/720))\n\nREADME.md\n  234-234:\n    234| | `entire clean`   | Clean up session data and orphaned Enti",
+      "output_tokens": 1438,
+      "duration_ms": 31.415939331054688,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "entire_clean"
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 14.287233352661133,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "pattern": "clean.go"
+      },
+      "output": "./cmd/entire/cli/clean.go",
+      "output_tokens": 25,
+      "duration_ms": 13.555765151977539,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/clean.go"
+      },
+      "output": "cmd/entire/cli/clean.go:1-80\n  1| package cli\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"errors\"\n  6| \t\"fmt\"\n  7| \t\"io\"\n  8| \t\"io/fs\"\n  9| \t\"os\"\n  10| \t\"strings\"\n  11| \n  12| \t\"github.com/charmbracelet/huh\"\n  13| \t\"github.com/entireio/cli/cmd/entire/cli/checkpoint\"\n  14| \t\"github.com/entireio/cli/cmd/entire/cli/logging\"\n  15| \t\"github.com/entireio/cli/cmd/entire/cli/paths\"\n  16| \t\"github.com/entireio/cli/cmd/entire/cli/session\"\n  17| \t\"github.com/entireio/cli/cmd/entire/cli/strategy\"\n  18| \t\"git",
+      "output_tokens": 2874,
+      "duration_ms": 0.6308555603027344,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/clean.go",
+        "start_line": 80,
+        "max_lines": 160
+      },
+      "output": "cmd/entire/cli/clean.go:80-239\n  80| \tcmd.Flags().BoolVarP(&forceFlag, \"force\", \"f\", false, \"Skip confirmation prompt and override active session guard\")\n  81| \tcmd.Flags().BoolVarP(&allFlag, \"all\", \"a\", false, \"Clean all session data across the repository\")\n  82| \tcmd.Flags().BoolVarP(&dryRunFlag, \"dry-run\", \"d\", false, \"Preview what would be deleted without deleting\")\n  83| \tcmd.Flags().StringVar(&sessionFlag, \"session\", \"\", \"Clean a specific session by ID\")\n  84| \n  85| \treturn cmd\n  86| }\n  ",
+      "output_tokens": 5893,
+      "duration_ms": 0.5700588226318359,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/clean.go",
+        "start_line": 239,
+        "max_lines": 160
+      },
+      "output": "cmd/entire/cli/clean.go:239-398\n  239| \t\tif err := form.Run(); err != nil {\n  240| \t\t\tif errors.Is(err, huh.ErrUserAborted) {\n  241| \t\t\t\treturn nil\n  242| \t\t\t}\n  243| \t\t\treturn fmt.Errorf(\"failed to get confirmation: %w\", err)\n  244| \t\t}\n  245| \n  246| \t\tif !confirmed {\n  247| \t\t\treturn nil\n  248| \t\t}\n  249| \t}\n  250| \n  251| \tif err := strat.ResetSession(ctx, cmd.OutOrStdout(), cmd.ErrOrStderr(), sessionID); err != nil {\n  252| \t\treturn fmt.Errorf(\"%s session failed: %w\", strings.ToLower(action",
+      "output_tokens": 5968,
+      "duration_ms": 0.4940032958984375,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/clean.go",
+        "start_line": 398,
+        "max_lines": 160
+      },
+      "output": "cmd/entire/cli/clean.go:398-555\n  398| \t\t}\n  399| \n  400| \t\tif len(deletedTempFiles) > 0 {\n  401| \t\t\tfmt.Fprintf(w, \"\\nTemp files (%d):\\n\", len(deletedTempFiles))\n  402| \t\t\tfor _, file := range deletedTempFiles {\n  403| \t\t\t\tfmt.Fprintf(w, \"  %s\\n\", file)\n  404| \t\t\t}\n  405| \t\t}\n  406| \t}\n  407| \n  408| \tif totalFailed > 0 {\n  409| \t\tfmt.Fprintf(errW, \"\\nFailed to delete %d %s:\\n\", totalFailed, itemWord(totalFailed))\n  410| \n  411| \t\tif len(result.FailedBranches) > 0 {\n  412| \t\t\tfmt.Fprintf(errW, ",
+      "output_tokens": 5125,
+      "duration_ms": 0.47707557678222656,
+      "turn_number": 6
+    }
+  ],
+  "total_tool_calls": 7,
+  "total_turns": 7,
+  "wall_clock_ms": 24558.896780014038,
+  "input_tokens": 33206,
+  "output_tokens": 1166,
+  "tool_output_tokens": 21340,
+  "total_cost_usd": 0.11710799999999999,
+  "first_call_tool": "search_code",
+  "first_call_produced_file": true,
+  "retry_count": 0,
+  "error": "",
+  "total_tool_duration_ms": 61.430931091308594,
+  "tool_execution_share": 0.002501371769325604,
+  "search_call_count": 2,
+  "read_call_count": 4,
+  "avg_search_code_duration_ms": 22.85158634185791,
+  "median_search_code_duration_ms": 22.85158634185791
+}

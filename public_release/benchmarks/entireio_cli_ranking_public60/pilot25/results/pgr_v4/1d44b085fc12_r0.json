@@ -1,0 +1,342 @@
+{
+  "repeat": 0,
+  "task_id": "1d44b085fc12",
+  "repo": "entireio-cli",
+  "task_type": "implementation",
+  "condition": "pgr_v4",
+  "prompt": "find parts which are talking to the entire API via HTTP - add a global request handler to use the bearer token obtained via the cli login flow",
+  "answer": "",
+  "tool_calls": [
+    {
+      "tool_name": "list_dir",
+      "tool_input": {},
+      "output": "AGENTS.md\nCHANGELOG.md\nCLAUDE.md\nCODE_OF_CONDUCT.md\nCONTRIBUTING.md\nLICENSE\nREADME.md\nSECURITY.md\nWINDOWS.md\ncmd/\ndocs/\ne2e/\ngo.mod\ngo.sum\nmise-tasks/\nmise.toml\nperf/\nredact/\nscripts/",
+      "output_tokens": 183,
+      "duration_ms": 0.1862049102783203,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "http.Client",
+        "file_type": "go"
+      },
+      "output": "  summary:\n    query: http.Client\n    scope: type=go\n    files: 5 total, 5 shown\n    buckets: 4 source, 1 test, 0 low-priority\n    definition_candidates: 2\n    best_next_step: read cmd/entire/cli/auth/client.go around line 22\n\ncmd/entire/cli/auth/client.go\n  why: definition, source\n  47-47:\n    47| func NewClient(httpClient *http.Client) *Client {\n  22-22:\n    22| \thttpClient *http.Client\n  49-49:\n    49| \t\thttpClient = &http.Client{}\n\ncmd/entire/cli/search/search.go\n  why: definition, source\n  ",
+      "output_tokens": 1104,
+      "duration_ms": 12.678861618041992,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": "cmd/entire/cli"
+      },
+      "output": "agent/\napi/\napi_client.go\nattach.go\nattach_test.go\nattach_transcript.go\nauth/\nbench_enable_test.go\nbench_test.go\nbenchutil/\ncheckpoint/\nclean.go\nclean_test.go\ncommit_message.go\ncommit_message_test.go\nconfig.go\nconfig_test.go\nconstants.go\ndoctor.go\ndoctor_test.go\nerrors.go\nexplain.go\nexplain_test.go\nfetch_no_config_pollution_test.go\ngit_operations.go\ngit_operations_test.go\ngitops/\nglobal_test.go\nhelp.go\nhook_registry.go\nhook_registry_test.go\nhooks.go\nhooks_claudecode_posttodo.go\nhooks_cmd.go\nhook",
+      "output_tokens": 1356,
+      "duration_ms": 0.8230209350585938,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "login",
+        "file_type": "go",
+        "max_files": 15
+      },
+      "output": "  summary:\n    query: login\n    scope: type=go\n    files: 15 total, 15 shown\n    buckets: 6 source, 9 test, 0 low-priority\n    definition_candidates: 1\n    best_next_step: read cmd/entire/cli/integration_test/login_test.go around line 90\n\ncmd/entire/cli/integration_test/login_test.go\n  why: definition, test\n  187-187:\n    187| type loginProcess struct {\n  192-192:\n    192| func runLoginProcess(t *testing.T, apiBaseURL string) *loginProcess {\n  231-231:\n    231| func (p *loginProcess) wait() (str",
+      "output_tokens": 3852,
+      "duration_ms": 22.1099853515625,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/api_client.go"
+      },
+      "output": "cmd/entire/cli/api_client.go:1-29\n  1| package cli\n  2| \n  3| import (\n  4| \t\"errors\"\n  5| \t\"fmt\"\n  6| \n  7| \t\"github.com/entireio/cli/cmd/entire/cli/api\"\n  8| \t\"github.com/entireio/cli/cmd/entire/cli/auth\"\n  9| )\n 10| \n 11| // NewAuthenticatedAPIClient creates an API client using the bearer token\n 12| // from the CLI login flow. Returns an error if the user is not logged in.\n 13| // Pass insecureHTTP=true to allow plain HTTP base URLs (for local development).\n 14| func NewAuthenticatedAPIClient",
+      "output_tokens": 1003,
+      "duration_ms": 0.263214111328125,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/auth/client.go"
+      },
+      "output": "cmd/entire/cli/auth/client.go:1-80\n  1| package auth\n  2| \n  3| import (\n  4| \t\"bytes\"\n  5| \t\"context\"\n  6| \t\"encoding/json\"\n  7| \t\"fmt\"\n  8| \t\"io\"\n  9| \t\"net/http\"\n 10| \t\"net/url\"\n 11| \t\"strings\"\n 12| \n 13| \t\"github.com/entireio/cli/cmd/entire/cli/api\"\n 14| )\n 15| \n 16| const (\n 17| \tmaxResponseBytes = 1 << 20\n 18| \tclientID         = \"entire-cli\"\n 19| )\n 20| \n 21| type Client struct {\n 22| \thttpClient *http.Client\n 23| \tbaseURL    string\n 24| }\n 25| \n 26| type DeviceAuthStart struct {\n 27| \tDe",
+      "output_tokens": 2276,
+      "duration_ms": 0.1671314239501953,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/api/client.go"
+      },
+      "output": "cmd/entire/cli/api/client.go:1-80\n  1| package api\n  2| \n  3| import (\n  4| \t\"bytes\"\n  5| \t\"context\"\n  6| \t\"encoding/json\"\n  7| \t\"fmt\"\n  8| \t\"io\"\n  9| \t\"net/http\"\n 10| \t\"strings\"\n 11| )\n 12| \n 13| const (\n 14| \tmaxResponseBytes = 1 << 20\n 15| \tuserAgent        = \"entire-cli\"\n 16| )\n 17| \n 18| // Client is an authenticated HTTP client for the Entire API.\n 19| // It attaches the bearer token to all outgoing requests via the Authorization header.\n 20| type Client struct {\n 21| \thttpClient *http.Cli",
+      "output_tokens": 2605,
+      "duration_ms": 0.14209747314453125,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/api/client.go",
+        "start_line": 80
+      },
+      "output": "cmd/entire/cli/api/client.go:80-159\n 80| \tif body != nil {\n 81| \t\tdata, err := json.Marshal(body)\n 82| \t\tif err != nil {\n 83| \t\t\treturn nil, fmt.Errorf(\"marshal request body: %w\", err)\n 84| \t\t}\n 85| \t\treader = bytes.NewReader(data)\n 86| \t}\n 87| \treturn c.do(ctx, http.MethodPut, path, reader)\n 88| }\n 89| \n 90| // Patch sends an authenticated PATCH request with a JSON body to the given API-relative path.\n 91| func (c *Client) Patch(ctx context.Context, path string, body any) (*http.Response, error",
+      "output_tokens": 2928,
+      "duration_ms": 0.3299713134765625,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/search/search.go",
+        "max_lines": 50
+      },
+      "output": "cmd/entire/cli/search/search.go:1-50\n  1| package search\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"encoding/json\"\n  6| \t\"errors\"\n  7| \t\"fmt\"\n  8| \t\"io\"\n  9| \t\"net/http\"\n 10| \t\"net/url\"\n 11| \t\"strconv\"\n 12| \t\"strings\"\n 13| \t\"time\"\n 14| )\n 15| \n 16| const apiTimeout = 30 * time.Second\n 17| \n 18| // DefaultServiceURL is the production search service URL.\n 19| const DefaultServiceURL = \"https://entire.io\"\n 20| \n 21| // WildcardQuery is the query string used when only filters are provided (no search",
+      "output_tokens": 1686,
+      "duration_ms": 0.19884109497070312,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/versioncheck/versioncheck.go",
+        "max_lines": 60
+      },
+      "output": "cmd/entire/cli/versioncheck/versioncheck.go:1-60\n  1| package versioncheck\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"encoding/json\"\n  6| \t\"errors\"\n  7| \t\"fmt\"\n  8| \t\"io\"\n  9| \t\"net/http\"\n 10| \t\"os\"\n 11| \t\"path/filepath\"\n 12| \t\"strings\"\n 13| \t\"time\"\n 14| \n 15| \t\"github.com/entireio/cli/cmd/entire/cli/logging\"\n 16| \t\"github.com/entireio/cli/cmd/entire/cli/versioninfo\"\n 17| \t\"golang.org/x/mod/semver\"\n 18| )\n 19| \n 20| const (\n 21| \tinstallManagerBrew    = \"brew\"\n 22| \tinstallManagerMise    = \"mise",
+      "output_tokens": 1890,
+      "duration_ms": 0.16379356384277344,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/search/search.go",
+        "start_line": 200,
+        "end_line": 261
+      },
+      "output": "cmd/entire/cli/search/search.go:200-261\n200| \tparts := strings.Split(repo, \"/\")\n201| \treturn len(parts) == 2 && parts[0] != \"\" && parts[1] != \"\"\n202| }\n203| \n204| func appendUnique(existing []string, values ...string) []string {\n205| \tif len(values) == 0 {\n206| \t\treturn existing\n207| \t}\n208| \n209| \tseen := make(map[string]struct{}, len(existing)+len(values))\n210| \tfor _, value := range existing {\n211| \t\tseen[value] = struct{}{}\n212| \t}\n213| \tfor _, value := range values {\n214| \t\tif _, ok := seen",
+      "output_tokens": 1882,
+      "duration_ms": 0.17690658569335938,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/versioncheck/versioncheck.go",
+        "start_line": 180,
+        "end_line": 260
+      },
+      "output": "cmd/entire/cli/versioncheck/versioncheck.go:180-259\n180| \tctx, cancel := context.WithTimeout(ctx, httpTimeout)\n181| \tdefer cancel()\n182| \n183| \treq, err := http.NewRequestWithContext(ctx, http.MethodGet, githubAPIURL, nil)\n184| \tif err != nil {\n185| \t\treturn \"\", fmt.Errorf(\"creating request: %w\", err)\n186| \t}\n187| \n188| \t// Set headers to identify as Entire CLI\n189| \treq.Header.Set(\"Accept\", \"application/vnd.github+json\")\n190| \treq.Header.Set(\"User-Agent\", \"entire-cli\")\n191| \n192| \tclient := &ht",
+      "output_tokens": 2802,
+      "duration_ms": 0.11205673217773438,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/auth/client.go",
+        "start_line": 80
+      },
+      "output": "cmd/entire/cli/auth/client.go:80-159\n 80| \t}\n 81| \n 82| \treturn &result, nil\n 83| }\n 84| \n 85| func (c *Client) PollDeviceAuth(ctx context.Context, deviceCode string) (*DeviceAuthPoll, error) {\n 86| \tbody := url.Values{}\n 87| \tbody.Set(\"grant_type\", \"urn:ietf:params:oauth:grant-type:device_code\")\n 88| \tbody.Set(\"client_id\", clientID)\n 89| \tbody.Set(\"device_code\", deviceCode)\n 90| \n 91| \tresp, err := c.postForm(ctx, \"/oauth/token\", body)\n 92| \tif err != nil {\n 93| \t\treturn nil, fmt.Errorf(\"poll d",
+      "output_tokens": 2807,
+      "duration_ms": 0.08606910705566406,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/search/search.go",
+        "start_line": 261,
+        "end_line": 311
+      },
+      "output": "cmd/entire/cli/search/search.go:261-311\n261| \t}\n262| \tif cfg.Date != \"\" {\n263| \t\tq.Set(\"date\", cfg.Date)\n264| \t}\n265| \tif cfg.Branch != \"\" {\n266| \t\tq.Set(\"branch\", cfg.Branch)\n267| \t}\n268| \tif cfg.Page > 0 {\n269| \t\tq.Set(\"page\", strconv.Itoa(cfg.Page))\n270| \t}\n271| \tu.RawQuery = q.Encode()\n272| \n273| \treq, err := http.NewRequestWithContext(ctx, http.MethodGet, u.String(), nil)\n274| \tif err != nil {\n275| \t\treturn nil, fmt.Errorf(\"creating request: %w\", err)\n276| \t}\n277| \treq.Header.Set(\"Authoriza",
+      "output_tokens": 1661,
+      "duration_ms": 0.31685829162597656,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/search/search.go",
+        "start_line": 50,
+        "end_line": 200
+      },
+      "output": "cmd/entire/cli/search/search.go:50-129\n 50| }\n 51| \n 52| // Result wraps a search result with its type and ranking metadata.\n 53| type Result struct {\n 54| \tType string           `json:\"type\"`\n 55| \tData CheckpointResult `json:\"data\"`\n 56| \tMeta Meta             `json:\"searchMeta\"`\n 57| }\n 58| \n 59| // Response is the search service response.\n 60| type Response struct {\n 61| \tResults []Result `json:\"results\"`\n 62| \tTotal   int      `json:\"total\"`\n 63| \tPage    int      `json:\"page\"`\n 64| \tError ",
+      "output_tokens": 2918,
+      "duration_ms": 0.2338886260986328,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/versioncheck/versioncheck.go",
+        "start_line": 130,
+        "end_line": 180
+      },
+      "output": "cmd/entire/cli/versioncheck/versioncheck.go:130-180\n130| \t\treturn nil, fmt.Errorf(\"parsing cache: %w\", err)\n131| \t}\n132| \n133| \treturn &cache, nil\n134| }\n135| \n136| // saveCache saves the version check cache to disk.\n137| // Uses atomic write semantics (write to temp file, then rename).\n138| func saveCache(cache *VersionCache) error {\n139| \tfilePath, err := cacheFilePath()\n140| \tif err != nil {\n141| \t\treturn err\n142| \t}\n143| \n144| \t// Marshal to JSON\n145| \tdata, err := json.MarshalIndent(cache, ",
+      "output_tokens": 1742,
+      "duration_ms": 0.14495849609375,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/search_cmd.go"
+      },
+      "output": "cmd/entire/cli/search_cmd.go:1-80\n  1| package cli\n  2| \n  3| import (\n  4| \t\"errors\"\n  5| \t\"fmt\"\n  6| \t\"io\"\n  7| \t\"os\"\n  8| \t\"strings\"\n  9| \n 10| \ttea \"github.com/charmbracelet/bubbletea\"\n 11| \t\"github.com/entireio/cli/cmd/entire/cli/auth\"\n 12| \t\"github.com/entireio/cli/cmd/entire/cli/jsonutil\"\n 13| \t\"github.com/entireio/cli/cmd/entire/cli/search\"\n 14| \t\"github.com/entireio/cli/cmd/entire/cli/strategy\"\n 15| \t\"github.com/spf13/cobra\"\n 16| )\n 17| \n 18| func newSearchCmd() *cobra.Command {\n 19| \tv",
+      "output_tokens": 2827,
+      "duration_ms": 0.4391670227050781,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "GitHubToken",
+        "file_type": "go"
+      },
+      "output": "  summary:\n    query: GitHubToken\n    scope: type=go\n    files: 3 total, 3 shown\n    buckets: 2 source, 1 test, 0 low-priority\n    definition_candidates: 0\n    best_next_step: read cmd/entire/cli/search/search.go around line 70\n\ncmd/entire/cli/search/search.go\n  why: reference, source\n  70-70:\n    70| \tGitHubToken string\n  277-277:\n    277| \treq.Header.Set(\"Authorization\", \"Bearer \"+cfg.GitHubToken)\n\ncmd/entire/cli/search_cmd.go\n  why: reference, source\n  114-114:\n    114| \t\t\t\tGitHubToken: ghTok",
+      "output_tokens": 699,
+      "duration_ms": 15.356063842773438,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/search_cmd.go",
+        "start_line": 80
+      },
+      "output": "cmd/entire/cli/search_cmd.go:80-159\n 80| \t\t\t}\n 81| \t\t\tif ghToken == \"\" {\n 82| \t\t\t\treturn errors.New(\"not authenticated. Run 'entire login' to authenticate\")\n 83| \t\t\t}\n 84| \n 85| \t\t\t// Get the repo's GitHub remote URL\n 86| \t\t\trepo, err := strategy.OpenRepository(ctx)\n 87| \t\t\tif err != nil {\n 88| \t\t\t\tcmd.SilenceUsage = true\n 89| \t\t\t\tfmt.Fprintln(cmd.ErrOrStderr(), \"Not a git repository. Run this command from within a git repository.\")\n 90| \t\t\t\treturn NewSilentError(err)\n 91| \t\t\t}\n 92| \n 93| \t\t\trem",
+      "output_tokens": 2857,
+      "duration_ms": 0.17881393432617188,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/versioncheck/versioncheck.go",
+        "start_line": 60,
+        "end_line": 130
+      },
+      "output": "cmd/entire/cli/versioncheck/versioncheck.go:60-130\n 60| \t\tlatestVersion, err = fetchLatestVersion(ctx)\n 61| \t}\n 62| \n 63| \t// Always update cache to avoid retrying on every CLI invocation\n 64| \tcache.LastCheckTime = time.Now()\n 65| \tif saveErr := saveCache(cache); saveErr != nil {\n 66| \t\tlogging.Debug(ctx, \"version check: failed to save cache\",\n 67| \t\t\t\"error\", saveErr.Error())\n 68| \t}\n 69| \n 70| \tif err != nil {\n 71| \t\tlogging.Debug(ctx, \"version check: failed to fetch latest version\",\n 72| \t\t\t",
+      "output_tokens": 2464,
+      "duration_ms": 0.10180473327636719,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": "cmd/entire/cli/api"
+      },
+      "output": "base_url.go\nbase_url_test.go\nclient.go\nclient_test.go\ntrail_types.go",
+      "output_tokens": 68,
+      "duration_ms": 0.23412704467773438,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": "cmd/entire/cli/auth"
+      },
+      "output": "client.go\nclient_test.go\nstore.go\nstore_test.go",
+      "output_tokens": 47,
+      "duration_ms": 0.08416175842285156,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "LookupCurrentToken",
+        "file_type": "go"
+      },
+      "output": "  summary:\n    query: LookupCurrentToken\n    scope: type=go\n    files: 4 total, 4 shown\n    buckets: 3 source, 1 test, 0 low-priority\n    definition_candidates: 2\n    best_next_step: read cmd/entire/cli/auth/store.go around line 70\n\ncmd/entire/cli/auth/store.go\n  why: definition, source\n  71-71:\n    71| func LookupCurrentToken() (string, error) {\n  70-70:\n    70| // LookupCurrentToken retrieves the token for the current base URL.\n\ncmd/entire/cli/auth/store_test.go\n  why: definition, test\n  135-1",
+      "output_tokens": 912,
+      "duration_ms": 14.523983001708984,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/auth/store.go"
+      },
+      "output": "cmd/entire/cli/auth/store.go:1-74\n  1| package auth\n  2| \n  3| import (\n  4| \t\"errors\"\n  5| \t\"fmt\"\n  6| \t\"strings\"\n  7| \n  8| \t\"github.com/entireio/cli/cmd/entire/cli/api\"\n  9| \t\"github.com/zalando/go-keyring\"\n 10| )\n 11| \n 12| const keyringService = \"entire-cli\"\n 13| \n 14| // Store manages CLI authentication tokens in the OS keyring.\n 15| type Store struct {\n 16| \tservice string\n 17| }\n 18| \n 19| // NewStore returns a Store backed by the system keyring.\n 20| func NewStore() *Store {\n 21| \tretur",
+      "output_tokens": 2219,
+      "duration_ms": 0.3268718719482422,
+      "turn_number": 10
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/api/base_url.go"
+      },
+      "output": "cmd/entire/cli/api/base_url.go:1-74\n  1| package api\n  2| \n  3| import (\n  4| \t\"errors\"\n  5| \t\"fmt\"\n  6| \t\"net/url\"\n  7| \t\"os\"\n  8| \t\"strings\"\n  9| )\n 10| \n 11| // ErrInsecureHTTP is returned when the base URL uses HTTP without an explicit opt-in.\n 12| var ErrInsecureHTTP = errors.New(\"refusing to use insecure http:// base URL for authentication (use --insecure-http-auth to override)\")\n 13| \n 14| const (\n 15| \t// DefaultBaseURL is the production Entire API origin.\n 16| \tDefaultBaseURL = \"https:/",
+      "output_tokens": 2437,
+      "duration_ms": 0.20599365234375,
+      "turn_number": 10
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/api/client_test.go"
+      },
+      "output": "cmd/entire/cli/api/client_test.go:1-80\n  1| package api\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"encoding/json\"\n  6| \t\"io\"\n  7| \t\"net/http\"\n  8| \t\"net/http/httptest\"\n  9| \t\"testing\"\n 10| )\n 11| \n 12| func TestBearerTransport_InjectsAuthHeader(t *testing.T) {\n 13| \tt.Parallel()\n 14| \n 15| \tvar gotAuth string\n 16| \tvar gotUA string\n 17| \tvar gotAccept string\n 18| \n 19| \tserver := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {\n 20| \t\tgotAuth = r.Header.Get(\"Aut",
+      "output_tokens": 2317,
+      "duration_ms": 0.4630088806152344,
+      "turn_number": 11
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/search/search_test.go",
+        "max_lines": 50
+      },
+      "output": "cmd/entire/cli/search/search_test.go:1-50\n  1| package search\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"encoding/json\"\n  6| \t\"net/http\"\n  7| \t\"net/http/httptest\"\n  8| \t\"strings\"\n  9| \t\"testing\"\n 10| )\n 11| \n 12| const testOwner = \"entirehq\"\n 13| const testRepo = \"entire.io\"\n 14| \n 15| // -- ParseGitHubRemote tests --\n 16| \n 17| func TestParseGitHubRemote_SSH(t *testing.T) {\n 18| \tt.Parallel()\n 19| \towner, repo, err := ParseGitHubRemote(\"git@github.com:entirehq/entire.io.git\")\n 20| \tif err != ni",
+      "output_tokens": 1470,
+      "duration_ms": 0.6639957427978516,
+      "turn_number": 11
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/search/search_test.go",
+        "start_line": 100,
+        "end_line": 220
+      },
+      "output": "cmd/entire/cli/search/search_test.go:100-179\n100| \n101| // -- Search() tests --\n102| \n103| func TestSearch_URLConstruction(t *testing.T) {\n104| \tt.Parallel()\n105| \n106| \tvar capturedReq *http.Request\n107| \tsrv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {\n108| \t\tcapturedReq = r\n109| \t\tresp := Response{Results: []Result{}, Total: 0, Page: 1}\n110| \t\tw.Header().Set(\"Content-Type\", \"application/json\")\n111| \t\tjson.NewEncoder(w).Encode(resp) //nolint:errcheck //",
+      "output_tokens": 2918,
+      "duration_ms": 0.6089210510253906,
+      "turn_number": 12
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/api/client_test.go",
+        "start_line": 80
+      },
+      "output": "cmd/entire/cli/api/client_test.go:80-159\n 80| \t\tt.Fatal(err)\n 81| \t}\n 82| \tdefer resp.Body.Close()\n 83| \n 84| \tif gotAccept != \"text/plain\" {\n 85| \t\tt.Errorf(\"Accept = %q, want %q\", gotAccept, \"text/plain\")\n 86| \t}\n 87| }\n 88| \n 89| func TestBearerTransport_DoesNotMutateOriginalRequest(t *testing.T) {\n 90| \tt.Parallel()\n 91| \n 92| \tserver := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {\n 93| \t\tw.WriteHeader(http.StatusOK)\n 94| \t}))\n 95| \tdefer server.Close()\n",
+      "output_tokens": 2532,
+      "duration_ms": 0.2751350402832031,
+      "turn_number": 12
+    }
+  ],
+  "total_tool_calls": 29,
+  "total_turns": 12,
+  "wall_clock_ms": 38652.34684944153,
+  "input_tokens": 156148,
+  "output_tokens": 2099,
+  "tool_output_tokens": 56462,
+  "total_cost_usd": 0.499929,
+  "first_call_tool": "list_dir",
+  "first_call_produced_file": true,
+  "retry_count": 0,
+  "error": "",
+  "total_tool_duration_ms": 71.59590721130371,
+  "tool_execution_share": 0.0018523042724982214,
+  "search_call_count": 4,
+  "read_call_count": 21,
+  "avg_search_code_duration_ms": 16.16722345352173,
+  "median_search_code_duration_ms": 14.940023422241211
+}

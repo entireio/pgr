@@ -1,0 +1,122 @@
+{
+  "repeat": 0,
+  "task_id": "20388d3a424a",
+  "repo": "entireio-cli",
+  "task_type": "code_understanding",
+  "condition": "fff",
+  "prompt": "can you take a look at: The exported wrapper functions TruncateRunes and CapitalizeFirst in utils.go are not used anywhere in the codebase. Code directly imports and uses stringutil.TruncateRunes and stringutil.CapitalizeFirst instead. Consider removing these unused wrapper functions to reduce code duplication, or document why they exist if they're intended for external use.",
+  "answer": "The investigation is complete. Here is a precise, evidence-based verdict:\n\n---\n\n## Finding: The Claim Is Incorrect\n\n**There are no wrapper functions named `TruncateRunes` or `CapitalizeFirst` in `utils.go`** \u2014 and there never were. The functions only exist in one place: `cmd/entire/cli/stringutil/stringutil.go`. Every caller uses them directly via `stringutil.TruncateRunes(...)` and `stringutil.CapitalizeFirst(...)`. There is no duplication, no wrappers, and nothing to remove.\n\nHere is the exact evidence:\n\n### 1. `utils.go` contains neither function\nA direct search for `func TruncateRunes` and `func CapitalizeFirst` scoped to `utils.go` returned **0 matches**. The full file (`utils.go`, 165 lines) was read and contains only: `IsAccessibleMode`, `entireTheme`, `NewAccessibleForm`, `handleFormCancellation`, `printSessionCommand`, `fileExists`, `copyFile`, `openAllowedRoot`, `allowedRootDirs`, and `appendResolved`.\n\n### 2. Both functions are defined exactly once \u2014 in `stringutil/stringutil.go`\n| Symbol | Defined in | Line |\n|---|---|---|\n| `TruncateRunes` | `cmd/entire/cli/stringutil/stringutil.go` | 23 |\n| `CapitalizeFirst` | `cmd/entire/cli/stringutil/stringutil.go` | 38 |\n\n### 3. All callers use the canonical `stringutil.` import path directly \u2014 consistently\n`TruncateRunes` is called directly via `stringutil.TruncateRunes` in **8 files** with **13 call sites**: `commit_message.go`, `search_tui.go` (\u00d78), `sessions.go` (\u00d72), `status.go`, `strategy/messages.go` (\u00d72), `strategy/manual_commit_hooks.go`, and `strategy/manual_commit_types.go`.\n\n`CapitalizeFirst` is called directly via `stringutil.CapitalizeFirst` in **1 file**: `commit_message.go`.\n\n### Conclusion\n\nThe reported issue describes a state that **does not exist in the codebase**. There are no wrapper functions, no duplication, and no dead code related to these two symbols. The design is already correct: both functions live in a single, purpose-built `stringutil` package and are imported directly by all consumers. No action is needed.",
+  "tool_calls": [
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "glob": "**/utils.go"
+      },
+      "output": "\u2192 Read cmd/entire/cli/utils.go (best match \u2014 Read this file directly)\ncmd/entire/cli/utils.go git:clean",
+      "output_tokens": 103,
+      "duration_ms": 0.225067138671875,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "TruncateRunes"
+      },
+      "output": "\u2192 Read cmd/entire/cli/stringutil/stringutil_test.go [def]\ncmd/entire/cli/stringutil/stringutil.go\n 23: func TruncateRunes(s string, maxRunes int, suffix string) string {\n  24| if utf8.RuneCountInString(s) <= maxRunes {\n  25| return s\n  26| }\n  27| runes := []rune(s)\n  28| suffixRunes := []rune(suffix)\n  29| truncateAt := maxRunes - len(suffixRunes)\n  30| if truncateAt < 0 {\n  31| truncateAt = 0\ncmd/entire/cli/stringutil/stringutil_test.go\n 73: func TestTruncateRunes(t *testing.T) {\n  74| tests :",
+      "output_tokens": 2551,
+      "duration_ms": 0.4360675811767578,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/utils.go"
+      },
+      "output": "cmd/entire/cli/utils.go:1-80\n  1| package cli\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"errors\"\n  6| \t\"fmt\"\n  7| \t\"io\"\n  8| \t\"os\"\n  9| \t\"path/filepath\"\n  10| \n  11| \t\"github.com/charmbracelet/huh\"\n  12| \n  13| \t\"github.com/entireio/cli/cmd/entire/cli/osroot\"\n  14| \t\"github.com/entireio/cli/cmd/entire/cli/paths\"\n  15| )\n  16| \n  17| // IsAccessibleMode returns true if accessibility mode should be enabled.\n  18| // This checks the ACCESSIBLE environment variable.\n  19| // Set ACCESSIBLE=1 (or any",
+      "output_tokens": 3220,
+      "duration_ms": 1.316070556640625,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "CapitalizeFirst"
+      },
+      "output": "\u2192 Read cmd/entire/cli/stringutil/stringutil_test.go [def]\ncmd/entire/cli/stringutil/stringutil.go\n 38: func CapitalizeFirst(s string) string {\n  39| if s == \"\" {\n  40| return s\n  41| }\n  42| r, size := utf8.DecodeRuneInString(s)\n  43| if r == utf8.RuneError {\n  44| return s\n  45| }\n  46| return string(unicode.ToUpper(r)) + s[size:]\ncmd/entire/cli/stringutil/stringutil_test.go\n 164: func TestCapitalizeFirst(t *testing.T) {\n  165| tests := []struct {\n  166| name  string\n  167| input string\n  168| ",
+      "output_tokens": 870,
+      "duration_ms": 0.7469654083251953,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/utils.go",
+        "start_line": 80,
+        "end_line": 165
+      },
+      "output": "cmd/entire/cli/utils.go:80-165\n  80| // The kernel enforces that the write cannot escape the allowed directory,\n  81| // eliminating TOCTOU races and symlink escapes.\n  82| func copyFile(src, dst string) error {\n  83| \tsrc = filepath.Clean(src)\n  84| \tdst = filepath.Clean(dst)\n  85| \n  86| \tif !filepath.IsAbs(dst) {\n  87| \t\treturn fmt.Errorf(\"copyFile: dst must be absolute, got %q\", dst)\n  88| \t}\n  89| \n  90| \tinput, err := os.ReadFile(src)\n  91| \tif err != nil {\n  92| \t\treturn err //nolint:wrap",
+      "output_tokens": 3350,
+      "duration_ms": 0.3180503845214844,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "func TruncateRunes\\|func CapitalizeFirst",
+        "path_glob": "**/utils.go"
+      },
+      "output": "0 matches.",
+      "output_tokens": 10,
+      "duration_ms": 1.0039806365966797,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "TruncateRunes",
+        "path_glob": "**/*.go",
+        "context_before": 1,
+        "context_after": 0,
+        "max_files": 20,
+        "max_matches_per_file": 20
+      },
+      "output": "\u2192 Read cmd/entire/cli/stringutil/stringutil_test.go [def]\ncmd/entire/cli/stringutil/stringutil.go\n 23: func TruncateRunes(s string, maxRunes int, suffix string) string {\n  24| if utf8.RuneCountInString(s) <= maxRunes {\n  25| return s\n  26| }\n  27| runes := []rune(s)\n  28| suffixRunes := []rune(suffix)\n  29| truncateAt := maxRunes - len(suffixRunes)\n  30| if truncateAt < 0 {\n  31| truncateAt = 0\ncmd/entire/cli/stringutil/stringutil_test.go\n 73: func TestTruncateRunes(t *testing.T) {\n  74| tests :",
+      "output_tokens": 2529,
+      "duration_ms": 3.5440921783447266,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "CapitalizeFirst",
+        "path_glob": "**/*.go",
+        "context_before": 1,
+        "context_after": 0,
+        "max_files": 20,
+        "max_matches_per_file": 20
+      },
+      "output": "\u2192 Read cmd/entire/cli/stringutil/stringutil_test.go [def]\ncmd/entire/cli/stringutil/stringutil.go\n 38: func CapitalizeFirst(s string) string {\n  39| if s == \"\" {\n  40| return s\n  41| }\n  42| r, size := utf8.DecodeRuneInString(s)\n  43| if r == utf8.RuneError {\n  44| return s\n  45| }\n  46| return string(unicode.ToUpper(r)) + s[size:]\ncmd/entire/cli/stringutil/stringutil_test.go\n 164: func TestCapitalizeFirst(t *testing.T) {\n  165| tests := []struct {\n  166| name  string\n  167| input string\n  168| ",
+      "output_tokens": 870,
+      "duration_ms": 0.48995018005371094,
+      "turn_number": 4
+    }
+  ],
+  "total_tool_calls": 8,
+  "total_turns": 5,
+  "wall_clock_ms": 24877.718210220337,
+  "input_tokens": 21689,
+  "output_tokens": 1351,
+  "tool_output_tokens": 13503,
+  "total_cost_usd": 0.08533199999999999,
+  "first_call_tool": "find_files",
+  "first_call_produced_file": true,
+  "retry_count": 0,
+  "error": "",
+  "total_tool_duration_ms": 8.080244064331055,
+  "tool_execution_share": 0.000324798439955458,
+  "search_call_count": 5,
+  "avg_search_code_duration_ms": 1.244211196899414,
+  "median_search_code_duration_ms": 0.7469654083251953,
+  "avg_read_code_duration_ms": 0.8170604705810547,
+  "median_read_code_duration_ms": 0.8170604705810547
+}

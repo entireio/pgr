@@ -1,0 +1,264 @@
+{
+  "repeat": 0,
+  "task_id": "8b5b4eca788e",
+  "repo": "entireio-cli",
+  "task_type": "debug_or_validation",
+  "condition": "rg_ranked",
+  "prompt": "I am running this test on Windows TestSingleSessionSubagentCommitInTurn. And it is failing, not always, it fails because after running the test we identify that there is a shadow branch that should not be there. I copied the entire.log on windows execution windows-broken-test.json (failing one) and the same test but this time running on macos the entire.log are inside mac-ok-test.json.",
+  "answer": "",
+  "tool_calls": [
+    {
+      "tool_name": "list_dir",
+      "tool_input": {},
+      "output": ".allowed-licenses\n.claude/\n.codex/\n.devcontainer/\n.entire/\n.ferrata/\n.gemini/\n.git/\n.github/\n.gitignore\n.golangci.yaml\n.goreleaser.yaml\n.opencode/\n.vscode/\nAGENTS.md\nCHANGELOG.md\nCLAUDE.md\nCODE_OF_CONDUCT.md\nCONTRIBUTING.md\nLICENSE\nREADME.md\nSECURITY.md\nWINDOWS.md\ncmd/\ndocs/\ne2e/\ngo.mod\ngo.sum\nmise-tasks/\nmise.toml\nperf/\nredact/\nscripts/",
+      "output_tokens": 339,
+      "duration_ms": 0.5500316619873047,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "TestSingleSessionSubagentCommitInTurn"
+      },
+      "output": "e2e/tests/single_session_test.go\n  89-89:\n    89| // TestSingleSessionSubagentCommitInTurn: one prompt with subagent creates a file and commits it.\n  92-92:\n    92| func TestSingleSessionSubagentCommitInTurn(t *testing.T) {",
+      "output_tokens": 223,
+      "duration_ms": 18.132925033569336,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "pattern": "windows-broken-test.json"
+      },
+      "output": "No files found.",
+      "output_tokens": 15,
+      "duration_ms": 11.891841888427734,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/tests/single_session_test.go",
+        "start_line": 89,
+        "max_lines": 80
+      },
+      "output": "e2e/tests/single_session_test.go:89-114\n  89| // TestSingleSessionSubagentCommitInTurn: one prompt with subagent creates a file and commits it.\n  90| // Expects both an initial checkpoint (post-commit) and a catchup checkpoint\n  91| // (end-of-turn) referencing the same checkpoint ID.\n  92| func TestSingleSessionSubagentCommitInTurn(t *testing.T) {\n  93| \ttestutil.ForEachAgent(t, 2*time.Minute, func(t *testing.T, s *testutil.RepoState, ctx context.Context) {\n  94| \t\tif s.Agent.Name() == \"copilot",
+      "output_tokens": 1585,
+      "duration_ms": 0.1590251922607422,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "pattern": "windows-broken-test"
+      },
+      "output": "No files found.",
+      "output_tokens": 15,
+      "duration_ms": 10.757207870483398,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "pattern": "mac-ok-test"
+      },
+      "output": "No files found.",
+      "output_tokens": 15,
+      "duration_ms": 9.915828704833984,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "WaitForNoShadowBranches"
+      },
+      "output": "e2e/testutil/assertions.go\n  137-137:\n    137| // WaitForNoShadowBranches polls until all shadow branches are cleaned up or\n  141-141:\n    141| func WaitForNoShadowBranches(t *testing.T, dir string, timeout time.Duration) {\n\ne2e/tests/attribution_test.go\n  43-43:\n    43| \t\ttestutil.WaitForNoShadowBranches(t, s.Dir, 10*time.Second)\n  73-73:\n    73| \t\ttestutil.WaitForNoShadowBranches(t, s.Dir, 10*time.Second)\n  113-113:\n    113| \t\ttestutil.WaitForNoShadowBranches(t, s.Dir, 10*time.Second)\n\ne2e/tes",
+      "output_tokens": 1887,
+      "duration_ms": 14.889955520629883,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/testutil/assertions.go",
+        "start_line": 130,
+        "max_lines": 50
+      },
+      "output": "e2e/testutil/assertions.go:130-179\n  130| \t\t\tcontinue\n  131| \t\t}\n  132| \t\tshadow = append(shadow, b)\n  133| \t}\n  134| \treturn shadow\n  135| }\n  136| \n  137| // WaitForNoShadowBranches polls until all shadow branches are cleaned up or\n  138| // the timeout expires. Shadow branch cleanup can lag slightly behind checkpoint\n  139| // condensation (carry-forward creates intermediate branches that are deleted\n  140| // asynchronously).\n  141| func WaitForNoShadowBranches(t *testing.T, dir string, time",
+      "output_tokens": 2180,
+      "duration_ms": 0.40912628173828125,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": ".entire"
+      },
+      "output": ".gitignore\nsettings.json",
+      "output_tokens": 24,
+      "duration_ms": 0.1518726348876953,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/testutil/assertions.go",
+        "start_line": 100,
+        "max_lines": 35
+      },
+      "output": "e2e/testutil/assertions.go:100-134\n  100| \t\t\tt.Fatalf(\"expected at least %d new commit(s), got %d after %s\", atLeast, len(lines), timeout)\n  101| \t\t}\n  102| \t\ttime.Sleep(500 * time.Millisecond)\n  103| \t}\n  104| }\n  105| \n  106| // WaitForCheckpoint polls until the checkpoint branch advances from its\n  107| // initial state, or fails the test after timeout. Use this before any\n  108| // assertions that depend on the checkpoint branch (post-commit hook is async).\n  109| func WaitForCheckpoint(t *t",
+      "output_tokens": 1532,
+      "duration_ms": 3.5190582275390625,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "shadowBranches"
+      },
+      "output": "cmd/entire/cli/strategy/cleanup.go\n  89-89:\n    89| \tvar shadowBranches []string\n  104-104:\n    104| \t\t\tshadowBranches = append(shadowBranches, branchName)\n  113-113:\n    113| \tif shadowBranches == nil {\n\ne2e/testutil/assertions.go\n  122-122:\n    122| // shadowBranches returns all shadow branches (entire/*) excluding entire/checkpoints/*.\n  123-123:\n    123| func shadowBranches(t *testing.T, dir string) []string {\n  145-145:\n    145| \t\tshadow := shadowBranches(t, dir)\n\ncmd/entire/cli/explain.go\n",
+      "output_tokens": 121784,
+      "duration_ms": 31.460046768188477,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "glob": "**/*.json",
+        "pattern": "windows-broken"
+      },
+      "output": "No files found.",
+      "output_tokens": 15,
+      "duration_ms": 12.573003768920898,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "carryForwardToNewShadowBranch"
+      },
+      "output": "cmd/entire/cli/strategy/manual_commit_hooks.go\n  1343-1343:\n    1343| \t\t\ts.carryForwardToNewShadowBranch(ctx, repo, state, remainingFiles)\n  2508-2508:\n    2508| \t// Skip this when carry-forward is active. carryForwardToNewShadowBranch\n  2704-2704:\n    2704| \t// transcript lines when condensing, and carryForwardToNewShadowBranch resets it to 0\n\ncmd/entire/cli/transcript/compact/testdata/claude_full2.jsonl\n  326-326:\n    326| {\"parentUuid\":\"11930b2a-4c11-44e1-bd7f-6f3aa50ffff4\",\"isSidechain\":fals",
+      "output_tokens": 210120,
+      "duration_ms": 27.941226959228516,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "deleteShadowBranch"
+      },
+      "output": "cmd/entire/cli/strategy/manual_commit_git.go\n  374-374:\n    374| // deleteShadowBranch deletes a shadow branch by name.\n  378-378:\n    378| func deleteShadowBranch(ctx context.Context, _ *git.Repository, branchName string) error {\n\ncmd/entire/cli/strategy/manual_commit_hooks.go\n  1065-1065:\n    1065| \t\tif err := deleteShadowBranch(ctx, repo, shadowBranchName); err != nil {\n\ncmd/entire/cli/strategy/manual_commit_test.go\n  1267-1267:\n    1267| // TestDeleteShadowBranch verifies that deleteShadowBr",
+      "output_tokens": 210483,
+      "duration_ms": 30.000925064086914,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "WriteTemporary",
+        "file_type": "go"
+      },
+      "output": "cmd/entire/cli/checkpoint/checkpoint.go\n  67-67:\n    67| // - WriteTemporary takes WriteTemporaryOptions and returns a result with commit hash and skip status\n  71-71:\n    71| \t// WriteTemporary writes a temporary checkpoint (full state) to a shadow branch.\n  75-75:\n    75| \tWriteTemporary(ctx context.Context, opts WriteTemporaryOptions) (WriteTemporaryResult, error)\n\ncmd/entire/cli/checkpoint/temporary.go\n  52-52:\n    52| // WriteTemporary writes a temporary checkpoint to a shadow branch.\n  57-",
+      "output_tokens": 3216,
+      "duration_ms": 18.21613311767578,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/strategy/manual_commit_git.go",
+        "start_line": 370,
+        "max_lines": 30
+      },
+      "output": "cmd/entire/cli/strategy/manual_commit_git.go:370-388\n  370| \n  371| \treturn existing\n  372| }\n  373| \n  374| // deleteShadowBranch deletes a shadow branch by name.\n  375| // Returns nil if the branch doesn't exist (idempotent).\n  376| // Uses git CLI instead of go-git's RemoveReference because go-git v5\n  377| // doesn't properly persist deletions with packed refs or worktrees.\n  378| func deleteShadowBranch(ctx context.Context, _ *git.Repository, branchName string) error {\n  379| \terr := Delete",
+      "output_tokens": 775,
+      "duration_ms": 0.22983551025390625,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "cleanup.go",
+        "path_glob": "cmd/entire/cli/strategy/cleanup.go"
+      },
+      "output": "No matches found.",
+      "output_tokens": 17,
+      "duration_ms": 13.760089874267578,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "DeleteBranchCLI",
+        "file_type": "go"
+      },
+      "output": "cmd/entire/cli/strategy/common.go\n  1315-1315:\n    1315| // ErrBranchNotFound is returned by DeleteBranchCLI when the branch does not exist.\n  1318-1318:\n    1318| // DeleteBranchCLI deletes a git branch using the git CLI.\n  1326-1326:\n    1326| func DeleteBranchCLI(ctx context.Context, branchName string) error {\n\ncmd/entire/cli/doctor.go\n  352-352:\n    352| \t\t\tif err := strategy.DeleteBranchCLI(ctx, ss.ShadowBranch); err != nil {\n\ncmd/entire/cli/strategy/cleanup.go\n  131-131:\n    131| \t\tif err ",
+      "output_tokens": 1056,
+      "duration_ms": 16.988039016723633,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/strategy/cleanup.go",
+        "max_lines": 120
+      },
+      "output": "cmd/entire/cli/strategy/cleanup.go:1-120\n  1| package strategy\n  2| \n  3| import (\n  4| \t\"context\"\n  5| \t\"fmt\"\n  6| \t\"log/slog\"\n  7| \t\"regexp\"\n  8| \t\"strings\"\n  9| \t\"time\"\n  10| \n  11| \t\"github.com/entireio/cli/cmd/entire/cli/checkpoint\"\n  12| \t\"github.com/entireio/cli/cmd/entire/cli/checkpoint/id\"\n  13| \t\"github.com/entireio/cli/cmd/entire/cli/logging\"\n  14| \t\"github.com/entireio/cli/cmd/entire/cli/paths\"\n  15| \t\"github.com/entireio/cli/cmd/entire/cli/session\"\n  16| \n  17| \t\"github.com/go-git/g",
+      "output_tokens": 4805,
+      "duration_ms": 0.37407875061035156,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "func DeleteBranchCLI",
+        "file_type": "go"
+      },
+      "output": "cmd/entire/cli/strategy/common.go\n  1326-1326:\n    1326| func DeleteBranchCLI(ctx context.Context, branchName string) error {",
+      "output_tokens": 125,
+      "duration_ms": 18.5091495513916,
+      "turn_number": 10
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/strategy/common.go",
+        "start_line": 1315,
+        "max_lines": 60
+      },
+      "output": "cmd/entire/cli/strategy/common.go:1315-1374\n  1315| // ErrBranchNotFound is returned by DeleteBranchCLI when the branch does not exist.\n  1316| var ErrBranchNotFound = errors.New(\"branch not found\")\n  1317| \n  1318| // DeleteBranchCLI deletes a git branch using the git CLI.\n  1319| // Uses `git branch -D` instead of go-git's RemoveReference because go-git v5\n  1320| // doesn't properly persist deletions when refs are packed (.git/packed-refs)\n  1321| // or in a worktree context. This is the same",
+      "output_tokens": 3420,
+      "duration_ms": 0.7848739624023438,
+      "turn_number": 11
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/checkpoint/temporary.go",
+        "start_line": 52,
+        "max_lines": 80
+      },
+      "output": "cmd/entire/cli/checkpoint/temporary.go:52-131\n  52| // WriteTemporary writes a temporary checkpoint to a shadow branch.\n  53| // Shadow branches are named entire/<base-commit-short-hash>.\n  54| // Returns the result containing commit hash and whether it was skipped.\n  55| // If the new tree hash matches the last checkpoint's tree hash, the checkpoint\n  56| // is skipped to avoid duplicate commits (deduplication).\n  57| func (s *GitStore) WriteTemporary(ctx context.Context, opts WriteTemporaryOpt",
+      "output_tokens": 4187,
+      "duration_ms": 0.5817413330078125,
+      "turn_number": 12
+    }
+  ],
+  "total_tool_calls": 22,
+  "total_turns": 12,
+  "wall_clock_ms": 45448.51493835449,
+  "input_tokens": 1213238,
+  "output_tokens": 1582,
+  "tool_output_tokens": 567818,
+  "total_cost_usd": 3.663444,
+  "first_call_tool": "list_dir",
+  "first_call_produced_file": true,
+  "retry_count": 0,
+  "error": "",
+  "total_tool_duration_ms": 241.79601669311523,
+  "tool_execution_share": 0.005320218207813452,
+  "search_call_count": 9,
+  "read_call_count": 7,
+  "avg_search_code_duration_ms": 21.09983232286241,
+  "median_search_code_duration_ms": 18.21613311767578
+}

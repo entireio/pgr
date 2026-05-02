@@ -1,0 +1,201 @@
+{
+  "overall": {
+    "baseline": {
+      "wall_clock_ms": 38567.3730413119,
+      "total_tool_calls": 19.116666666666667,
+      "total_cost_usd": 0.50674705,
+      "tool_output_tokens": 74361.11666666667,
+      "total_tool_duration_ms": 140.0293986002604,
+      "tool_execution_share": 0.003650740882226094,
+      "search_call_count": 6.016666666666667,
+      "avg_search_code_duration_ms": 15.545130815318325,
+      "median_search_code_duration_ms": 14.689719676971436,
+      "avg_read_code_duration_ms": 0.46842898446157566,
+      "median_read_code_duration_ms": 0.3964861234029134
+    },
+    "fff": {
+      "wall_clock_ms": 36987.85849014918,
+      "total_tool_calls": 17.9,
+      "total_cost_usd": 0.3685123,
+      "tool_output_tokens": 52930.63333333333,
+      "total_tool_duration_ms": 55.429768562316895,
+      "tool_execution_share": 0.0012770870979811146,
+      "search_call_count": 5.4,
+      "avg_search_code_duration_ms": 5.6539089812172785,
+      "median_search_code_duration_ms": 1.6688326994578044,
+      "avg_read_code_duration_ms": 0.5408082276452276,
+      "median_read_code_duration_ms": 0.437621275583903
+    }
+  },
+  "by_type": {
+    "code_understanding": {
+      "baseline": {
+        "wall_clock_ms": 41096.57470385233,
+        "total_tool_calls": 19.22222222222222,
+        "total_cost_usd": 0.5630515555555555,
+        "tool_output_tokens": 86901.92592592593,
+        "total_tool_duration_ms": 161.99393625612612,
+        "tool_execution_share": 0.0040359661742201715,
+        "search_call_count": 7.296296296296297,
+        "avg_search_code_duration_ms": 18.205284813934203,
+        "median_search_code_duration_ms": 17.260282127945512,
+        "avg_read_code_duration_ms": 0.48706858308732687,
+        "median_read_code_duration_ms": 0.41843785179985893
+      },
+      "fff": {
+        "wall_clock_ms": 38997.35001281456,
+        "total_tool_calls": 17.85185185185185,
+        "total_cost_usd": 0.3386958888888889,
+        "tool_output_tokens": 44085.74074074074,
+        "total_tool_duration_ms": 97.50675272058558,
+        "tool_execution_share": 0.002121620511901608,
+        "search_call_count": 6.333333333333333,
+        "avg_search_code_duration_ms": 9.588468309891459,
+        "median_search_code_duration_ms": 1.4927122328016493,
+        "avg_read_code_duration_ms": 0.508582397055431,
+        "median_read_code_duration_ms": 0.44704808129204643
+      }
+    },
+    "debug_or_validation": {
+      "baseline": {
+        "wall_clock_ms": 39969.07347791335,
+        "total_tool_calls": 19.88235294117647,
+        "total_cost_usd": 0.5529460588235294,
+        "tool_output_tokens": 77193.11764705883,
+        "total_tool_duration_ms": 106.4610481262207,
+        "tool_execution_share": 0.00266730959056573,
+        "search_call_count": 4.588235294117647,
+        "avg_search_code_duration_ms": 13.202997731713202,
+        "median_search_code_duration_ms": 12.728165177737965,
+        "avg_read_code_duration_ms": 0.4303954482818315,
+        "median_read_code_duration_ms": 0.34880638122558594
+      },
+      "fff": {
+        "wall_clock_ms": 38034.50245015761,
+        "total_tool_calls": 19.529411764705884,
+        "total_cost_usd": 0.4703680588235294,
+        "tool_output_tokens": 73592.82352941176,
+        "total_tool_duration_ms": 20.133018493652344,
+        "tool_execution_share": 0.0005417549549377029,
+        "search_call_count": 4.9411764705882355,
+        "avg_search_code_duration_ms": 1.738642805370023,
+        "median_search_code_duration_ms": 1.517022357267492,
+        "avg_read_code_duration_ms": 0.5219814472529913,
+        "median_read_code_duration_ms": 0.41160162757424745
+      }
+    },
+    "implementation": {
+      "baseline": {
+        "wall_clock_ms": 34048.377434412636,
+        "total_tool_calls": 20.555555555555557,
+        "total_cost_usd": 0.4081996666666667,
+        "tool_output_tokens": 58304.0,
+        "total_tool_duration_ms": 126.98393397861057,
+        "tool_execution_share": 0.0036318982600129085,
+        "search_call_count": 4.444444444444445,
+        "avg_search_code_duration_ms": 10.221495906645735,
+        "median_search_code_duration_ms": 9.888278113471138,
+        "avg_read_code_duration_ms": 0.4839995500935847,
+        "median_read_code_duration_ms": 0.36793284946017796
+      },
+      "fff": {
+        "wall_clock_ms": 33533.506870269775,
+        "total_tool_calls": 20.22222222222222,
+        "total_cost_usd": 0.3728803333333333,
+        "tool_output_tokens": 51147.444444444445,
+        "total_tool_duration_ms": 24.582783381144207,
+        "tool_execution_share": 0.0007112734992877122,
+        "search_call_count": 3.888888888888889,
+        "avg_search_code_duration_ms": 3.2888310926931874,
+        "median_search_code_duration_ms": 2.36715210808648,
+        "avg_read_code_duration_ms": 0.6168393835993682,
+        "median_read_code_duration_ms": 0.4261467191908095
+      }
+    },
+    "repo_task": {
+      "baseline": {
+        "wall_clock_ms": 31217.888491494316,
+        "total_tool_calls": 15.0,
+        "total_cost_usd": 0.3040787142857143,
+        "tool_output_tokens": 39756.57142857143,
+        "total_tool_duration_ms": 153.60491616385323,
+        "tool_execution_share": 0.00457743126426963,
+        "search_call_count": 6.571428571428571,
+        "avg_search_code_duration_ms": 17.81724776342,
+        "median_search_code_duration_ms": 15.711750302995954,
+        "avg_read_code_duration_ms": 0.468881250386188,
+        "median_read_code_duration_ms": 0.46432018280029297
+      },
+      "fff": {
+        "wall_clock_ms": 31136.42222540719,
+        "total_tool_calls": 11.142857142857142,
+        "total_cost_usd": 0.23053842857142856,
+        "tool_output_tokens": 39159.71428571428,
+        "total_tool_duration_ms": 18.513917922973633,
+        "tool_execution_share": 0.0005328823328561581,
+        "search_call_count": 4.857142857142857,
+        "avg_search_code_duration_ms": 3.027069568634033,
+        "median_search_code_duration_ms": 1.818997519356864,
+        "avg_read_code_duration_ms": 0.6130756975031223,
+        "median_read_code_duration_ms": 0.47920431409563335
+      }
+    }
+  },
+  "paired_by_task": {
+    "wall_clock_ms": {
+      "n_tasks": 60,
+      "mean_diff": -1579.5145511627197,
+      "median_diff": -20.30646800994873
+    },
+    "total_tool_calls": {
+      "n_tasks": 60,
+      "mean_diff": -1.2166666666666666,
+      "median_diff": -1.0
+    },
+    "total_cost_usd": {
+      "n_tasks": 60,
+      "mean_diff": -0.13823475,
+      "median_diff": -0.0308475
+    },
+    "tool_output_tokens": {
+      "n_tasks": 60,
+      "mean_diff": -21430.483333333334,
+      "median_diff": -4203.0
+    },
+    "total_tool_duration_ms": {
+      "n_tasks": 60,
+      "mean_diff": -84.59963003794353,
+      "median_diff": -113.77871036529541
+    },
+    "tool_execution_share": {
+      "n_tasks": 60,
+      "mean_diff": -0.002373653784244979,
+      "median_diff": -0.003255896389566623
+    },
+    "search_call_count": {
+      "n_tasks": 60,
+      "mean_diff": -0.6166666666666667,
+      "median_diff": 0.0
+    },
+    "avg_search_code_duration_ms": {
+      "n_tasks": 60,
+      "mean_diff": -9.891221834101048,
+      "median_diff": -15.766858218009013
+    },
+    "median_search_code_duration_ms": {
+      "n_tasks": 60,
+      "mean_diff": -13.020886977513632,
+      "median_diff": -15.053808689117432
+    },
+    "avg_read_code_duration_ms": {
+      "n_tasks": 60,
+      "mean_diff": 0.07237924318365199,
+      "median_diff": 0.03457864125569665
+    },
+    "median_read_code_duration_ms": {
+      "n_tasks": 60,
+      "mean_diff": 0.041135152180989586,
+      "median_diff": 0.021159648895263672
+    }
+  }
+}

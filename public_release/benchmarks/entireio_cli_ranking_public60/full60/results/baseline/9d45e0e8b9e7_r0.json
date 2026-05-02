@@ -1,0 +1,278 @@
+{
+  "repeat": 0,
+  "task_id": "9d45e0e8b9e7",
+  "repo": "entireio-cli",
+  "task_type": "debug_or_validation",
+  "condition": "baseline",
+  "prompt": "can we add some integration tests",
+  "answer": "",
+  "tool_calls": [
+    {
+      "tool_name": "list_dir",
+      "tool_input": {},
+      "output": ".allowed-licenses\n.claude/\n.codex/\n.devcontainer/\n.entire/\n.ferrata/\n.gemini/\n.git/\n.github/\n.gitignore\n.golangci.yaml\n.goreleaser.yaml\n.opencode/\n.vscode/\nAGENTS.md\nCHANGELOG.md\nCLAUDE.md\nCODE_OF_CONDUCT.md\nCONTRIBUTING.md\nLICENSE\nREADME.md\nSECURITY.md\nWINDOWS.md\ncmd/\ndocs/\ne2e/\ngo.mod\ngo.sum\nmise-tasks/\nmise.toml\nperf/\nredact/\nscripts/",
+      "output_tokens": 339,
+      "duration_ms": 0.5660057067871094,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "glob": "**/*test*",
+        "max_results": 50
+      },
+      "output": "./cmd/entire/cli/agent/agent_test.go\n./cmd/entire/cli/agent/architecture_test.go\n./cmd/entire/cli/agent/capabilities_test.go\n./cmd/entire/cli/agent/chunking_test.go\n./cmd/entire/cli/agent/claudecode/claude_test.go\n./cmd/entire/cli/agent/claudecode/hooks_test.go\n./cmd/entire/cli/agent/claudecode/lifecycle_test.go\n./cmd/entire/cli/agent/claudecode/response_test.go\n./cmd/entire/cli/agent/claudecode/transcript_test.go\n./cmd/entire/cli/agent/codex/codex_test.go\n./cmd/entire/cli/agent/codex/hooks_test",
+      "output_tokens": 2347,
+      "duration_ms": 11.791706085205078,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": "e2e"
+      },
+      "output": "README.md\nagents/\nbootstrap/\ncmd/\nentire/\nexploratory/\ntests/\ntestutil/\nvogon/",
+      "output_tokens": 78,
+      "duration_ms": 0.31304359436035156,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": "cmd/entire/cli"
+      },
+      "output": "agent/\napi/\napi_client.go\nattach.go\nattach_test.go\nattach_transcript.go\nauth/\nbench_enable_test.go\nbench_test.go\nbenchutil/\ncheckpoint/\nclean.go\nclean_test.go\ncommit_message.go\ncommit_message_test.go\nconfig.go\nconfig_test.go\nconstants.go\ndoctor.go\ndoctor_test.go\nerrors.go\nexplain.go\nexplain_test.go\nfetch_no_config_pollution_test.go\ngit_operations.go\ngit_operations_test.go\ngitops/\nglobal_test.go\nhelp.go\nhook_registry.go\nhook_registry_test.go\nhooks.go\nhooks_claudecode_posttodo.go\nhooks_cmd.go\nhook",
+      "output_tokens": 1356,
+      "duration_ms": 1.1191368103027344,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": "e2e/tests"
+      },
+      "output": "attribution_test.go\ncheckpoint_metadata_test.go\ncodex_resume_test.go\ndeleted_files_test.go\ndisable_test.go\nedge_cases_test.go\nexisting_files_test.go\nexternal_agent_test.go\nfactory_hooks_test.go\ninteractive_test.go\nmain_test.go\nmid_turn_commit_test.go\nmulti_session_test.go\nresume_remote_test.go\nresume_test.go\nrewind_test.go\nsession_lifecycle_test.go\nsingle_session_test.go\nsplit_commits_test.go\nstash_workflows_test.go\nsubagent_commit_flow_test.go",
+      "output_tokens": 448,
+      "duration_ms": 0.42700767517089844,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": "cmd/entire/cli/integration_test"
+      },
+      "output": "agent_strategy_test.go\nagent_test.go\nattach_test.go\nattribution_test.go\ncarry_forward_overlap_test.go\ncopilot_vscode_hooks_test.go\ndefault_branch_test.go\ndeferred_finalization_test.go\nexplain_test.go\nfully_condensed_test.go\ngit_author_test.go\nhook_bench_test.go\nhook_logging_test.go\nhook_overwrite_test.go\nhooks.go\nhooks_test.go\ninteractive.go\nlast_checkpoint_id_test.go\nlast_interaction_test.go\nlogin_test.go\nlogs_only_rewind_test.go\nmanual_commit_untracked_files_test.go\nmanual_commit_workflow_test",
+      "output_tokens": 1189,
+      "duration_ms": 0.6148815155029297,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/integration_test/testenv.go"
+      },
+      "output": "cmd/entire/cli/integration_test/testenv.go:1-80\n  1| //go:build integration\n  2| \n  3| package integration\n  4| \n  5| import (\n  6| \t\"crypto/sha256\"\n  7| \t\"encoding/hex\"\n  8| \t\"encoding/json\"\n  9| \t\"errors\"\n  10| \t\"fmt\"\n  11| \t\"os\"\n  12| \t\"os/exec\"\n  13| \t\"path/filepath\"\n  14| \t\"regexp\"\n  15| \t\"runtime\"\n  16| \t\"strings\"\n  17| \t\"testing\"\n  18| \t\"time\"\n  19| \n  20| \t\"github.com/entireio/cli/cmd/entire/cli/agent/types\"\n  21| \t\"github.com/entireio/cli/cmd/entire/cli/checkpoint\"\n  22| \t\"github.com/en",
+      "output_tokens": 2933,
+      "duration_ms": 0.90789794921875,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/tests/main_test.go"
+      },
+      "output": "e2e/tests/main_test.go:1-78\n  1| //go:build e2e\n  2| \n  3| package tests\n  4| \n  5| import (\n  6| \t\"fmt\"\n  7| \t\"os\"\n  8| \t\"os/exec\"\n  9| \t\"path/filepath\"\n  10| \t\"runtime\"\n  11| \t\"testing\"\n  12| \n  13| \t\"github.com/entireio/cli/e2e/agents\"\n  14| \t\"github.com/entireio/cli/e2e/entire\"\n  15| \t\"github.com/entireio/cli/e2e/testutil\"\n  16| )\n  17| \n  18| func TestMain(m *testing.M) {\n  19| \trunDir := os.Getenv(\"E2E_ARTIFACT_DIR\")\n  20| \tif runDir == \"\" {\n  21| \t\t_, file, _, _ := runtime.Caller(0)\n  22|",
+      "output_tokens": 3057,
+      "duration_ms": 0.22602081298828125,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/integration_test/testenv.go",
+        "start_line": 80,
+        "end_line": 250
+      },
+      "output": "cmd/entire/cli/integration_test/testenv.go:80-250\n  80| \t}\n  81| \topenCodeProjectDir := t.TempDir()\n  82| \tif resolved, err := filepath.EvalSymlinks(openCodeProjectDir); err == nil {\n  83| \t\topenCodeProjectDir = resolved\n  84| \t}\n  85| \n  86| \tenv := &TestEnv{\n  87| \t\tT:                  t,\n  88| \t\tRepoDir:            repoDir,\n  89| \t\tClaudeProjectDir:   claudeProjectDir,\n  90| \t\tGeminiProjectDir:   geminiProjectDir,\n  91| \t\tOpenCodeProjectDir: openCodeProjectDir,\n  92| \t}\n  93| \n  94| \t// Note:",
+      "output_tokens": 6729,
+      "duration_ms": 0.7050037384033203,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/integration_test/single_session_test.go"
+      },
+      "output": "File not found: cmd/entire/cli/integration_test/single_session_test.go",
+      "output_tokens": 70,
+      "duration_ms": 5.970954895019531,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/integration_test/session_lifecycle_test.go"
+      },
+      "output": "File not found: cmd/entire/cli/integration_test/session_lifecycle_test.go",
+      "output_tokens": 73,
+      "duration_ms": 6.530046463012695,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "e2e/tests/single_session_test.go"
+      },
+      "output": "e2e/tests/single_session_test.go:1-80\n  1| //go:build e2e\n  2| \n  3| package tests\n  4| \n  5| import (\n  6| \t\"context\"\n  7| \t\"os\"\n  8| \t\"path/filepath\"\n  9| \t\"testing\"\n  10| \t\"time\"\n  11| \n  12| \t\"github.com/entireio/cli/e2e/testutil\"\n  13| \t\"github.com/stretchr/testify/assert\"\n  14| )\n  15| \n  16| // TestHumanOnlyChangesAndCommits: human creates a file and commits without any\n  17| // agent interaction. No checkpoint should be created.\n  18| func TestHumanOnlyChangesAndCommits(t *testing.T) {\n ",
+      "output_tokens": 3433,
+      "duration_ms": 0.11920928955078125,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/integration_test/session_lifecycle_test.go"
+      },
+      "output": "File not found: cmd/entire/cli/integration_test/session_lifecycle_test.go",
+      "output_tokens": 73,
+      "duration_ms": 6.582021713256836,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "glob": "cmd/entire/cli/integration_test/*_test.go",
+        "max_results": 60
+      },
+      "output": "./cmd/entire/cli/integration_test/agent_strategy_test.go\n./cmd/entire/cli/integration_test/agent_test.go\n./cmd/entire/cli/integration_test/attach_test.go\n./cmd/entire/cli/integration_test/attribution_test.go\n./cmd/entire/cli/integration_test/carry_forward_overlap_test.go\n./cmd/entire/cli/integration_test/copilot_vscode_hooks_test.go\n./cmd/entire/cli/integration_test/default_branch_test.go\n./cmd/entire/cli/integration_test/deferred_finalization_test.go\n./cmd/entire/cli/integration_test/explain_te",
+      "output_tokens": 2735,
+      "duration_ms": 12.459993362426758,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/integration_test/hooks_test.go"
+      },
+      "output": "cmd/entire/cli/integration_test/hooks_test.go:1-80\n  1| //go:build integration\n  2| \n  3| package integration\n  4| \n  5| import (\n  6| \t\"context\"\n  7| \t\"os\"\n  8| \t\"path/filepath\"\n  9| \t\"testing\"\n  10| \n  11| \t\"github.com/entireio/cli/cmd/entire/cli/strategy\"\n  12| )\n  13| \n  14| func TestHookRunner_SimulateUserPromptSubmit(t *testing.T) {\n  15| \tt.Parallel()\n  16| \tenv := NewRepoWithCommit(t)\n  17| \t// Create an untracked file to capture\n  18| \tenv.WriteFile(\"newfile.txt\", \"content\")\n  19| \n  20",
+      "output_tokens": 2748,
+      "duration_ms": 0.45990943908691406,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/integration_test/resume_test.go"
+      },
+      "output": "cmd/entire/cli/integration_test/resume_test.go:1-80\n  1| //go:build integration\n  2| \n  3| package integration\n  4| \n  5| import (\n  6| \t\"fmt\"\n  7| \t\"os\"\n  8| \t\"os/exec\"\n  9| \t\"path/filepath\"\n  10| \t\"strings\"\n  11| \t\"testing\"\n  12| \t\"time\"\n  13| \n  14| \t\"github.com/entireio/cli/cmd/entire/cli/testutil\"\n  15| \t\"github.com/go-git/go-git/v6\"\n  16| \t\"github.com/go-git/go-git/v6/plumbing\"\n  17| )\n  18| \n  19| const masterBranch = \"master\"\n  20| \n  21| // TestResume_SwitchBranchWithSession tests the r",
+      "output_tokens": 2884,
+      "duration_ms": 0.3421306610107422,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/integration_test/testenv.go",
+        "start_line": 250,
+        "end_line": 500
+      },
+      "output": "cmd/entire/cli/integration_test/testenv.go:250-500\n  250| \n  251| func (env *TestEnv) setGitConfigBaseline() {\n  252| \tenv.T.Helper()\n  253| \n  254| \tconfigPath := env.gitConfigPath()\n  255| \tdata, err := os.ReadFile(configPath)\n  256| \tif err != nil {\n  257| \t\tenv.T.Fatalf(\"failed to read %s: %v\", configPath, err)\n  258| \t}\n  259| \n  260| \tenv.gitConfigSnapshot = string(data)\n  261| \tif env.gitConfigGuardSet {\n  262| \t\treturn\n  263| \t}\n  264| \n  265| \tenv.gitConfigGuardSet = true\n  266| \tenv.T.",
+      "output_tokens": 9642,
+      "duration_ms": 5.466938018798828,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/integration_test/rewind_test.go"
+      },
+      "output": "cmd/entire/cli/integration_test/rewind_test.go:1-80\n  1| //go:build integration\n  2| \n  3| package integration\n  4| \n  5| import (\n  6| \t\"os\"\n  7| \t\"path/filepath\"\n  8| \t\"strings\"\n  9| \t\"testing\"\n  10| )\n  11| \n  12| // TestRewind_FullWorkflow tests the complete rewind workflow for all strategies.\n  13| // From the user's perspective, all strategies should behave identically:\n  14| // - Sessions create rewind points\n  15| // - Rewind restores file contents\n  16| // - Transcript is available for ",
+      "output_tokens": 2952,
+      "duration_ms": 0.3991127014160156,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/integration_test/testenv.go",
+        "start_line": 500,
+        "end_line": 750
+      },
+      "output": "cmd/entire/cli/integration_test/testenv.go:500-750\n  500| \t// Format message with metadata trailer\n  501| \tfullMessage := message + \"\\n\\nEntire-Metadata: \" + metadataDir + \"\\n\"\n  502| \n  503| \trepo, err := git.PlainOpen(env.RepoDir)\n  504| \tif err != nil {\n  505| \t\tenv.T.Fatalf(\"failed to open git repo: %v\", err)\n  506| \t}\n  507| \n  508| \tworktree, err := repo.Worktree()\n  509| \tif err != nil {\n  510| \t\tenv.T.Fatalf(\"failed to get worktree: %v\", err)\n  511| \t}\n  512| \n  513| \t_, err = worktree.C",
+      "output_tokens": 8634,
+      "duration_ms": 0.560760498046875,
+      "turn_number": 10
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/integration_test/setup_test.go"
+      },
+      "output": "cmd/entire/cli/integration_test/setup_test.go:1-41\n  1| //go:build integration\n  2| \n  3| package integration\n  4| \n  5| import (\n  6| \t\"fmt\"\n  7| \t\"os\"\n  8| \t\"os/exec\"\n  9| \t\"path/filepath\"\n  10| \t\"testing\"\n  11| )\n  12| \n  13| // TestMain builds the CLI binary once before running all tests.\n  14| func TestMain(m *testing.M) {\n  15| \t// Build binary once to a temp directory\n  16| \ttmpDir, err := os.MkdirTemp(\"\", \"entire-integration-test-*\")\n  17| \tif err != nil {\n  18| \t\tfmt.Fprintf(os.Stderr, ",
+      "output_tokens": 1194,
+      "duration_ms": 0.11301040649414062,
+      "turn_number": 10
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/integration_test/testenv.go",
+        "start_line": 750,
+        "end_line": 1000
+      },
+      "output": "cmd/entire/cli/integration_test/testenv.go:750-1000\n  750| \t// Run rewind --list using the shared binary\n  751| \tcmd := exec.Command(getTestBinary(), \"rewind\", \"--list\")\n  752| \tcmd.Dir = env.RepoDir\n  753| \tcmd.Env = env.cliEnv()\n  754| \n  755| \toutput, err := cmd.CombinedOutput()\n  756| \tif err != nil {\n  757| \t\tenv.T.Fatalf(\"rewind --list failed: %v\\nOutput: %s\", err, output)\n  758| \t}\n  759| \n  760| \t// Parse JSON output\n  761| \tvar jsonPoints []struct {\n  762| \t\tID               string `jso",
+      "output_tokens": 8345,
+      "duration_ms": 0.8409023284912109,
+      "turn_number": 11
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/integration_test/hooks_test.go",
+        "start_line": 80,
+        "end_line": 369
+      },
+      "output": "cmd/entire/cli/integration_test/hooks_test.go:80-369\n  80| \n  81| \t// Create a file (as if Claude Code wrote it)\n  82| \tenv.WriteFile(\"created.txt\", \"created by claude\")\n  83| \n  84| \t// USER COMMITS THE FILE BEFORE HOOK RUNS\n  85| \t// This simulates the scenario where user runs `git commit` manually\n  86| \t// or the changes are committed via another mechanism\n  87| \tenv.GitAdd(\"created.txt\")\n  88| \tenv.GitCommit(\"User committed changes manually\")\n  89| \n  90| \t// Create transcript (still refere",
+      "output_tokens": 13180,
+      "duration_ms": 0.42819976806640625,
+      "turn_number": 11
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/integration_test/manual_commit_workflow_test.go"
+      },
+      "output": "cmd/entire/cli/integration_test/manual_commit_workflow_test.go:1-80\n  1| //go:build integration\n  2| \n  3| package integration\n  4| \n  5| import (\n  6| \t\"encoding/json\"\n  7| \t\"os\"\n  8| \t\"path/filepath\"\n  9| \t\"strings\"\n  10| \t\"testing\"\n  11| \n  12| \t\"github.com/entireio/cli/cmd/entire/cli/agent\"\n  13| \t\"github.com/entireio/cli/cmd/entire/cli/checkpoint\"\n  14| \t\"github.com/entireio/cli/cmd/entire/cli/paths\"\n  15| \t\"github.com/entireio/cli/cmd/entire/cli/strategy\"\n  16| \t\"github.com/entireio/cli/cm",
+      "output_tokens": 3098,
+      "duration_ms": 0.5369186401367188,
+      "turn_number": 12
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/integration_test/session_conflict_test.go"
+      },
+      "output": "cmd/entire/cli/integration_test/session_conflict_test.go:1-80\n  1| //go:build integration\n  2| \n  3| package integration\n  4| \n  5| import (\n  6| \t\"encoding/json\"\n  7| \t\"os\"\n  8| \t\"path/filepath\"\n  9| \t\"strings\"\n  10| \t\"testing\"\n  11| \t\"time\"\n  12| \n  13| \t\"github.com/go-git/go-git/v6\"\n  14| \t\"github.com/go-git/go-git/v6/plumbing\"\n  15| \t\"github.com/go-git/go-git/v6/plumbing/object\"\n  16| )\n  17| \n  18| // TestSessionIDConflict_OrphanedBranchIsReset tests that starting a new session\n  19| // res",
+      "output_tokens": 3152,
+      "duration_ms": 0.225067138671875,
+      "turn_number": 12
+    }
+  ],
+  "total_tool_calls": 24,
+  "total_turns": 12,
+  "wall_clock_ms": 29565.793991088867,
+  "input_tokens": 142151,
+  "output_tokens": 1610,
+  "tool_output_tokens": 80689,
+  "total_cost_usd": 0.45060300000000003,
+  "first_call_tool": "list_dir",
+  "first_call_produced_file": true,
+  "retry_count": 0,
+  "error": "",
+  "total_tool_duration_ms": 57.70587921142578,
+  "tool_execution_share": 0.001951778437907615,
+  "search_call_count": 0,
+  "read_call_count": 17,
+  "avg_search_code_duration_ms": 0.0,
+  "median_search_code_duration_ms": 0.0
+}

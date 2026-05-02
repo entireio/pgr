@@ -1,0 +1,48 @@
+{
+  "repeat": 0,
+  "task_id": "c762fa015c6a",
+  "repo": "entireio-cli",
+  "task_type": "debug_or_validation",
+  "condition": "rg_ranked",
+  "prompt": "There's a bug in this repo. I use the \"entire\" cli version 0.5.5 (the latest) and when I try to look at a checkpoint from a PR that was created by someone else I get this:",
+  "answer": "It looks like your message got cut off! You mentioned you get *\"this\"* when trying to look at a checkpoint from a PR created by someone else \u2014 but the error message or output didn't come through.\n\nCould you please share:\n1. **The error message or output** you see when running the command?\n2. **The exact command** you're running (e.g., `entire checkpoint view`, etc.)?\n\nThat will help me pinpoint the bug quickly!",
+  "tool_calls": [
+    {
+      "tool_name": "list_dir",
+      "tool_input": {},
+      "output": ".allowed-licenses\n.claude/\n.codex/\n.devcontainer/\n.entire/\n.ferrata/\n.gemini/\n.git/\n.github/\n.gitignore\n.golangci.yaml\n.goreleaser.yaml\n.opencode/\n.vscode/\nAGENTS.md\nCHANGELOG.md\nCLAUDE.md\nCODE_OF_CONDUCT.md\nCONTRIBUTING.md\nLICENSE\nREADME.md\nSECURITY.md\nWINDOWS.md\ncmd/\ndocs/\ne2e/\ngo.mod\ngo.sum\nmise-tasks/\nmise.toml\nperf/\nredact/\nscripts/",
+      "output_tokens": 339,
+      "duration_ms": 0.5178451538085938,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "entire",
+        "file_type": "go",
+        "max_files": 5
+      },
+      "output": "cmd/entire/cli/agent/claudecode/hooks.go\n  11-11:\n    11| \t\"github.com/entireio/cli/cmd/entire/cli/agent\"\n  12-12:\n    12| \t\"github.com/entireio/cli/cmd/entire/cli/jsonutil\"\n  13-13:\n    13| \t\"github.com/entireio/cli/cmd/entire/cli/paths\"\n\ncmd/entire/cli/agent/codex/hooks.go\n  11-11:\n    11| \t\"github.com/entireio/cli/cmd/entire/cli/agent\"\n  12-12:\n    12| \t\"github.com/entireio/cli/cmd/entire/cli/jsonutil\"\n  13-13:\n    13| \t\"github.com/entireio/cli/cmd/entire/cli/paths\"\n\ncmd/entire/cli/agent/copi",
+      "output_tokens": 1223,
+      "duration_ms": 46.61130905151367,
+      "turn_number": 1
+    }
+  ],
+  "total_tool_calls": 2,
+  "total_turns": 2,
+  "wall_clock_ms": 5417.530059814453,
+  "input_tokens": 3700,
+  "output_tokens": 237,
+  "tool_output_tokens": 1562,
+  "total_cost_usd": 0.014655000000000001,
+  "first_call_tool": "list_dir",
+  "first_call_produced_file": true,
+  "retry_count": 0,
+  "error": "",
+  "total_tool_duration_ms": 47.129154205322266,
+  "tool_execution_share": 0.00869938028676788,
+  "search_call_count": 1,
+  "read_call_count": 0,
+  "avg_search_code_duration_ms": 46.61130905151367,
+  "median_search_code_duration_ms": 46.61130905151367
+}

@@ -1,0 +1,402 @@
+{
+  "name": "entireio_cli_ranking_public25_pilot",
+  "tasks_source": "public_release/data/entireio_cli_checkpoints_2026_04_15/checkpoint_transcripts.jsonl.gz",
+  "selection": {
+    "kind": "trace_derived_public_prompts",
+    "repo": "entireio/cli",
+    "task_count": 25,
+    "notes": [
+      "Tasks are real checkpoint prompts drawn from the public entireio/cli transcript export.",
+      "The suite was manually curated to prefer prompts answerable from the repository alone.",
+      "Each task includes original checkpoint-level search pressure metadata from the source trace.",
+      "Pilot uses the first 25 tasks from the public 60-task suite."
+    ]
+  },
+  "tasks": [
+    {
+      "id": "eb5cdbdef570",
+      "repo": "entireio-cli",
+      "type": "code_understanding",
+      "prompt": "what's wrong with `entire explain`?",
+      "selection_meta": {
+        "checkpoint_id": "eb5cdbdef570",
+        "agent": "Claude Code",
+        "session_id": "d619f206-15aa-4199-8ec9-4a7a779d4aa1",
+        "checkpoint_created_at": "2026-03-06T05:26:06.598Z",
+        "total_tool_calls": 547,
+        "search_related_tool_calls": 432,
+        "source": "public_release/data/entireio_cli_checkpoints_2026_04_15/checkpoint_transcripts.jsonl.gz"
+      }
+    },
+    {
+      "id": "897eb280e769",
+      "repo": "entireio-cli",
+      "type": "implementation",
+      "prompt": "Can you read docs/architecture/shadow-branch-suffixes.md, I'd like to modify this approach: I don't think we need suffixes but instead we just use one branch, is there overlap in files we continue, if there is no overlap and the new session did create local changes, then we reset the shadow branch to a clean state. Can you ultrathink about it and come up with a new plan?",
+      "selection_meta": {
+        "checkpoint_id": "897eb280e769",
+        "agent": "Claude Code",
+        "session_id": "a318ad73-17a2-4575-845d-8952a1e5958b",
+        "checkpoint_created_at": "2026-02-15T14:18:16.693Z",
+        "total_tool_calls": 599,
+        "search_related_tool_calls": 381,
+        "source": "public_release/data/entireio_cli_checkpoints_2026_04_15/checkpoint_transcripts.jsonl.gz"
+      }
+    },
+    {
+      "id": "5eec47c03756",
+      "repo": "entireio-cli",
+      "type": "debug_or_validation",
+      "prompt": "The handling of trees via go-git seem to not be working effectively and erroring early, as not all objects are present. This is the current error:",
+      "selection_meta": {
+        "checkpoint_id": "5eec47c03756",
+        "agent": "Claude Code",
+        "session_id": "d7a0ff47-cf24-42b9-bac7-9b68d0e1ae4c",
+        "checkpoint_created_at": "2026-03-13T08:41:40.088Z",
+        "total_tool_calls": 618,
+        "search_related_tool_calls": 353,
+        "source": "public_release/data/entireio_cli_checkpoints_2026_04_15/checkpoint_transcripts.jsonl.gz"
+      }
+    },
+    {
+      "id": "61de2c90668f",
+      "repo": "entireio-cli",
+      "type": "debug_or_validation",
+      "prompt": "I think it's better to use `env.InitRepo()` instead of `git.PlainInit()` in tests.",
+      "selection_meta": {
+        "checkpoint_id": "61de2c90668f",
+        "agent": "OpenCode",
+        "session_id": "ses_286c8f0eeffeHgXNAZ8rAOjehL",
+        "checkpoint_created_at": "2026-04-10T21:14:08.356Z",
+        "total_tool_calls": 529,
+        "search_related_tool_calls": 294,
+        "source": "public_release/data/entireio_cli_checkpoints_2026_04_15/checkpoint_transcripts.jsonl.gz"
+      }
+    },
+    {
+      "id": "37f449ec7d97",
+      "repo": "entireio-cli",
+      "type": "code_understanding",
+      "prompt": "how does auth work for codex with e2e",
+      "selection_meta": {
+        "checkpoint_id": "37f449ec7d97",
+        "agent": "Claude Code",
+        "session_id": "1f4d64e1-451d-433a-a429-cde2c91eb900",
+        "checkpoint_created_at": "2026-03-25T15:40:26.477Z",
+        "total_tool_calls": 390,
+        "search_related_tool_calls": 227,
+        "source": "public_release/data/entireio_cli_checkpoints_2026_04_15/checkpoint_transcripts.jsonl.gz"
+      }
+    },
+    {
+      "id": "ea384d108347",
+      "repo": "entireio-cli",
+      "type": "code_understanding",
+      "prompt": "What does the nolint:ireturn linter rule refer to?",
+      "selection_meta": {
+        "checkpoint_id": "ea384d108347",
+        "agent": "Claude Code",
+        "session_id": "568b37a4-3c13-4b8a-bcc7-77247e2bdb4d",
+        "checkpoint_created_at": "2026-03-27T21:06:16.391Z",
+        "total_tool_calls": 455,
+        "search_related_tool_calls": 225,
+        "source": "public_release/data/entireio_cli_checkpoints_2026_04_15/checkpoint_transcripts.jsonl.gz"
+      }
+    },
+    {
+      "id": "a70d97c363c8",
+      "repo": "entireio-cli",
+      "type": "implementation",
+      "prompt": "Improve the documentation so that it covers the signing of checkpoint commits. For this to work:",
+      "selection_meta": {
+        "checkpoint_id": "a70d97c363c8",
+        "agent": "Claude Code",
+        "session_id": "b382ac61-ca97-4011-b80a-820ff0fae248",
+        "checkpoint_created_at": "2026-04-15T14:51:50.288Z",
+        "total_tool_calls": 339,
+        "search_related_tool_calls": 209,
+        "source": "public_release/data/entireio_cli_checkpoints_2026_04_15/checkpoint_transcripts.jsonl.gz"
+      }
+    },
+    {
+      "id": "1d44b085fc12",
+      "repo": "entireio-cli",
+      "type": "implementation",
+      "prompt": "find parts which are talking to the entire API via HTTP - add a global request handler to use the bearer token obtained via the cli login flow",
+      "selection_meta": {
+        "checkpoint_id": "1d44b085fc12",
+        "agent": "Claude Code",
+        "session_id": "1dcfbac3-9f87-4126-bd74-f484b2d7fadd",
+        "checkpoint_created_at": "2026-03-26T15:44:35.473Z",
+        "total_tool_calls": 420,
+        "search_related_tool_calls": 178,
+        "source": "public_release/data/entireio_cli_checkpoints_2026_04_15/checkpoint_transcripts.jsonl.gz"
+      }
+    },
+    {
+      "id": "3906e953d4ef",
+      "repo": "entireio-cli",
+      "type": "code_understanding",
+      "prompt": "where does `entire explain` get the checkpoints from?",
+      "selection_meta": {
+        "checkpoint_id": "3906e953d4ef",
+        "agent": "Codex",
+        "session_id": "019d867e-e938-7de2-a942-a061b84edb3c",
+        "checkpoint_created_at": "2026-04-13T11:42:51.855Z",
+        "total_tool_calls": 268,
+        "search_related_tool_calls": 173,
+        "source": "public_release/data/entireio_cli_checkpoints_2026_04_15/checkpoint_transcripts.jsonl.gz"
+      }
+    },
+    {
+      "id": "c283d360e6d5",
+      "repo": "entireio-cli",
+      "type": "code_understanding",
+      "prompt": "Right now we store full.jsonl when doing a checkpoint in `entire/sessions` when keeping the session active with claude we commit the growing log in commit after commit. Can we take a look and see if we can get the last row from the current session log at the start of a prompt and then track that for the checkpoint? so we can know what was added during this checkpoint?",
+      "selection_meta": {
+        "checkpoint_id": "c283d360e6d5",
+        "agent": "Claude Code",
+        "session_id": "2026-01-19-eb4bcc15-3ff5-4d73-bac5-9bc1d786b2bb",
+        "checkpoint_created_at": "2026-01-20T10:05:51.261Z",
+        "total_tool_calls": 294,
+        "search_related_tool_calls": 165,
+        "source": "public_release/data/entireio_cli_checkpoints_2026_04_15/checkpoint_transcripts.jsonl.gz"
+      }
+    },
+    {
+      "id": "751884f8707a",
+      "repo": "entireio-cli",
+      "type": "code_understanding",
+      "prompt": "We got a report yesterday from someone who enabled agents claude and codex using entire configure, then they manually committed, and they said reviewing with codex it seems to be an issue on the CLI on how it opens a session and if it fails it remains open and fallbacks to Claude Code which is the default value, here is their entire status, remotion-demos/public/screenshots/image.png\\",
+      "selection_meta": {
+        "checkpoint_id": "751884f8707a",
+        "agent": "Claude Code",
+        "session_id": "127afbf7-ba2f-4320-87e4-a27944e738ba",
+        "checkpoint_created_at": "2026-04-02T23:05:29.914Z",
+        "total_tool_calls": 283,
+        "search_related_tool_calls": 163,
+        "source": "public_release/data/entireio_cli_checkpoints_2026_04_15/checkpoint_transcripts.jsonl.gz"
+      }
+    },
+    {
+      "id": "8b5b4eca788e",
+      "repo": "entireio-cli",
+      "type": "debug_or_validation",
+      "prompt": "I am running this test on Windows TestSingleSessionSubagentCommitInTurn. And it is failing, not always, it fails because after running the test we identify that there is a shadow branch that should not be there. I copied the entire.log on windows execution windows-broken-test.json (failing one) and the same test but this time running on macos the entire.log are inside mac-ok-test.json.",
+      "selection_meta": {
+        "checkpoint_id": "8b5b4eca788e",
+        "agent": "Claude Code",
+        "session_id": "ad0d3d4c-b801-4b04-8f13-d1bfb9f3edef",
+        "checkpoint_created_at": "2026-04-11T13:42:07.271Z",
+        "total_tool_calls": 253,
+        "search_related_tool_calls": 144,
+        "source": "public_release/data/entireio_cli_checkpoints_2026_04_15/checkpoint_transcripts.jsonl.gz"
+      }
+    },
+    {
+      "id": "9de3322f8275",
+      "repo": "entireio-cli",
+      "type": "code_understanding",
+      "prompt": "let's add Read-side support (entire session list/show reading from gmeta) next",
+      "selection_meta": {
+        "checkpoint_id": "9de3322f8275",
+        "agent": "Claude Code",
+        "session_id": "13a2c707-167c-4672-91b6-7d97a2186395",
+        "checkpoint_created_at": "2026-04-09T18:12:13.752Z",
+        "total_tool_calls": 275,
+        "search_related_tool_calls": 140,
+        "source": "public_release/data/entireio_cli_checkpoints_2026_04_15/checkpoint_transcripts.jsonl.gz"
+      }
+    },
+    {
+      "id": "2458c3b38f2c",
+      "repo": "entireio-cli",
+      "type": "code_understanding",
+      "prompt": "We have instructions for E2E test in CLAUDE.md to basically not run them except especially asked. The issue is now that it would be good to flag that E2E changes are needed to the developer but also to CLAUDE.md. We run the E2E tests now on merge to main. So ideally we somehow flag this before without runnig the tests. Any other ideas?",
+      "selection_meta": {
+        "checkpoint_id": "2458c3b38f2c",
+        "agent": "Claude Code",
+        "session_id": "4afd0061-44c7-4e37-aaac-72870a80071f",
+        "checkpoint_created_at": "2026-03-05T10:27:29.942Z",
+        "total_tool_calls": 293,
+        "search_related_tool_calls": 135,
+        "source": "public_release/data/entireio_cli_checkpoints_2026_04_15/checkpoint_transcripts.jsonl.gz"
+      }
+    },
+    {
+      "id": "2a075ef186b4",
+      "repo": "entireio-cli",
+      "type": "code_understanding",
+      "prompt": "Direct id.CheckpointID(string) casts skip validation logic, Add validation helper or constructor that's consistently used instead of direct type casts",
+      "selection_meta": {
+        "checkpoint_id": "2a075ef186b4",
+        "agent": "Claude Code",
+        "session_id": "2026-01-22-375d5d79-9c13-419d-a5fd-72421f2af713",
+        "checkpoint_created_at": "2026-01-22T19:37:20.035Z",
+        "total_tool_calls": 265,
+        "search_related_tool_calls": 126,
+        "source": "public_release/data/entireio_cli_checkpoints_2026_04_15/checkpoint_transcripts.jsonl.gz"
+      }
+    },
+    {
+      "id": "f0c3dbdad0d8",
+      "repo": "entireio-cli",
+      "type": "code_understanding",
+      "prompt": "Can you tell me again how the logic works that flags if you have an active session in claude already and blocks the prompt once.",
+      "selection_meta": {
+        "checkpoint_id": "f0c3dbdad0d8",
+        "agent": "Claude Code",
+        "session_id": "2026-01-13-44df7d08-6bc4-4532-bef8-167ea3797cee",
+        "checkpoint_created_at": "2026-01-13T10:03:29.276Z",
+        "total_tool_calls": 226,
+        "search_related_tool_calls": 124,
+        "source": "public_release/data/entireio_cli_checkpoints_2026_04_15/checkpoint_transcripts.jsonl.gz"
+      }
+    },
+    {
+      "id": "cc90f6622c5b",
+      "repo": "entireio-cli",
+      "type": "code_understanding",
+      "prompt": "why is lint failing on the build?",
+      "selection_meta": {
+        "checkpoint_id": "cc90f6622c5b",
+        "agent": "Agent",
+        "session_id": "f022dad1-9896-4a6c-bb91-0d1efb580b70",
+        "checkpoint_created_at": "2026-02-06T00:59:02.254Z",
+        "total_tool_calls": 237,
+        "search_related_tool_calls": 121,
+        "source": "public_release/data/entireio_cli_checkpoints_2026_04_15/checkpoint_transcripts.jsonl.gz"
+      }
+    },
+    {
+      "id": "979a49177542",
+      "repo": "entireio-cli",
+      "type": "debug_or_validation",
+      "prompt": "give me steps to manually test my droid additions",
+      "selection_meta": {
+        "checkpoint_id": "979a49177542",
+        "agent": "Claude Code",
+        "session_id": "9a544f58-48c8-4c6e-b193-59716fe328ea",
+        "checkpoint_created_at": "2026-02-19T20:55:55.002Z",
+        "total_tool_calls": 315,
+        "search_related_tool_calls": 119,
+        "source": "public_release/data/entireio_cli_checkpoints_2026_04_15/checkpoint_transcripts.jsonl.gz"
+      }
+    },
+    {
+      "id": "d7c8f8341919",
+      "repo": "entireio-cli",
+      "type": "code_understanding",
+      "prompt": "can you do me a summary for the cases when we show the \"you have another active session\" warning?",
+      "selection_meta": {
+        "checkpoint_id": "d7c8f8341919",
+        "agent": "Claude Code",
+        "session_id": "2026-01-23-08940314-9e93-46b1-a598-06bada65ed55",
+        "checkpoint_created_at": "2026-01-23T16:11:03.711Z",
+        "total_tool_calls": 274,
+        "search_related_tool_calls": 119,
+        "source": "public_release/data/entireio_cli_checkpoints_2026_04_15/checkpoint_transcripts.jsonl.gz"
+      }
+    },
+    {
+      "id": "3afc9eb5cf12",
+      "repo": "entireio-cli",
+      "type": "debug_or_validation",
+      "prompt": "2026/03/20 20:39:18 WARN transcript flush sentinel not found within timeout, proceeding component=agent.claudecode timeout=3s",
+      "selection_meta": {
+        "checkpoint_id": "3afc9eb5cf12",
+        "agent": "Claude Code",
+        "session_id": "a623a2b2-efb2-4374-996e-bae1e9e1ca6a",
+        "checkpoint_created_at": "2026-03-20T19:46:26.704Z",
+        "total_tool_calls": 155,
+        "search_related_tool_calls": 114,
+        "source": "public_release/data/entireio_cli_checkpoints_2026_04_15/checkpoint_transcripts.jsonl.gz"
+      }
+    },
+    {
+      "id": "c0dbb5d73ef9",
+      "repo": "entireio-cli",
+      "type": "debug_or_validation",
+      "prompt": "I still saw slow unit test performance after applying the fixes:",
+      "selection_meta": {
+        "checkpoint_id": "c0dbb5d73ef9",
+        "agent": "Claude Code",
+        "session_id": "b1d0d1ce-0e93-48b0-b258-af36929f6314",
+        "checkpoint_created_at": "2026-04-01T01:15:34.754Z",
+        "total_tool_calls": 130,
+        "search_related_tool_calls": 94,
+        "source": "public_release/data/entireio_cli_checkpoints_2026_04_15/checkpoint_transcripts.jsonl.gz"
+      }
+    },
+    {
+      "id": "77072abe499b",
+      "repo": "entireio-cli",
+      "type": "debug_or_validation",
+      "prompt": "generate a `claude_expected.jsonl` testdata fixture file from cmd/entire/cli/transcript/compact/testdata/claude_full.jsonl",
+      "selection_meta": {
+        "checkpoint_id": "77072abe499b",
+        "agent": "Claude Code",
+        "session_id": "4272ef38-4e83-4ca7-a068-7e9e7d1426e5",
+        "checkpoint_created_at": "2026-03-26T21:00:31.888Z",
+        "total_tool_calls": 162,
+        "search_related_tool_calls": 92,
+        "source": "public_release/data/entireio_cli_checkpoints_2026_04_15/checkpoint_transcripts.jsonl.gz"
+      }
+    },
+    {
+      "id": "c07dfe9d6805",
+      "repo": "entireio-cli",
+      "type": "code_understanding",
+      "prompt": "if i run ./entire search then I see this error Error: parsing response: invalid character '<' looking for beginning of value but if I run ENTIRE_API_BASE_URL=http://localhost:8787 ENTIRE_SEARCH_URL=http://localhost:8686 ./entire search then no errors. whats going on",
+      "selection_meta": {
+        "checkpoint_id": "c07dfe9d6805",
+        "agent": "Claude Code",
+        "session_id": "8fdd16be-1354-446c-996b-4f1bfc1d773c",
+        "checkpoint_created_at": "2026-04-01T00:44:57.419Z",
+        "total_tool_calls": 192,
+        "search_related_tool_calls": 89,
+        "source": "public_release/data/entireio_cli_checkpoints_2026_04_15/checkpoint_transcripts.jsonl.gz"
+      }
+    },
+    {
+      "id": "a768042b28b1",
+      "repo": "entireio-cli",
+      "type": "code_understanding",
+      "prompt": "I first want to look at GetSessionLog in manual_commit_log.go, right now this has one param called `commitHash` but in 99% of the cases we actually pass in the checkpoint id from `Entire-Checkpoint` or `Checkpoint`. The `Entire-Session` logic can go away, and the logic where it's actually a `CommitHash` I'd like to move out of this method and rather add a method doing the conversion before calling `GetSessionLog` can you show me how you would approach this?",
+      "selection_meta": {
+        "checkpoint_id": "a768042b28b1",
+        "agent": "Claude Code",
+        "session_id": "2026-01-22-f36e9487-32ca-4c29-9163-93f97b36e2f9",
+        "checkpoint_created_at": "2026-01-22T15:26:21.059Z",
+        "total_tool_calls": 246,
+        "search_related_tool_calls": 87,
+        "source": "public_release/data/entireio_cli_checkpoints_2026_04_15/checkpoint_transcripts.jsonl.gz"
+      }
+    },
+    {
+      "id": "69682d9f2992",
+      "repo": "entireio-cli",
+      "type": "code_understanding",
+      "prompt": "can you look at this e2e test failure, it keeps happening and we assume it's a flake, but what confuses me is why the branch would be left over:",
+      "selection_meta": {
+        "checkpoint_id": "69682d9f2992",
+        "agent": "Claude Code",
+        "session_id": "598d6342-dba9-4e5d-a515-0851a9f582f4",
+        "checkpoint_created_at": "2026-03-06T13:17:51.638Z",
+        "total_tool_calls": 111,
+        "search_related_tool_calls": 87,
+        "source": "public_release/data/entireio_cli_checkpoints_2026_04_15/checkpoint_transcripts.jsonl.gz"
+      }
+    }
+  ],
+  "conditions": [
+    "baseline",
+    "fff",
+    "rg_ranked",
+    "pgr_v4"
+  ],
+  "repeats": 1,
+  "model": "claude-sonnet-4-6",
+  "max_turns": 12,
+  "repo_root": "/tmp/pgr-eval/repos/entireio-cli"
+}

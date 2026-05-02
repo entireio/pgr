@@ -1,0 +1,312 @@
+{
+  "repeat": 0,
+  "task_id": "9f325be721aa",
+  "repo": "entireio-cli",
+  "task_type": "implementation",
+  "condition": "baseline",
+  "prompt": "have a look at docs/plans/2026-03-04-transcript-parsing-replacement.md - can we implement phase 0 please? (refactor)",
+  "answer": "",
+  "tool_calls": [
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "glob": "docs/plans/2026-03-04-transcript-parsing-replacement.md"
+      },
+      "output": "No files found.",
+      "output_tokens": 15,
+      "duration_ms": 15.267133712768555,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": "."
+      },
+      "output": ".allowed-licenses\n.claude/\n.codex/\n.devcontainer/\n.entire/\n.ferrata/\n.gemini/\n.git/\n.github/\n.gitignore\n.golangci.yaml\n.goreleaser.yaml\n.opencode/\n.vscode/\nAGENTS.md\nCHANGELOG.md\nCLAUDE.md\nCODE_OF_CONDUCT.md\nCONTRIBUTING.md\nLICENSE\nREADME.md\nSECURITY.md\nWINDOWS.md\ncmd/\ndocs/\ne2e/\ngo.mod\ngo.sum\nmise-tasks/\nmise.toml\nperf/\nredact/\nscripts/",
+      "output_tokens": 339,
+      "duration_ms": 0.38814544677734375,
+      "turn_number": 1
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": "docs"
+      },
+      "output": "KNOWN_LIMITATIONS.md\narchitecture/\ngenerated/\ninstall-provenance-plan.md\nsecurity-and-privacy.md",
+      "output_tokens": 96,
+      "duration_ms": 0.3867149353027344,
+      "turn_number": 2
+    },
+    {
+      "tool_name": "list_dir",
+      "tool_input": {
+        "path": "docs/architecture"
+      },
+      "output": "agent-guide.md\nagent-integration-checklist.md\nattribution.md\ncheckpoint-scenarios.md\nclaude-hooks-integration.md\ncommit-hook-perf-analysis.md\ncopilot-token-validation.md\nexternal-agent-protocol.md\nlogging.md\nsessions-and-checkpoints.md",
+      "output_tokens": 235,
+      "duration_ms": 0.3352165222167969,
+      "turn_number": 3
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "glob": "**/*transcript*"
+      },
+      "output": "./cmd/entire/cli/agent/claudecode/transcript.go\n./cmd/entire/cli/agent/claudecode/transcript_test.go\n./cmd/entire/cli/agent/codex/transcript.go\n./cmd/entire/cli/agent/codex/transcript_test.go\n./cmd/entire/cli/agent/copilotcli/transcript.go\n./cmd/entire/cli/agent/copilotcli/transcript_test.go\n./cmd/entire/cli/agent/cursor/transcript.go\n./cmd/entire/cli/agent/cursor/transcript_test.go\n./cmd/entire/cli/agent/factoryaidroid/transcript.go\n./cmd/entire/cli/agent/factoryaidroid/transcript_test.go\n./cmd",
+      "output_tokens": 1094,
+      "duration_ms": 12.417793273925781,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "pattern": "2026-03-04"
+      },
+      "output": "No files found.",
+      "output_tokens": 15,
+      "duration_ms": 12.221813201904297,
+      "turn_number": 4
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/transcript.go"
+      },
+      "output": "cmd/entire/cli/transcript.go:1-80\n  1| package cli\n  2| \n  3| import (\n  4| \t\"bufio\"\n  5| \t\"context\"\n  6| \t\"encoding/json\"\n  7| \t\"errors\"\n  8| \t\"fmt\"\n  9| \t\"io\"\n  10| \t\"os\"\n  11| \t\"path/filepath\"\n  12| \t\"strings\"\n  13| \n  14| \tagentpkg \"github.com/entireio/cli/cmd/entire/cli/agent\"\n  15| \t\"github.com/entireio/cli/cmd/entire/cli/paths\"\n  16| \t\"github.com/entireio/cli/cmd/entire/cli/transcript\"\n  17| )\n  18| \n  19| // resolveTranscriptPath determines the correct file path for an agent's session tr",
+      "output_tokens": 3307,
+      "duration_ms": 0.31113624572753906,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/agent/claudecode/transcript.go"
+      },
+      "output": "cmd/entire/cli/agent/claudecode/transcript.go:1-80\n  1| package claudecode\n  2| \n  3| import (\n  4| \t\"bytes\"\n  5| \t\"encoding/json\"\n  6| \t\"fmt\"\n  7| \t\"path/filepath\"\n  8| \t\"strings\"\n  9| \n  10| \t\"github.com/entireio/cli/cmd/entire/cli/agent\"\n  11| \t\"github.com/entireio/cli/cmd/entire/cli/transcript\"\n  12| )\n  13| \n  14| // TranscriptLine is an alias to the shared transcript.Line type.\n  15| type TranscriptLine = transcript.Line\n  16| \n  17| // Type aliases for internal use.\n  18| type (\n  19| \tas",
+      "output_tokens": 2275,
+      "duration_ms": 0.22292137145996094,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/agent/codex/transcript.go"
+      },
+      "output": "cmd/entire/cli/agent/codex/transcript.go:1-80\n  1| package codex\n  2| \n  3| import (\n  4| \t\"bufio\"\n  5| \t\"bytes\"\n  6| \t\"encoding/json\"\n  7| \t\"errors\"\n  8| \t\"fmt\"\n  9| \t\"io\"\n  10| \t\"os\"\n  11| \t\"regexp\"\n  12| \t\"strings\"\n  13| \t\"time\"\n  14| \n  15| \t\"github.com/entireio/cli/cmd/entire/cli/agent\"\n  16| )\n  17| \n  18| // Compile-time interface assertions.\n  19| var (\n  20| \t_ agent.TranscriptAnalyzer          = (*CodexAgent)(nil)\n  21| \t_ agent.TokenCalculator             = (*CodexAgent)(nil)\n  22| \t_",
+      "output_tokens": 3303,
+      "duration_ms": 0.1900196075439453,
+      "turn_number": 5
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/transcript.go",
+        "start_line": 80,
+        "end_line": 232
+      },
+      "output": "cmd/entire/cli/transcript.go:80-232\n  80| \t\treturn nil\n  81| \t})\n  82| \tif walkErr != nil {\n  83| \t\treturn \"\", fmt.Errorf(\"failed to search project directories: %w\", walkErr)\n  84| \t}\n  85| \tif found != \"\" {\n  86| \t\treturn found, nil\n  87| \t}\n  88| \treturn \"\", errors.New(\"transcript not found in any project directory\")\n  89| }\n  90| \n  91| // AgentTranscriptPath returns the path to a subagent's transcript file.\n  92| // Subagent transcripts are stored as agent-{agentId}.jsonl in the same directo",
+      "output_tokens": 5447,
+      "duration_ms": 0.5278587341308594,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/agent/claudecode/transcript.go",
+        "start_line": 80,
+        "max_lines": 100
+      },
+      "output": "cmd/entire/cli/agent/claudecode/transcript.go:80-179\n  80| \t\t\tif file != \"\" && !fileSet[file] {\n  81| \t\t\t\tfileSet[file] = true\n  82| \t\t\t\tfiles = append(files, file)\n  83| \t\t\t}\n  84| \t\t}\n  85| \t}\n  86| \n  87| \treturn files\n  88| }\n  89| \n  90| // TruncateAtUUID returns transcript lines up to and including the line with given UUID\n  91| func TruncateAtUUID(lines []TranscriptLine, uuid string) []TranscriptLine {\n  92| \tif uuid == \"\" {\n  93| \t\treturn lines\n  94| \t}\n  95| \n  96| \tfor i, line := range",
+      "output_tokens": 3486,
+      "duration_ms": 0.43010711669921875,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/agent/codex/transcript.go",
+        "start_line": 80,
+        "max_lines": 100
+      },
+      "output": "cmd/entire/cli/agent/codex/transcript.go:80-179\n  80| // GetTranscriptPosition returns the current line count of a Codex rollout transcript.\n  81| func (c *CodexAgent) GetTranscriptPosition(path string) (int, error) {\n  82| \tif path == \"\" {\n  83| \t\treturn 0, nil\n  84| \t}\n  85| \n  86| \tfile, err := os.Open(path) //nolint:gosec // Path comes from agent hook input\n  87| \tif err != nil {\n  88| \t\tif os.IsNotExist(err) {\n  89| \t\t\treturn 0, nil\n  90| \t\t}\n  91| \t\treturn 0, fmt.Errorf(\"failed to open tra",
+      "output_tokens": 3188,
+      "duration_ms": 0.24771690368652344,
+      "turn_number": 6
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/agent/claudecode/transcript.go",
+        "start_line": 179,
+        "max_lines": 120
+      },
+      "output": "cmd/entire/cli/agent/claudecode/transcript.go:179-298\n  179| \t}\n  180| \n  181| \treturn usage\n  182| }\n  183| \n  184| // CalculateTokenUsageFromFile calculates token usage from a Claude Code transcript file.\n  185| // If startLine > 0, only considers lines from startLine onwards.\n  186| func CalculateTokenUsageFromFile(path string, startLine int) (*agent.TokenUsage, error) {\n  187| \tif path == \"\" {\n  188| \t\treturn &agent.TokenUsage{}, nil\n  189| \t}\n  190| \n  191| \tlines, err := transcript.ParseFr",
+      "output_tokens": 4291,
+      "duration_ms": 3.345966339111328,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/agent/codex/transcript.go",
+        "start_line": 179,
+        "max_lines": 120
+      },
+      "output": "cmd/entire/cli/agent/codex/transcript.go:179-298\n  179| // extractFilesFromApplyPatch parses apply_patch input for file paths.\n  180| // Format: \"*** Add File: <path>\" or \"*** Update File: <path>\" or \"*** Delete File: <path>\"\n  181| func extractFilesFromApplyPatch(input string) []string {\n  182| \tmatches := applyPatchFileRegex.FindAllStringSubmatch(input, -1)\n  183| \tvar files []string\n  184| \tseen := make(map[string]struct{})\n  185| \tfor _, m := range matches {\n  186| \t\tpath := strings.TrimSpac",
+      "output_tokens": 4288,
+      "duration_ms": 0.47898292541503906,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/agent/copilotcli/transcript.go"
+      },
+      "output": "cmd/entire/cli/agent/copilotcli/transcript.go:1-80\n  1| package copilotcli\n  2| \n  3| import (\n  4| \t\"bufio\"\n  5| \t\"bytes\"\n  6| \t\"context\"\n  7| \t\"encoding/json\"\n  8| \t\"fmt\"\n  9| \t\"io\"\n  10| \t\"os\"\n  11| \n  12| \t\"github.com/entireio/cli/cmd/entire/cli/agent\"\n  13| \t\"github.com/entireio/cli/cmd/entire/cli/logging\"\n  14| )\n  15| \n  16| // Compile-time interface checks.\n  17| var (\n  18| \t_ agent.TranscriptAnalyzer = (*CopilotCLIAgent)(nil)\n  19| \t_ agent.TokenCalculator    = (*CopilotCLIAgent)(nil)\n",
+      "output_tokens": 2732,
+      "duration_ms": 0.9901523590087891,
+      "turn_number": 7
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/agent/cursor/transcript.go"
+      },
+      "output": "cmd/entire/cli/agent/cursor/transcript.go:1-80\n  1| package cursor\n  2| \n  3| import (\n  4| \t\"bufio\"\n  5| \t\"encoding/json\"\n  6| \t\"fmt\"\n  7| \t\"io\"\n  8| \t\"os\"\n  9| \n  10| \t\"github.com/entireio/cli/cmd/entire/cli/agent\"\n  11| \t\"github.com/entireio/cli/cmd/entire/cli/textutil\"\n  12| \t\"github.com/entireio/cli/cmd/entire/cli/transcript\"\n  13| )\n  14| \n  15| // Compile-time interface assertion.\n  16| var _ agent.TranscriptAnalyzer = (*CursorAgent)(nil)\n  17| \n  18| // GetTranscriptPosition returns the ",
+      "output_tokens": 2858,
+      "duration_ms": 0.2911090850830078,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/agent/geminicli/transcript.go"
+      },
+      "output": "cmd/entire/cli/agent/geminicli/transcript.go:1-80\n  1| package geminicli\n  2| \n  3| import (\n  4| \t\"encoding/json\"\n  5| \t\"fmt\"\n  6| \t\"os\"\n  7| \t\"strings\"\n  8| )\n  9| \n  10| // Transcript parsing types - Gemini CLI uses JSON format for session storage\n  11| // Based on transcript_path format: ~/.gemini/tmp/<hash>/chats/session-<date>-<id>.json\n  12| \n  13| // Message type constants for Gemini transcripts\n  14| const (\n  15| \tMessageTypeUser   = \"user\"\n  16| \tMessageTypeGemini = \"gemini\"\n  17| )\n ",
+      "output_tokens": 2677,
+      "duration_ms": 0.24890899658203125,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/agent/opencode/transcript.go"
+      },
+      "output": "cmd/entire/cli/agent/opencode/transcript.go:1-80\n  1| package opencode\n  2| \n  3| import (\n  4| \t\"encoding/json\"\n  5| \t\"fmt\"\n  6| \t\"os\"\n  7| \t\"slices\"\n  8| \t\"strings\"\n  9| \n  10| \t\"github.com/entireio/cli/cmd/entire/cli/agent\"\n  11| )\n  12| \n  13| // Compile-time interface assertions\n  14| var (\n  15| \t_ agent.TranscriptAnalyzer = (*OpenCodeAgent)(nil)\n  16| \t_ agent.TranscriptPreparer = (*OpenCodeAgent)(nil)\n  17| \t_ agent.TokenCalculator    = (*OpenCodeAgent)(nil)\n  18| )\n  19| \n  20| // Parse",
+      "output_tokens": 2934,
+      "duration_ms": 0.2110004425048828,
+      "turn_number": 8
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/agent/factoryaidroid/transcript.go"
+      },
+      "output": "cmd/entire/cli/agent/factoryaidroid/transcript.go:1-80\n  1| package factoryaidroid\n  2| \n  3| import (\n  4| \t\"bufio\"\n  5| \t\"bytes\"\n  6| \t\"encoding/json\"\n  7| \t\"fmt\"\n  8| \t\"io\"\n  9| \t\"log/slog\"\n  10| \t\"os\"\n  11| \t\"path/filepath\"\n  12| \t\"slices\"\n  13| \t\"strings\"\n  14| \n  15| \t\"github.com/entireio/cli/cmd/entire/cli/agent\"\n  16| \t\"github.com/entireio/cli/cmd/entire/cli/transcript\"\n  17| )\n  18| \n  19| // TranscriptLine is an alias to the shared transcript.Line type.\n  20| type TranscriptLine = tran",
+      "output_tokens": 3205,
+      "duration_ms": 0.4761219024658203,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "glob": "cmd/entire/cli/transcript/**"
+      },
+      "output": "./cmd/entire/cli/transcript/compact/codex.go\n./cmd/entire/cli/transcript/compact/codex_test.go\n./cmd/entire/cli/transcript/compact/compact.go\n./cmd/entire/cli/transcript/compact/compact_test.go\n./cmd/entire/cli/transcript/compact/copilot.go\n./cmd/entire/cli/transcript/compact/copilot_test.go\n./cmd/entire/cli/transcript/compact/droid.go\n./cmd/entire/cli/transcript/compact/droid_test.go\n./cmd/entire/cli/transcript/compact/gemini.go\n./cmd/entire/cli/transcript/compact/gemini_test.go\n./cmd/entire/cl",
+      "output_tokens": 1710,
+      "duration_ms": 10.754108428955078,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "find_files",
+      "tool_input": {
+        "pattern": "transcript",
+        "glob": "cmd/entire/cli/transcript*"
+      },
+      "output": "./cmd/entire/cli/transcript.go\n./cmd/entire/cli/transcript_test.go",
+      "output_tokens": 66,
+      "duration_ms": 10.856151580810547,
+      "turn_number": 9
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/transcript/types.go"
+      },
+      "output": "cmd/entire/cli/transcript/types.go:1-60\n  1| // Package transcript provides shared types and utilities for parsing JSONL transcripts.\n  2| // Used by agents that share the same JSONL format (Claude Code, Cursor).\n  3| package transcript\n  4| \n  5| import \"encoding/json\"\n  6| \n  7| // Message type constants for transcript lines.\n  8| const (\n  9| \tTypeUser      = \"user\"\n  10| \tTypeAssistant = \"assistant\"\n  11| )\n  12| \n  13| // Content type constants for content blocks within messages.\n  14| cons",
+      "output_tokens": 2329,
+      "duration_ms": 0.5419254302978516,
+      "turn_number": 10
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/transcript/parse.go"
+      },
+      "output": "cmd/entire/cli/transcript/parse.go:1-80\n  1| package transcript\n  2| \n  3| import (\n  4| \t\"bufio\"\n  5| \t\"bytes\"\n  6| \t\"encoding/json\"\n  7| \t\"fmt\"\n  8| \t\"io\"\n  9| \t\"os\"\n  10| \t\"strings\"\n  11| \n  12| \t\"github.com/entireio/cli/cmd/entire/cli/textutil\"\n  13| )\n  14| \n  15| // ParseFromBytes parses transcript content from a byte slice.\n  16| // Uses bufio.Reader to handle arbitrarily long lines.\n  17| func ParseFromBytes(content []byte) ([]Line, error) {\n  18| \tvar lines []Line\n  19| \treader := bufio",
+      "output_tokens": 2507,
+      "duration_ms": 0.29969215393066406,
+      "turn_number": 10
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/transcript/parse.go",
+        "start_line": 80
+      },
+      "output": "cmd/entire/cli/transcript/parse.go:80-159\n  80| \t\t}\n  81| \n  82| \t\t// Count all lines for totalLines, but only parse after startLine\n  83| \t\tif totalLines >= startLine {\n  84| \t\t\tvar line Line\n  85| \t\t\tif err := json.Unmarshal(lineBytes, &line); err == nil {\n  86| \t\t\t\tnormalizeLineType(&line)\n  87| \t\t\t\tlines = append(lines, line)\n  88| \t\t\t}\n  89| \t\t}\n  90| \t\ttotalLines++\n  91| \n  92| \t\tif err == io.EOF {\n  93| \t\t\tbreak\n  94| \t\t}\n  95| \t}\n  96| \n  97| \treturn lines, nil\n  98| }\n  99| \n  100| // n",
+      "output_tokens": 2737,
+      "duration_ms": 0.31304359436035156,
+      "turn_number": 11
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/transcript_test.go"
+      },
+      "output": "cmd/entire/cli/transcript_test.go:1-80\n  1| package cli\n  2| \n  3| import (\n  4| \t\"os\"\n  5| \t\"path/filepath\"\n  6| \t\"testing\"\n  7| )\n  8| \n  9| func createTempTranscript(t *testing.T, content string) string {\n  10| \tt.Helper()\n  11| \ttmpDir := t.TempDir()\n  12| \ttmpFile := filepath.Join(tmpDir, \"transcript.jsonl\")\n  13| \tif err := os.WriteFile(tmpFile, []byte(content), 0o644); err != nil {\n  14| \t\tt.Fatalf(\"failed to create temp file: %v\", err)\n  15| \t}\n  16| \treturn tmpFile\n  17| }\n  18| \n  19| ",
+      "output_tokens": 2900,
+      "duration_ms": 0.2377033233642578,
+      "turn_number": 11
+    },
+    {
+      "tool_name": "read_code",
+      "tool_input": {
+        "path": "cmd/entire/cli/transcript_test.go",
+        "start_line": 80
+      },
+      "output": "cmd/entire/cli/transcript_test.go:80-159\n  80| \t\t\ttoolUseID: \"toolu_nonexistent\",\n  81| \t\t\twantUUID:  \"\",\n  82| \t\t\twantFound: false,\n  83| \t\t},\n  84| \t}\n  85| \n  86| \tfor _, tt := range tests {\n  87| \t\tt.Run(tt.name, func(t *testing.T) {\n  88| \t\t\tgotUUID, gotFound := FindCheckpointUUID(transcript, tt.toolUseID)\n  89| \t\t\tif gotFound != tt.wantFound {\n  90| \t\t\t\tt.Errorf(\"FindCheckpointUUID() found = %v, want %v\", gotFound, tt.wantFound)\n  91| \t\t\t}\n  92| \t\t\tif gotUUID != tt.wantUUID {\n  93| \t\t\t\tt.E",
+      "output_tokens": 2717,
+      "duration_ms": 0.2968311309814453,
+      "turn_number": 12
+    },
+    {
+      "tool_name": "search_code",
+      "tool_input": {
+        "query": "transcriptLine",
+        "path_glob": "cmd/entire/cli/*.go"
+      },
+      "output": "./cmd/entire/cli/lifecycle.go\n  533-544:\n    533| \t// Get transcript position/identifier from pre-prompt state\n    534| \tvar transcriptIdentifierAtStart string\n    535| \tvar transcriptLinesAtStart int\n    536| \tif preState != nil {\n    537| \t\ttranscriptIdentifierAtStart = preState.LastTranscriptIdentifier\n    538| \t\ttranscriptLinesAtStart = preState.TranscriptOffset\n    539| \t}\n    540| \n    541| \t// Calculate token usage - prefer SubagentAwareExtractor to include subagent tokens\n    542| \ttoken",
+      "output_tokens": 1565,
+      "duration_ms": 14.326810836791992,
+      "turn_number": 12
+    }
+  ],
+  "total_tool_calls": 27,
+  "total_turns": 12,
+  "wall_clock_ms": 30601.640224456787,
+  "input_tokens": 131213,
+  "output_tokens": 1786,
+  "tool_output_tokens": 62316,
+  "total_cost_usd": 0.420429,
+  "first_call_tool": "find_files",
+  "first_call_produced_file": false,
+  "retry_count": 0,
+  "error": "",
+  "total_tool_duration_ms": 86.61508560180664,
+  "tool_execution_share": 0.002830406637242405,
+  "search_call_count": 1,
+  "read_call_count": 18,
+  "avg_search_code_duration_ms": 14.326810836791992,
+  "median_search_code_duration_ms": 14.326810836791992
+}

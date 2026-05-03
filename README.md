@@ -8,6 +8,11 @@ It is built around a simple idea: faster search alone is not enough. What matter
 
 This repository also includes the public datasets, benchmark packages, and saved results used in the accompanying writeup on agentic code search.
 
+- [About](#about)
+- [Contributing guide](CONTRIBUTING.md)
+- [Security policy](SECURITY.md)
+- [License](LICENSE)
+
 ## What is in this repo
 
 - `src/`
@@ -28,6 +33,10 @@ In the public benchmarks in this repository, the strongest effects did not come 
 - getting the agent into reading relevant files sooner
 
 That is the problem `pgr` is designed to improve.
+
+## About
+
+`pgr` is a stateless MCP code-search server for coding agents. It improves what agents see first by ranking likely implementation files earlier and formatting search results to make the next step clearer.
 
 ## Build
 
@@ -238,3 +247,7 @@ This public repository is intentionally focused on:
 - the public data and results packages cited in the writeup
 
 Older internal drafts, duplicate exports, and superseded experimental outputs have been removed so the repo stays small, inspectable, and externally understandable.
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md), [SECURITY.md](SECURITY.md), and [LICENSE](LICENSE).

@@ -2,9 +2,10 @@
 
 Thanks for helping improve `pgr`.
 
-This repository is intentionally small and public-facing. It contains the Rust
-MCP server, a minimal evaluation harness, and the benchmark and data artifacts
-referenced in the writeup.
+This repository is intentionally small and public-facing. `pgr` is a working
+prototype and public research artifact, not a polished product. The repo
+contains the experimental, stateless Rust MCP server, a minimal evaluation
+harness, and the benchmark and data artifacts referenced in the writeup.
 
 New to the project? Start with the [README](README.md). For MCP setup, direct
 stdio smoke testing, tool arguments, and output profiles, see

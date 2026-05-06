@@ -4,43 +4,97 @@
 
 `pgr` is a stateless MCP code-search server for coding agents.
 
-It is built around a simple idea: faster search alone is not enough. What matters just as much is whether the search result helps the model choose a better next action.
+It wraps local code search with ranking and output shaping designed for agent
+workflows: surfacing likely implementation files earlier, de-prioritizing tests
+and low-value matches, and formatting results so a model can decide what to read
+next with less thrashing.
 
-`pgr` wraps local code search with ranking and output shaping designed for agent workflows: surfacing likely implementation files earlier, de-prioritizing tests and low-value matches, and formatting results so a model can decide what to read next with less thrashing.
+This repository also includes the public datasets, benchmark packages, and saved
+results used in the accompanying writeup on agentic code search.
 
-This repository also includes the public datasets, benchmark packages, and saved results used in the accompanying writeup on agentic code search.
-
-- [About](#about)
+- [Quick Start](#quick-start)
+- [Usage Documentation](#usage-documentation)
+- [Public Benchmarks and Data](#public-benchmarks-and-data)
 - [Contributing guide](CONTRIBUTING.md)
 - [Security policy](SECURITY.md)
 - [License](LICENSE)
 
-## What is in this repo
+## Quick Start
 
-- `src/`
-  - the Rust MCP server
-- `tests/`
-  - integration tests for the MCP surface
-- `eval/v2/`
-  - the minimal evaluation harness and backend adapters used by the public benchmark runners
-- `public_release/`
-  - public datasets, benchmark definitions, summaries, and saved outputs referenced in the blog post
+### 1. Install pgr
 
-## Why we built it
+Install `pgr` from this repository:
 
-In the public benchmarks in this repository, the strongest effects did not come from raw scan speed. They showed up in more local agent behavior:
+```bash
+git clone https://github.com/entireio/pgr.git
+cd pgr
+cargo install --path .
+```
 
-- better first-query retrieval quality
-- fewer redundant search loops before the first code read
-- getting the agent into reading relevant files sooner
+### 2. Add it to your MCP client
 
-That is the problem `pgr` is designed to improve.
+Then add it to any MCP client that can launch a stdio server:
 
-## About
+```json
+{
+  "mcpServers": {
+    "pgr": {
+      "command": "pgr",
+      "cwd": "/absolute/path/to/repo"
+    }
+  }
+}
+```
 
-`pgr` is a stateless MCP code-search server for coding agents. It improves what agents see first by ranking likely implementation files earlier and formatting search results to make the next step clearer.
+### 3. Point it at the repo to search
 
-## Build
+Set `cwd` to the repository you want your agent to search. `pgr` searches the
+current working directory of the process that launches it.
+
+### 4. Ask your agent to search
+
+Once configured, ask your agent to search the repo. For example:
+
+```text
+search for where checkpoint commits are written
+```
+
+```text
+find the code that handles MCP tool calls
+```
+
+If `pgr` is not yet on your shell `PATH` after install, use the binary directly
+at:
+
+```bash
+~/.cargo/bin/pgr
+```
+
+## What pgr gives agents
+
+`pgr` is not trying to replace `ripgrep`. It shells out to local `rg` for fast
+content search and file listing, then ranks and shapes the results for coding
+agents.
+
+That means an agent is more likely to see implementation files before test
+noise, repeated references, or lower-signal matches.
+
+At a high level it provides tools for:
+
+- `search_code`
+- `read_code`
+- `find_files`
+- `list_dir`
+
+The search output profile is controlled with `PGR_OUTPUT_PROFILE`. If it is
+unset, the server defaults to the richer planner-oriented output profile used in
+the public results.
+
+There is no index to build, no background daemon, and no separate storage layer.
+`pgr` starts, answers MCP tool calls over stdio, and exits when the client stops
+it.
+
+## Build from source
 
 ```bash
 cargo build --release
@@ -56,204 +110,39 @@ cargo install --path .
 
 For most first-time users, this is the easiest way to try `pgr`.
 
-## Running `pgr`
-
-`pgr` is designed to run as an MCP server over stdio.
-
-At a high level it provides tools for:
-
-- `search_code`
-- `read_code`
-- `find_files`
-- `list_dir`
-
-The search output profile is controlled with `PGR_OUTPUT_PROFILE`. If it is unset, the server defaults to the richer planner-oriented output profile used in the public results.
-
 ## Requirements
 
 - Rust toolchain for building from source
-- [`ripgrep`](https://github.com/BurntSushi/ripgrep) installed and available as `rg`
+- [`ripgrep`](https://github.com/BurntSushi/ripgrep) installed and available as
+  `rg`
 
-`pgr` shells out to local `rg` for both content search and file listing. If `rg` is not installed, `pgr` will not be able to search.
+`pgr` shells out to local `rg` for both content search and file listing. If `rg`
+is not installed, `pgr` will not be able to search.
 
-## How to use it
+## Why we built it
 
-The most important thing to know is that `pgr` searches the **current working directory** of the process that launches it.
+`pgr` is built around a simple idea: faster search alone is not enough. What
+matters just as much is whether the search result helps the model choose a
+better next action.
 
-That means:
+In the public benchmarks in this repository, the strongest effects did not come
+from raw scan speed. They showed up in more local agent behavior:
 
-- start `pgr` from the repository you want to search, or
-- configure your MCP client to launch `pgr` with that repository as its working directory
+- better first-query retrieval quality
+- fewer redundant search loops before the first code read
+- getting the agent into reading relevant files sooner
 
-There is no index to build, no background daemon, and no separate storage layer. `pgr` just starts, answers MCP tool calls over stdio, and exits when the client stops it.
+That is the problem `pgr` is designed to improve.
 
-## Fastest first run
+## Usage Documentation
 
-If you are coming to the repo for the first time, the simplest path is:
+- [docs/usage.md](docs/usage.md) - MCP setup, direct stdio smoke test, tool
+  arguments, and output profiles
 
-```bash
-git clone https://github.com/entireio/pgr.git
-cd pgr
-cargo install --path .
-```
+## Public benchmarks and data
 
-Then move into the repository you want to search and point your MCP client at `pgr`, or smoke-test it directly over stdio.
-
-If `pgr` is not yet on your shell `PATH` after install, use the binary directly at:
-
-```bash
-~/.cargo/bin/pgr
-```
-
-## MCP client setup
-
-Any MCP client that can launch a stdio server can use `pgr`.
-
-A generic configuration looks like this:
-
-```json
-{
-  "mcpServers": {
-    "pgr": {
-      "command": "/absolute/path/to/pgr",
-      "args": [],
-      "cwd": "/absolute/path/to/repo",
-      "env": {
-        "PGR_OUTPUT_PROFILE": "full_v4"
-      }
-    }
-  }
-}
-```
-
-If you have already run `cargo install --path .`, `command` can just be `pgr`.
-
-If you want to use the compiled release binary directly, it will usually look like:
-
-```json
-{
-  "mcpServers": {
-    "pgr": {
-      "command": "/absolute/path/to/target/release/pgr",
-      "cwd": "/absolute/path/to/repo"
-    }
-  }
-}
-```
-
-## Try it directly
-
-You can smoke-test `pgr` without a full MCP client by talking to it over stdio.
-
-From the repository you want to search:
-
-```bash
-printf '%s\n' \
-  '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{}}' \
-  '{"jsonrpc":"2.0","id":2,"method":"tools/list","params":{}}' \
-  '{"jsonrpc":"2.0","id":3,"method":"tools/call","params":{"name":"search_code","arguments":{"query":"fn main","max_files":3}}}' \
-  | ~/.cargo/bin/pgr
-```
-
-That will:
-
-- initialize the server
-- list the exposed MCP tools
-- run a `search_code` call against the current repository
-
-If `pgr` is already on your `PATH`, you can replace `~/.cargo/bin/pgr` with just:
-
-```bash
-pgr
-```
-
-## Tool reference
-
-`pgr` exposes four MCP tools.
-
-### `search_code`
-
-Searches file contents with `ripgrep`, then ranks the results for agent use.
-
-Arguments:
-
-- `query` (required): regex or literal search string
-- `path_glob`: optional glob filter such as `**/*.rs`
-- `file_type`: optional ripgrep type such as `rust`, `py`, or `js`
-- `max_files`: maximum files to return, default `10`
-- `max_matches_per_file`: maximum matches per file, default `3`
-
-Behavior:
-
-- definitions are ranked ahead of plain references
-- source files are ranked ahead of tests and lower-priority paths
-- output is grouped by file and formatted for downstream tool-use decisions
-
-Example:
-
-```json
-{
-  "name": "search_code",
-  "arguments": {
-    "query": "CheckpointStore",
-    "file_type": "rs",
-    "max_files": 5
-  }
-}
-```
-
-### `read_code`
-
-Reads a file with line numbers and optional range limits.
-
-Arguments:
-
-- `path` (required): exact path or suffix match
-- `start_line`: default `1`
-- `end_line`: default `0`, which means auto-size from `start_line`
-- `max_lines`: default `80`
-
-Notes:
-
-- if the exact path does not exist, `pgr` falls back to suffix matching within the current repo
-- output includes the resolved path and the returned line range
-
-### `find_files`
-
-Lists files using `rg --files` with optional filtering.
-
-Arguments:
-
-- `pattern`: case-insensitive substring filter
-- `glob`: optional glob such as `**/*.ts`
-- `file_type`: optional ripgrep type
-- `max_results`: default `50`
-
-### `list_dir`
-
-Lists directory contents relative to the current repo.
-
-Arguments:
-
-- `path`: directory path, default `.`
-- `recursive`: default `false`
-- `max_results`: default `100`
-
-## Output profiles
-
-`pgr` supports a few output profiles through `PGR_OUTPUT_PROFILE`:
-
-- `full_v4`: the default, richer planner-oriented output
-- `v3`: a more minimal output format
-- `empty_only`
-- `summary_only`
-- `counts_empty`
-
-For most users, the default is the right starting point.
-
-## Public benchmark packages
-
-The public artifacts referenced in the writeup live under [`public_release/`](public_release/README.md).
+The public artifacts referenced in the writeup live under
+[`public_release/`](public_release/README.md).
 
 Key packages:
 
@@ -266,6 +155,19 @@ Key packages:
 - [`public_release/benchmarks/entireio_cli_offline_ir_public60/README.md`](public_release/benchmarks/entireio_cli_offline_ir_public60/README.md)
   - offline retrieval replay benchmark built from real agent-issued queries
 
+## What is in this repo
+
+- `src/`
+  - the Rust MCP server
+- `tests/`
+  - integration tests for the MCP surface
+- `eval/v2/`
+  - the minimal evaluation harness and backend adapters used by the public
+    benchmark runners
+- `public_release/`
+  - public datasets, benchmark definitions, summaries, and saved outputs
+    referenced in the blog post
+
 ## Repository scope
 
 This public repository is intentionally focused on:
@@ -274,7 +176,9 @@ This public repository is intentionally focused on:
 - the minimal benchmark harness needed by the public runners
 - the public data and results packages cited in the writeup
 
-Older internal drafts, duplicate exports, and superseded experimental outputs have been removed so the repo stays small, inspectable, and externally understandable.
+Older internal drafts, duplicate exports, and superseded experimental outputs
+have been removed so the repo stays small, inspectable, and externally
+understandable.
 
 ## Contributing
 

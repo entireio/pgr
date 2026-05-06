@@ -2,7 +2,10 @@
 
 # pgr
 
-`pgr` is a stateless MCP code-search server for coding agents.
+`pgr` is an experimental, stateless MCP server for code search, built as part of
+research into how coding agents search repositories.
+
+It is a working prototype and public research artifact, not a polished product.
 
 It wraps local code search with ranking and output shaping designed for agent
 workflows: surfacing likely implementation files earlier, de-prioritizing tests

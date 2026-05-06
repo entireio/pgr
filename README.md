@@ -1,3 +1,5 @@
+![pgr repository cover](assets/gh-repo-cover.png)
+
 # pgr
 
 `pgr` is a stateless MCP code-search server for coding agents.
